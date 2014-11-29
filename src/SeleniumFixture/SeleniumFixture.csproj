@@ -30,9 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SimpleFixture">
-      <HintPath>..\packages\SimpleFixture.1.0.0-CI10024\lib\portable-net45+win+wpa81+wp80\SimpleFixture.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="SimpleFixture, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SimpleFixture.1.0.1\lib\portable-net45+win+wpa81+wp80\SimpleFixture.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
