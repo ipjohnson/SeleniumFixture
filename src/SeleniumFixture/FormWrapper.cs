@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 
 namespace SeleniumFixture
 {
@@ -126,18 +127,122 @@ namespace SeleniumFixture
             {
                 if (webElement.TagName == "input")
                 {
-                    webElement.Clear();
-                    webElement.SendKeys(value.ToString());
+                    var type = webElement.GetAttribute("type");
 
-                    setValue = true;
+                    switch (type)
+                    {
+                        case "checkbox":
+                            setValue = SetValueIntoCheckBox(value, webElement);
+                            break;
+                        case "radio":
+                            setValue = SetValueIntoRadioButton(value, webElement);
+                            break;
+                        default:
+                            setValue = SetValueIntoTextInput(value, webElement);
+                            break;
+
+                    }
                 }
                 else if (webElement.TagName == "select")
                 {
-                    setValue = true;
+                    setValue = SetValueIntoSelect(value, webElement);
+                }
+
+                if (setValue)
+                {
+                    break;
                 }
             }
 
             return setValue;
+        }
+
+        private bool SetValueIntoRadioButton(object value, IWebElement webElement)
+        {
+            string radioButtonValue = webElement.GetAttribute("value");
+
+            if (value != null)
+            {
+                if (value is Enum)
+                {
+                    value = Convert.ChangeType(value, typeof(int));
+                }
+
+                if (value.ToString() == radioButtonValue)
+                {
+                    webElement.Click();
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool SetValueIntoSelect(object value, IWebElement element)
+        {
+            if (value == null)
+            {
+                SelectElement selectElement = new SelectElement(element);
+
+                selectElement.DeselectAll();
+
+                return true;
+            }
+
+            var option = element.FindElements(By.CssSelector(string.Format("option[value='{0}']", value)));
+
+            if (option.Count != 0)
+            {
+                SelectElement selectElement = new SelectElement(element);
+
+                selectElement.SelectByValue(value.ToString());
+
+                return true;
+            }
+            {
+                SelectElement selectElement = new SelectElement(element);
+
+                string valueString = value.ToString();
+
+                if (selectElement.Options.Any(e => e.Text == value.ToString()))
+                {
+                    selectElement.SelectByText(valueString);
+
+                    return true;
+                }
+
+            }
+            return false;
+        }
+
+        private bool SetValueIntoCheckBox(object value, IWebElement webElement)
+        {
+            bool setValue = false;
+
+            if (value is bool)
+            {
+                setValue = (bool)value;
+            }
+            else
+            {
+                setValue = (bool)Convert.ChangeType(value, typeof(bool));
+            }
+
+            if (setValue != webElement.Selected)
+            {
+                webElement.Click();
+            }
+
+            return true;
+        }
+
+        private bool SetValueIntoTextInput(object value, IWebElement webElement)
+        {
+            webElement.Clear();
+            webElement.SendKeys(value.ToString());
+
+            return true;
         }
 
         private void MapFormValuesToObject(object returnValue, IDictionary<string, object> getFormValues)
