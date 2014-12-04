@@ -26,9 +26,9 @@ namespace SeleniumFixture
             _dataGeneratorService = fixture.Configuration.Locate<IRandomDataGeneratorService>();
         }
 
-        public FormWrapper FillWith(object fillObject, bool throwIfElementMissing = true)
+        public FormWrapper FillWith(object fillObject)
         {
-            FillFormWithValues(_formElement, fillObject, throwIfElementMissing);
+            FillFormWithSeedValues(_formElement, fillObject, false);
 
             return this;
         }
@@ -40,7 +40,7 @@ namespace SeleniumFixture
 
         public FormWrapper AutoFillSeedWith(object seedObject)
         {
-            AutoFillFormWithSeedValues(_formElement, seedObject, true);
+            FillFormWithSeedValues(_formElement, seedObject, true);
 
             return this;
         }
@@ -93,18 +93,18 @@ namespace SeleniumFixture
 
         #region Map Value Methods
 
-        private void AutoFillFormWithSeedValues(IWebElement formElement, object seedObject, bool autoFillIfMissing)
+        private void FillFormWithSeedValues(IWebElement formElement, object seedObject, bool autoFillIfMissing)
         {
-            AutoFillRadioButtonInputs(formElement, seedObject, autoFillIfMissing);
+            FillRadioButtonInputs(formElement, seedObject, autoFillIfMissing);
 
-            AutoFillCheckBoxInputs(formElement, seedObject, autoFillIfMissing);
+            FillCheckBoxInputs(formElement, seedObject, autoFillIfMissing);
 
-            AutoFillSelectInputs(formElement, seedObject, autoFillIfMissing);
+            FillSelectInputs(formElement, seedObject, autoFillIfMissing);
 
-            AutoFillTextInputs(formElement, seedObject, autoFillIfMissing);
+            FillTextInputs(formElement, seedObject, autoFillIfMissing);
         }
 
-        private void AutoFillTextInputs(IWebElement formElement, object seedObject, bool autoFillIfMissing)
+        private void FillTextInputs(IWebElement formElement, object seedObject, bool autoFillIfMissing)
         {
             var inputElements = formElement.FindElements(By.CssSelector("input"));
 
@@ -143,7 +143,7 @@ namespace SeleniumFixture
             }
         }
 
-        private void AutoFillSelectInputs(IWebElement formElement, object seedObject, bool autoFillIfMissing)
+        private void FillSelectInputs(IWebElement formElement, object seedObject, bool autoFillIfMissing)
         {
             var selectElements = formElement.FindElements(By.CssSelector("select"));
 
@@ -188,7 +188,7 @@ namespace SeleniumFixture
             }
         }
 
-        private void AutoFillCheckBoxInputs(IWebElement formElement, object seedObject, bool autoFillIfMissing)
+        private void FillCheckBoxInputs(IWebElement formElement, object seedObject, bool autoFillIfMissing)
         {
             var checkBoxes = formElement.FindElements(By.CssSelector("input[type='check']"));
 
@@ -214,7 +214,7 @@ namespace SeleniumFixture
             }
         }
 
-        private void AutoFillRadioButtonInputs(IWebElement formElement, object seedObject, bool autoFillIfMissing)
+        private void FillRadioButtonInputs(IWebElement formElement, object seedObject, bool autoFillIfMissing)
         {
             var radioButtonGroups = FindRadioButtonGroups(formElement);
 
@@ -285,171 +285,8 @@ namespace SeleniumFixture
                     elements.Add(radioButton);
                 }
             }
+
             return radioButtonGroups;
-        }
-
-        private void FillFormWithValues(IWebElement webElement, object valuesObject, bool throwIfMissingElement)
-        {
-            foreach (KeyValuePair<string, object> keyValuePair in GetValuesFromObject(valuesObject))
-            {
-                string elementName = keyValuePair.Key;
-                IReadOnlyCollection<IWebElement> setElements;
-
-                switch (elementName[0])
-                {
-                    case '#':
-                        setElements = webElement.FindElements(By.Id(elementName.Substring(1)));
-                        break;
-                    case '/':
-                        setElements = webElement.FindElements(By.XPath(elementName));
-                        break;
-                    default:
-                        setElements = webElement.FindElements(By.Id(elementName));
-
-                        if (setElements.Count == 0)
-                        {
-                            setElements = webElement.FindElements(By.Name(elementName));
-                        }
-
-                        if (setElements.Count == 0)
-                        {
-                            setElements = webElement.FindElements(By.CssSelector(elementName));
-                        }
-                        break;
-                }
-
-                if (!SetValueIntoElements(setElements, keyValuePair.Value) &&
-                    throwIfMissingElement)
-                {
-                    throw new Exception("Could not set element by name: " + elementName);
-                }
-            }
-        }
-
-        private bool SetValueIntoElements(IReadOnlyCollection<IWebElement> setElements, object value)
-        {
-            bool setValue = false;
-
-            foreach (IWebElement webElement in setElements)
-            {
-                if (webElement.TagName == "input")
-                {
-                    var type = webElement.GetAttribute("type");
-
-                    switch (type)
-                    {
-                        case "checkbox":
-                            setValue = SetValueIntoCheckBox(value, webElement);
-                            break;
-                        case "radio":
-                            setValue = SetValueIntoRadioButton(value, webElement);
-                            break;
-                        default:
-                            setValue = SetValueIntoTextInput(value, webElement);
-                            break;
-
-                    }
-                }
-                else if (webElement.TagName == "select")
-                {
-                    setValue = SetValueIntoSelect(value, webElement);
-                }
-
-                if (setValue)
-                {
-                    break;
-                }
-            }
-
-            return setValue;
-        }
-
-        private bool SetValueIntoRadioButton(object value, IWebElement webElement)
-        {
-            string radioButtonValue = webElement.GetAttribute("value");
-
-            if (value != null)
-            {
-                if (value is Enum)
-                {
-                    value = Convert.ChangeType(value, typeof(int));
-                }
-
-                if (value.ToString() == radioButtonValue)
-                {
-                    webElement.Click();
-
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private bool SetValueIntoSelect(object value, IWebElement element)
-        {
-            if (value == null)
-            {
-                SelectElement selectElement = new SelectElement(element);
-
-                selectElement.DeselectAll();
-
-                return true;
-            }
-
-            var option = element.FindElements(By.CssSelector(string.Format("option[value='{0}']", value)));
-
-            if (option.Count != 0)
-            {
-                SelectElement selectElement = new SelectElement(element);
-
-                selectElement.SelectByValue(value.ToString());
-
-                return true;
-            }
-            {
-                SelectElement selectElement = new SelectElement(element);
-
-                string valueString = value.ToString();
-
-                if (selectElement.Options.Any(e => e.Text == value.ToString()))
-                {
-                    selectElement.SelectByText(valueString);
-
-                    return true;
-                }
-
-            }
-            return false;
-        }
-
-        private bool SetValueIntoCheckBox(object value, IWebElement webElement)
-        {
-            bool setValue = false;
-
-            if (value is bool)
-            {
-                setValue = (bool)value;
-            }
-            else
-            {
-                setValue = (bool)Convert.ChangeType(value, typeof(bool));
-            }
-
-            if (setValue != webElement.Selected)
-            {
-                webElement.Click();
-            }
-
-            return true;
-        }
-
-        private bool SetValueIntoTextInput(object value, IWebElement webElement)
-        {
-            webElement.Clear();
-            webElement.SendKeys(value.ToString());
-
-            return true;
         }
 
         private void MapFormValuesToObject(object returnValue, IDictionary<string, object> getFormValues)
