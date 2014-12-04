@@ -7,29 +7,41 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using SimpleFixture.Impl;
 
 namespace SeleniumFixture
 {
     public class FormWrapper
     {
-        private Fixture _fixture;
-        private IWebElement _formElement;
+        private readonly Fixture _fixture;
+        private readonly IWebElement _formElement;
+        private readonly IConstraintHelper _helper;
+        private readonly IRandomDataGeneratorService _dataGeneratorService;
 
         public FormWrapper(Fixture fixture, IWebElement formElement)
         {
             _fixture = fixture;
             _formElement = formElement;
+            _helper = fixture.Configuration.Locate<IConstraintHelper>();
+            _dataGeneratorService = fixture.Configuration.Locate<IRandomDataGeneratorService>();
         }
 
         public FormWrapper FillWith(object fillObject, bool throwIfElementMissing = true)
         {
-            FillMethodHandler(_formElement, fillObject, throwIfElementMissing);
+            FillFormWithValues(_formElement, fillObject, throwIfElementMissing);
 
             return this;
         }
 
-        public FormWrapper AutoFillWith(object fillObject)
+        public FormWrapper AutoFill()
         {
+            return AutoFillSeedWith(null);
+        }
+
+        public FormWrapper AutoFillSeedWith(object seedObject)
+        {
+            AutoFillFormWithSeedValues(_formElement, seedObject, true);
+
             return this;
         }
 
@@ -76,12 +88,207 @@ namespace SeleniumFixture
 
             MapFormValuesToObject(returnValue, GetFormValues(_formElement));
 
-            return default(T);
+            return returnValue;
         }
 
         #region Map Value Methods
 
-        private void FillMethodHandler(IWebElement webElement, object valuesObject, bool throwIfMissingElement)
+        private void AutoFillFormWithSeedValues(IWebElement formElement, object seedObject, bool autoFillIfMissing)
+        {
+            AutoFillRadioButtonInputs(formElement, seedObject, autoFillIfMissing);
+
+            AutoFillCheckBoxInputs(formElement, seedObject, autoFillIfMissing);
+
+            AutoFillSelectInputs(formElement, seedObject, autoFillIfMissing);
+
+            AutoFillTextInputs(formElement, seedObject, autoFillIfMissing);
+        }
+
+        private void AutoFillTextInputs(IWebElement formElement, object seedObject, bool autoFillIfMissing)
+        {
+            var inputElements = formElement.FindElements(By.CssSelector("input"));
+
+            foreach (IWebElement inputElement in inputElements)
+            {
+                var type = inputElement.GetAttribute("type");
+
+                if (type == "check" || type == "radio")
+                {
+                    continue;
+                }
+
+                var uniqueId = inputElement.GetAttribute("id") ?? inputElement.GetAttribute("name");
+                bool setValue = false;
+
+                if (uniqueId != null)
+                {
+                    object textValue = _helper.GetValue<object>(seedObject, null, uniqueId);
+
+                    if (textValue != null)
+                    {
+                        inputElement.Clear();
+                        inputElement.SendKeys(textValue.ToString());
+
+                        setValue = true;
+                    }
+                }
+
+                if (!setValue && autoFillIfMissing)
+                {
+                    var randomStringValue = _fixture.Generate<string>(uniqueId);
+
+                    inputElement.Clear();
+                    inputElement.SendKeys(randomStringValue);
+                }
+            }
+        }
+
+        private void AutoFillSelectInputs(IWebElement formElement, object seedObject, bool autoFillIfMissing)
+        {
+            var selectElements = formElement.FindElements(By.CssSelector("select"));
+
+            foreach (IWebElement webElement in selectElements)
+            {
+                SelectElement selectElement = new SelectElement(webElement);
+                var uniqueId = webElement.GetAttribute("id") ?? webElement.GetAttribute("name");
+                bool setValue = false;
+
+                if (uniqueId != null)
+                {
+                    object selectedValue = _helper.GetValue<object>(seedObject, null, uniqueId);
+
+                    if (selectedValue != null)
+                    {
+                        string selectedValueString = null;
+
+                        if (selectedValue is Enum)
+                        {
+                            selectedValue = Convert.ChangeType(selectedValue, typeof(int));
+                        }
+
+                        selectedValueString = selectedValue.ToString();
+
+                        selectElement.SelectByValue(selectedValueString);
+
+                        setValue = true;
+                    }
+                }
+
+                if (!setValue && autoFillIfMissing)
+                {
+                    selectElement.DeselectAll();
+
+                    int count = selectElement.Options.Count;
+
+                    if (count > 0)
+                    {
+                        selectElement.SelectByIndex(_dataGeneratorService.NextInt(0, count));
+                    }
+                }
+            }
+        }
+
+        private void AutoFillCheckBoxInputs(IWebElement formElement, object seedObject, bool autoFillIfMissing)
+        {
+            var checkBoxes = formElement.FindElements(By.CssSelector("input[type='check']"));
+
+            foreach (IWebElement webElement in checkBoxes)
+            {
+                bool? checkedValue = null;
+                var uniqueId = webElement.GetAttribute("id") ?? webElement.GetAttribute("name");
+
+                if (uniqueId != null)
+                {
+                    checkedValue = _helper.GetValue<bool?>(seedObject, null, uniqueId);
+                }
+
+                if (!checkedValue.HasValue && autoFillIfMissing)
+                {
+                    checkedValue = _fixture.Generate<bool>(uniqueId);
+                }
+
+                if (checkedValue.HasValue && checkedValue != webElement.Selected)
+                {
+                    webElement.Click();
+                }
+            }
+        }
+
+        private void AutoFillRadioButtonInputs(IWebElement formElement, object seedObject, bool autoFillIfMissing)
+        {
+            var radioButtonGroups = FindRadioButtonGroups(formElement);
+
+            foreach (KeyValuePair<string, List<IWebElement>> radioButtonGroup in radioButtonGroups)
+            {
+                var setValue = TryAndSetRadioButtonGroupFromSeedValue(seedObject, radioButtonGroup);
+
+                if (!setValue && autoFillIfMissing)
+                {
+                    var webElement = _dataGeneratorService.NextInSet(radioButtonGroup.Value);
+
+                    webElement.Click();
+                }
+            }
+        }
+
+        private bool TryAndSetRadioButtonGroupFromSeedValue(object seedObject, KeyValuePair<string, List<IWebElement>> radioButtonGroup)
+        {
+            bool setValue = false;
+            var constraintValue = _helper.GetValue<object>(seedObject, null, radioButtonGroup.Key);
+
+            if (constraintValue != null)
+            {
+                string constraintValueString = null;
+
+                if (constraintValue is Enum)
+                {
+                    constraintValue = Convert.ChangeType(constraintValue, typeof(int));
+                }
+
+                constraintValueString = constraintValue.ToString();
+
+                IWebElement foundElement =
+                    radioButtonGroup.Value.FirstOrDefault(e => e.GetAttribute("value") == constraintValueString);
+
+                if (foundElement != null)
+                {
+                    foundElement.Click();
+
+                    setValue = true;
+                }
+            }
+
+            return setValue;
+        }
+
+        private Dictionary<string, List<IWebElement>> FindRadioButtonGroups(IWebElement formElement)
+        {
+            var radioButtons = formElement.FindElements(By.CssSelector("input[type='radio']"));
+
+            Dictionary<string, List<IWebElement>> radioButtonGroups = new Dictionary<string, List<IWebElement>>();
+
+            foreach (IWebElement radioButton in radioButtons)
+            {
+                var name = radioButton.GetAttribute("name");
+
+                if (name != null)
+                {
+                    List<IWebElement> elements;
+
+                    if (!radioButtonGroups.TryGetValue(name, out elements))
+                    {
+                        elements = new List<IWebElement>();
+
+                        radioButtonGroups[name] = elements;
+                    }
+
+                    elements.Add(radioButton);
+                }
+            }
+            return radioButtonGroups;
+        }
+
+        private void FillFormWithValues(IWebElement webElement, object valuesObject, bool throwIfMissingElement)
         {
             foreach (KeyValuePair<string, object> keyValuePair in GetValuesFromObject(valuesObject))
             {
