@@ -22,8 +22,8 @@ namespace SeleniumFixture
         {
             _fixture = fixture;
             _formElement = formElement;
-            _helper = fixture.Configuration.Locate<IConstraintHelper>();
-            _dataGeneratorService = fixture.Configuration.Locate<IRandomDataGeneratorService>();
+            //_helper = fixture.Configuration.Locate<IConstraintHelper>();
+            //_dataGeneratorService = fixture.Configuration.Locate<IRandomDataGeneratorService>();
         }
 
         public FormWrapper FillWith(object fillObject)
@@ -56,7 +56,7 @@ namespace SeleniumFixture
         {
             Submit();
 
-            _fixture.WaitForAjax(timeOut);
+            //_fixture.WaitForAjax(timeOut);
 
             return this;
         }
@@ -65,16 +65,16 @@ namespace SeleniumFixture
         {
             Submit();
 
-            return _fixture.Locate<T>();
+            return _fixture.Data.Locate<T>();
         }
 
         public T AjaxSubmitYields<T>(int timeOut = 60)
         {
             Submit();
 
-            _fixture.WaitForAjax(timeOut);
+            //_fixture.WaitForAjax(timeOut);
 
-            return _fixture.Locate<T>();
+            return _fixture.Data.Locate<T>();
         }
 
         public FormData GetFormData()
@@ -84,7 +84,7 @@ namespace SeleniumFixture
 
         public T GetFormDataAs<T>()
         {
-            T returnValue = _fixture.Locate<T>();
+            T returnValue = _fixture.Data.Locate<T>();
 
             MapFormValuesToObject(returnValue, GetFormValues(_formElement));
 
@@ -135,7 +135,7 @@ namespace SeleniumFixture
 
                 if (!setValue && autoFillIfMissing)
                 {
-                    var randomStringValue = _fixture.Generate<string>(uniqueId);
+                    var randomStringValue = _fixture.Data.Generate<string>(uniqueId);
 
                     inputElement.Clear();
                     inputElement.SendKeys(randomStringValue);
@@ -204,7 +204,7 @@ namespace SeleniumFixture
 
                 if (!checkedValue.HasValue && autoFillIfMissing)
                 {
-                    checkedValue = _fixture.Generate<bool>(uniqueId);
+                    checkedValue = _fixture.Data.Generate<bool>(uniqueId);
                 }
 
                 if (checkedValue.HasValue && checkedValue != webElement.Selected)

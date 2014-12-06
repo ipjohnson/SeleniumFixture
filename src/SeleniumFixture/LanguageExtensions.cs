@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 
 namespace SeleniumFixture
 {
@@ -23,7 +24,7 @@ namespace SeleniumFixture
 
             return elements;
         }
-
+        
         public static IReadOnlyCollection<IWebElement> Clear(this IReadOnlyCollection<IWebElement> elements)
         {
             elements.Apply(e => e.Clear());

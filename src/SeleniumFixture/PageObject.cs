@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SeleniumFixture.Impl;
 
 namespace SeleniumFixture
 {
     public class PageObject
     {
-        public Fixture Fixture { get; set; }
+        /// <summary>
+        /// Allows you to perform actions on the page
+        /// </summary>
+        protected IActionProvider I { get; private set; }
     }
 }

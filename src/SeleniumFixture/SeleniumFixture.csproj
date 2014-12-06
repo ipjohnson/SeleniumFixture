@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\SeleniumFixture.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,6 +29,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\SeleniumFixture.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SimpleFixture, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -45,22 +47,31 @@
     <Reference Include="WebDriver">
       <HintPath>..\packages\Selenium.WebDriver.2.44.0\lib\net40\WebDriver.dll</HintPath>
     </Reference>
-    <Reference Include="WebDriver.Support">
+    <Reference Include="WebDriver.Support, Version=2.44.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Selenium.Support.2.44.0\lib\net40\WebDriver.Support.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ElementWrapper.cs" />
+    <Compile Include="Impl\ActionProvider.cs" />
+    <Compile Include="Impl\DragActionProvider.cs" />
+    <Compile Include="Impl\ElementWrapper.cs" />
     <Compile Include="Fixture.cs" />
     <Compile Include="FormData.cs" />
-    <Compile Include="FormWrapper.cs" />
+    <Compile Include="Impl\FillActionProvider.cs" />
+    <Compile Include="Impl\FormWrapper.cs" />
+    <Compile Include="Impl\SelectActionProvider.cs" />
+    <Compile Include="Impl\SeleniumFixtureCustomization.cs" />
+    <Compile Include="Impl\ThenSubmitActionProvider.cs" />
+    <Compile Include="Impl\WaitActionProvider.cs" />
+    <Compile Include="Impl\YieldsActionProvider.cs" />
     <Compile Include="ImportAttribute.cs" />
-    <Compile Include="ImportSeleniumTypePropertySelector.cs" />
+    <Compile Include="Impl\ImportSeleniumTypePropertySelector.cs" />
     <Compile Include="LanguageExtensions.cs" />
     <Compile Include="PageObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SeleniumFixtureConfiguration.cs" />
-    <Compile Include="SeleniumTypePropertySelector.cs" />
+    <Compile Include="Impl\SeleniumTypePropertySelector.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

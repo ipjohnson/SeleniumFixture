@@ -1,210 +1,330 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.PageObjects;
 using OpenQA.Selenium.Support.UI;
+using SeleniumFixture.Impl;
 using SimpleFixture;
 using SimpleFixture.Impl;
 
 namespace SeleniumFixture
 {
-    public class Fixture : SimpleFixture.Fixture
+    /// <summary>
+    /// Fixture to make working with Selenium and PageObjects easier
+    /// </summary>
+    public class Fixture : IActionProvider
     {
+        #region Private Fields
+        private IActionProvider _actionProvider;
+        #endregion
+
         #region Constructor
         public Fixture(IWebDriver webDriver, string baseAddress = null)
-            : base(new SeleniumFixtureConfiguration())
+            : this(webDriver, new SeleniumFixtureConfiguration { BaseAddress = baseAddress })
         {
-            Initialize(webDriver, baseAddress);
         }
+
+        public Fixture(IWebDriver webDriver, SeleniumFixtureConfiguration configuration)
+        {
+            Initialize(webDriver, configuration);
+        }
+
         #endregion
 
         #region Public Members
 
-        public IWebDriver WebDriver { get; private set; }
+        public IWebDriver Driver { get; private set; }
 
-        public string BaseAddress { get; private set; }
+        public SeleniumFixtureConfiguration Configuration { get; private set; }
 
-        #endregion
-
-        #region Find Methods
-
-        public virtual IWebElement Find(string element)
-        {
-            if (!string.IsNullOrEmpty(element))
-            {
-                switch (element[0])
-                {
-                    case '#':
-                        return WebDriver.FindElement(By.Id(element.Substring(1)));
-
-                    case '/':
-                        return WebDriver.FindElement(By.XPath(element));
-
-                    default:
-                        return WebDriver.FindElement(By.CssSelector(element));
-                }
-            }
-
-            return null;
-        }
-
-        public virtual IEnumerable<IWebElement> FindAll(string element)
-        {
-            if (!string.IsNullOrEmpty(element))
-            {
-                switch (element[0])
-                {
-                    case '#':
-                        return WebDriver.FindElements(By.Id(element.Substring(1)));
-
-                    case '/':
-                        return WebDriver.FindElements(By.XPath(element));
-
-                    default:
-                        return WebDriver.FindElements(By.CssSelector(element));
-                }
-            }
-
-            return Enumerable.Empty<IWebElement>();
-        }
+        public SimpleFixture.Fixture Data { get; private set; }
 
         #endregion
+        
+        #region IActionProvider
 
-        #region Wrapper Methods
-
-        public FormWrapper Form(string formName = null)
+        /// <summary>
+        /// Navigate to a specified url, base address will be added to any relative URL
+        /// </summary>
+        /// <param name="url">url to navigate to</param>
+        /// <returns>this</returns>
+        public IActionProvider NavigateTo(string url = null)
         {
-            if (formName == null)
-            {
-                formName = "//form";
-            }
-
-            IWebElement formElement = Find(formName);
-
-            if (formElement == null)
-            {
-                throw new Exception("Could not find element named " + formName);
-            }
-
-            return new FormWrapper(this, formElement);
+            return _actionProvider.NavigateTo(url);
         }
 
-        public FormWrapper Form(By element)
+        /// <summary>
+        /// Navigate and Yield a Page Object model
+        /// </summary>
+        /// <typeparam name="T">Page Object type</typeparam>
+        /// <param name="url">url to navigate to</param>
+        /// <returns>page object</returns>
+        public T NavigateTo<T>(string url = null)
         {
-            IWebElement formElement = WebDriver.FindElement(element);
-
-            if (formElement == null)
-            {
-                throw new Exception("Could not find element by " + element);
-            }
-
-            return new FormWrapper(this, formElement);
+            return _actionProvider.NavigateTo<T>(url);
         }
 
-        public ElementWrapper Element(string element)
+        /// <summary>
+        /// Find a specified element by selector
+        /// </summary>
+        /// <param name="selector">selector to use to locate element</param>
+        /// <returns>element or throws an exception</returns>
+        public IWebElement Find(string selector)
         {
-            IWebElement webElement = Find(element);
-
-            if (webElement == null)
-            {
-                throw new Exception("Could not find element named " + element);
-            }
-
-            return new ElementWrapper(this, webElement);
+            return _actionProvider.Find(selector);
         }
 
-        public ElementWrapper Element(By element)
+        /// <summary>
+        /// Find a specified by selector
+        /// </summary>
+        /// <param name="selector">by selector</param>
+        /// <returns>elements</returns>
+        public IWebElement Find(By selector)
         {
-            IWebElement webElement = WebDriver.FindElement(element);
-
-            if (webElement == null)
-            {
-                throw new Exception("Could not find element named " + element);
-            }
-
-            return new ElementWrapper(this, webElement);
+            return _actionProvider.Find(selector);
         }
 
-        #endregion
-
-        #region Navigation Methods
-
-        public T NavigateTo<T>(string address = null)
+        /// <summary>
+        /// Find All elements meeting the specified selector
+        /// </summary>
+        /// <param name="selector">selector to use to find elements</param>
+        /// <returns>elements</returns>
+        public ReadOnlyCollection<IWebElement> FindAll(string selector)
         {
-            string navigateAddress = null;
-
-            if (address != null && address.StartsWith("http", StringComparison.CurrentCultureIgnoreCase))
-            {
-                navigateAddress = address;
-            }
-            else
-            {
-                navigateAddress = BaseAddress + address;
-            }
-
-            WebDriver.Navigate().GoToUrl(navigateAddress);
-
-            return Locate<T>();
+            return _actionProvider.FindAll(selector);
         }
 
-        public T NavigateBackTo<T>()
+        /// <summary>
+        /// Find all elements meeting the specified selector
+        /// </summary>
+        /// <param name="selector">selector to use to find elements</param>
+        /// <returns>elements</returns>
+        public ReadOnlyCollection<IWebElement> FindAll(By selector)
         {
-            WebDriver.Navigate().Back();
-
-            return Locate<T>();
+            return _actionProvider.FindAll(selector);
         }
 
-        public T NavigateForwardTo<T>()
+        /// <summary>
+        /// Check for the element specified in the selector
+        /// </summary>
+        /// <param name="selector">selector to look for</param>
+        /// <returns>true if element exists</returns>
+        public bool CheckForElement(string selector)
         {
-            WebDriver.Navigate().Forward();
-
-            return Locate<T>();
+            return _actionProvider.CheckForElement(selector);
         }
 
-        public T RefreshYields<T>()
+        /// <summary>
+        /// Check for the element specified in the selector
+        /// </summary>
+        /// <param name="selector">selector to look for</param>
+        /// <returns>true if element exists</returns>
+        public bool CheckForElement(By selector)
         {
-            WebDriver.Navigate().Refresh();
+            return _actionProvider.CheckForElement(selector);
+        }
 
-            return Locate<T>();
+        /// <summary>
+        /// Click the elements returned by the selector
+        /// </summary>
+        /// <param name="selector">selector to use when find elements to click</param>
+        /// <param name="clickMode">click mode, by default </param>
+        /// <returns>this</returns>
+        public IActionProvider Click(string selector, ClickMode clickMode = ClickMode.ClickAll)
+        {
+            return _actionProvider.Click(selector, clickMode);
+        }
+
+        /// <summary>
+        /// Click the elements returned by the selector
+        /// </summary>
+        /// <param name="selector">selector to use when find elements to click</param>
+        /// <param name="clickMode">click mode, by default </param>
+        /// <returns>this</returns>
+        public IActionProvider Click(By selector, ClickMode clickMode = ClickMode.ClickAll)
+        {
+            return _actionProvider.Click(selector, clickMode);
+        }
+
+        /// <summary>
+        /// Double click the selected elements
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <param name="clickMode">click mode</param>
+        /// <returns>this</returns>
+        public IActionProvider DoubleClick(string selector, ClickMode clickMode = ClickMode.ClickAll)
+        {
+            return _actionProvider.DoubleClick(selector, clickMode);
+        }
+
+        /// <summary>
+        /// Double click the selected elements
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <param name="clickMode">click mode</param>
+        /// <returns>this</returns>
+        public IActionProvider DoubleClick(By selector, ClickMode clickMode = ClickMode.ClickAll)
+        {
+            return _actionProvider.DoubleClick(selector, clickMode);
+        }
+
+        /// <summary>
+        /// Drag an element
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <returns>this</returns>
+        public IDragActionProvider Drag(string selector)
+        {
+            return _actionProvider.Drag(selector);
+        }
+
+        /// <summary>
+        /// Drag an element
+        /// </summary>
+        /// <param name="selector">element</param>
+        /// <returns>this</returns>
+        public IDragActionProvider Drag(By selector)
+        {
+            return _actionProvider.Drag(selector);
+        }
+
+        /// <summary>
+        /// Autofill elements using data from SimpleFixture
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <param name="seedWith">seed data</param>
+        /// <returns>this</returns>
+        public IThenSubmitActionProvider AutoFill(string selector, object seedWith = null)
+        {
+            return _actionProvider.AutoFill(selector, seedWith);
+        }
+
+        /// <summary>
+        /// Autofill elements using data from SimpleFixture
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <param name="seedWith">seed data</param>
+        /// <returns>this</returns>
+        public IThenSubmitActionProvider AutoFill(By selector, object seedWith = null)
+        {
+            return _actionProvider.AutoFill(selector, seedWith);
+        }
+
+        /// <summary>
+        /// Autofill elements using data from SimpleFixture
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <param name="seedWith"></param>
+        /// <returns></returns>
+        public IThenSubmitActionProvider AutoFill(IEnumerable<IWebElement> elements, object seedWith = null)
+        {
+            return _actionProvider.AutoFill(elements, seedWith);
+        }
+
+        /// <summary>
+        /// Fill elements with values
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <returns>fill action</returns>
+        public IFillActionProvider Fill(string selector)
+        {
+            return _actionProvider.Fill(selector);
+        }
+
+        /// <summary>
+        /// Fill elements with values
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <returns>fill action</returns>
+        public IFillActionProvider Fill(By selector)
+        {
+            return _actionProvider.Fill(selector);
         }
         
-        public T ActionYields<T>(Action<Fixture> action)
+        /// <summary>
+        /// Fill elements with values
+        /// </summary>
+        /// <param name="elements">elements</param>
+        /// <returns>fill action</returns>
+        public IFillActionProvider Fill(IEnumerable<IWebElement> elements)
         {
-            action(this);
-
-            return Locate<T>();
-        }
-        #endregion
-
-        #region Ajax Methods
-
-        public void WaitForAjax(int timeout = 20)
-        {
-            WebDriverWait wait = new WebDriverWait(WebDriver, TimeSpan.FromSeconds(timeout));
-
-            IJavaScriptExecutor jsScript = (IJavaScriptExecutor)WebDriver;
-
-            wait.Until(d => (bool)jsScript.ExecuteScript("return jQuery.active == 0"));
+            return _actionProvider.Fill(elements);
         }
 
+        /// <summary>
+        /// Wait for something to happen
+        /// </summary>
+        public IWaitActionProvider Wait
+        {
+            get { return _actionProvider.Wait; }
+        }
+
+        /// <summary>
+        /// Submit form.
+        /// </summary>
+        /// <param name="selector"></param>
+        /// <returns></returns>
+        public IYieldsActionProvider Submit(string selector)
+        {
+            return _actionProvider.Submit(selector);
+        }
+
+        /// <summary>
+        /// Fixture for this action provider
+        /// </summary>
+        public Fixture UsingFixture
+        {
+            get { return _actionProvider.UsingFixture; }
+        }
+
+        /// <summary>
+        /// Yields a Page Object using SimpleFixture
+        /// </summary>
+        /// <typeparam name="T">Type of object to Generate</typeparam>
+        /// <param name="requestName">request name</param>
+        /// <param name="constraints">constraints for the locate</param>
+        /// <returns>new T</returns>
+        public T Yields<T>(string requestName = null, object constraints = null)
+        {
+            return _actionProvider.Yields<T>(requestName, constraints);
+        }
+
+        /// <summary>
+        /// Yields a Page Object using SimpleFixture
+        /// </summary>
+        /// <param name="type">Type of object to Generate</param>
+        /// <param name="requestName">request name</param>
+        /// <param name="constraints">constraints for the locate</param>
+        /// <returns>new instance</returns>
+        public object Yields(Type type, string requestName = null, object constraints = null)
+        {
+            return _actionProvider.Yields(type, requestName, constraints);
+        }
         #endregion
 
         #region Private Members
 
-        private void Initialize(IWebDriver webDriver, string baseAddress)
+        protected void Initialize(IWebDriver webDriver, SeleniumFixtureConfiguration configuration)
         {
-            Return(this);
-            Return(webDriver);
-            Return(baseAddress).WhenNamed("BaseAddress");
+            var dataConfiguration = new DefaultFixtureConfiguration();
 
-            WebDriver = webDriver;
-            BaseAddress = baseAddress;
+            dataConfiguration.Export<ITypePropertySelector>(g => new SeleniumTypePropertySelector(g.Locate<IConstraintHelper>()));
 
-            Behavior.Add((r, o) =>
+            Data = new SimpleFixture.Fixture();
+            
+            Data.Return(this);
+            Data.Return(webDriver);
+            Data.Return(configuration.BaseAddress).WhenNamed("BaseAddress");
+
+            Driver = webDriver;
+
+            Data.Behavior.Add((r, o) =>
                          {
                              if (o.GetType().IsValueType || o is string)
                              {
@@ -216,7 +336,9 @@ namespace SeleniumFixture
                              return o;
                          });
 
-            Behavior.Add(ImportPropertiesOnLocate);
+            Data.Behavior.Add(ImportPropertiesOnLocate);
+            
+            _actionProvider = new ActionProvider(this);
         }
 
         private object ImportPropertiesOnLocate(DataRequest r, object o)
@@ -226,14 +348,16 @@ namespace SeleniumFixture
                 return o;
             }
 
-            IModelService modelService = Configuration.Locate<IModelService>();
+            IModelService modelService = Data.Configuration.Locate<IModelService>();
 
-            TypePopulator typePopulator = new TypePopulator(Configuration.Locate<IConstraintHelper>(), new ImportSeleniumTypePropertySelector(Configuration.Locate<IConstraintHelper>()));
+            TypePopulator typePopulator = new TypePopulator(Data.Configuration.Locate<IConstraintHelper>(),
+                                                            new ImportSeleniumTypePropertySelector(Data.Configuration.Locate<IConstraintHelper>()));
 
             typePopulator.Populate(o, r, modelService.GetModel(r.RequestedType));
 
             return o;
         }
         #endregion
+
     }
 }
