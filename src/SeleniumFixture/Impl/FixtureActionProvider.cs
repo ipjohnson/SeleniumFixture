@@ -3,223 +3,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Internal;
 using SimpleFixture;
 
 namespace SeleniumFixture.Impl
 {
-    public enum ClickMode
-    {
-        /// <summary>
-        /// Click all elements returned, throws exception when there are none
-        /// </summary>
-        ClickAll,
-
-        /// <summary>
-        /// Click any element returned, does not throw an exception if no elements are found
-        /// </summary>
-        ClickAny,
-
-        /// <summary>
-        /// Click one and only one element, throws exception when there isn't exactly one element
-        /// </summary>
-        ClickOne,
-
-        /// <summary>
-        /// Click the first element, throws exception when there are no element
-        /// </summary>
-        ClickFirst,
-    }
-
-    public interface IActionProvider
-    {
-        /// <summary>
-        /// Navigate to a specified url, base address will be added to any relative URL
-        /// </summary>
-        /// <param name="url">url to navigate to</param>
-        /// <returns>this</returns>
-        IActionProvider NavigateTo(string url = null);
-
-        /// <summary>
-        /// Navigate and Yield a Page Object model
-        /// </summary>
-        /// <typeparam name="T">Page Object type</typeparam>
-        /// <param name="url">url to navigate to</param>
-        /// <returns>page object</returns>
-        T NavigateTo<T>(string url = null);
-
-        /// <summary>
-        /// Find a specified element by selector
-        /// </summary>
-        /// <param name="selector">selector to use to locate element</param>
-        /// <returns>element or throws an exception</returns>
-        IWebElement Find(string selector);
-
-        /// <summary>
-        /// Find a specified by selector
-        /// </summary>
-        /// <param name="selector">by selector</param>
-        /// <returns>elements</returns>
-        IWebElement Find(By selector);
-
-        /// <summary>
-        /// Find All elements meeting the specified selector
-        /// </summary>
-        /// <param name="selector">selector to use to find elements</param>
-        /// <returns>elements</returns>
-        ReadOnlyCollection<IWebElement> FindAll(string selector);
-
-        /// <summary>
-        /// Find all elements meeting the specified selector
-        /// </summary>
-        /// <param name="selector">selector to use to find elements</param>
-        /// <returns>elements</returns>
-        ReadOnlyCollection<IWebElement> FindAll(By selector);
-
-        /// <summary>
-        /// Check for the element specified in the selector
-        /// </summary>
-        /// <param name="selector">selector to look for</param>
-        /// <returns>true if element exists</returns>
-        bool CheckForElement(string selector);
-
-        /// <summary>
-        /// Check for the element specified in the selector
-        /// </summary>
-        /// <param name="selector">selector to look for</param>
-        /// <returns>true if element exists</returns>
-        bool CheckForElement(By selector);
-
-        /// <summary>
-        /// Click the elements returned by the selector
-        /// </summary>
-        /// <param name="selector">selector to use when find elements to click</param>
-        /// <param name="clickMode">click mode, by default </param>
-        /// <returns>this</returns>
-        IActionProvider Click(string selector, ClickMode clickMode = ClickMode.ClickAll);
-
-        /// <summary>
-        /// Click the elements returned by the selector
-        /// </summary>
-        /// <param name="selector">selector to use when find elements to click</param>
-        /// <param name="clickMode">click mode, by default </param>
-        /// <returns>this</returns>
-        IActionProvider Click(By selector, ClickMode clickMode = ClickMode.ClickAll);
-
-        /// <summary>
-        /// Double click the selected elements
-        /// </summary>
-        /// <param name="selector">selector</param>
-        /// <param name="clickMode">click mode</param>
-        /// <returns>this</returns>
-        IActionProvider DoubleClick(string selector, ClickMode clickMode = ClickMode.ClickAll);
-
-        /// <summary>
-        /// Double click the selected elements
-        /// </summary>
-        /// <param name="selector">selector</param>
-        /// <param name="clickMode">click mode</param>
-        /// <returns>this</returns>
-        IActionProvider DoubleClick(By selector, ClickMode clickMode = ClickMode.ClickAll);
-
-        /// <summary>
-        /// Drag an element
-        /// </summary>
-        /// <param name="selector">selector</param>
-        /// <returns>this</returns>
-        IDragActionProvider Drag(string selector);
-        
-        /// <summary>
-        /// Drag an element
-        /// </summary>
-        /// <param name="selector">element</param>
-        /// <returns>this</returns>
-        IDragActionProvider Drag(By selector);
-
-        /// <summary>
-        /// Autofill elements using data from SimpleFixture
-        /// </summary>
-        /// <param name="selector">selector</param>
-        /// <param name="seedWith">seed data</param>
-        /// <returns>this</returns>
-        IThenSubmitActionProvider AutoFill(string selector, object seedWith = null);
-
-        /// <summary>
-        /// Autofill elements using data from SimpleFixture
-        /// </summary>
-        /// <param name="selector">selector</param>
-        /// <param name="seedWith">seed data</param>
-        /// <returns>this</returns>
-        IThenSubmitActionProvider AutoFill(By selector, object seedWith = null);
-
-        /// <summary>
-        /// Autofill elements using data from SimpleFixture
-        /// </summary>
-        /// <param name="elements"></param>
-        /// <param name="seedWith"></param>
-        /// <returns></returns>
-        IThenSubmitActionProvider AutoFill(IEnumerable<IWebElement> elements, object seedWith = null);
-
-        /// <summary>
-        /// Fill elements with values
-        /// </summary>
-        /// <param name="selector">selector</param>
-        /// <returns>fill action</returns>
-        IFillActionProvider Fill(string selector);
-
-        /// <summary>
-        /// Fill elements with values
-        /// </summary>
-        /// <param name="selector">selector</param>
-        /// <returns>fill action</returns>
-        IFillActionProvider Fill(By selector);
-        
-        /// <summary>
-        /// Fill elements with values
-        /// </summary>
-        /// <param name="elements">elements</param>
-        /// <returns>fill action</returns>
-        IFillActionProvider Fill(IEnumerable<IWebElement> elements);
-
-        /// <summary>
-        /// Wait for something to happen
-        /// </summary>
-        IWaitActionProvider Wait { get; }
-
-        /// <summary>
-        /// Submit form.
-        /// </summary>
-        /// <param name="selector"></param>
-        /// <returns></returns>
-        IYieldsActionProvider Submit(string selector);
-
-        /// <summary>
-        /// Fixture for this action provider
-        /// </summary>
-        Fixture UsingFixture { get; }
-
-        /// <summary>
-        /// Yields a Page Object using SimpleFixture
-        /// </summary>
-        /// <typeparam name="T">Type of object to Generate</typeparam>
-        /// <param name="requestName">request name</param>
-        /// <param name="constraints">constraints for the locate</param>
-        /// <returns>new T</returns>
-        T Yields<T>(string requestName = null, object constraints = null);
-
-        /// <summary>
-        /// Yields a Page Object using SimpleFixture
-        /// </summary>
-        /// <param name="type">Type of object to Generate</param>
-        /// <param name="requestName">request name</param>
-        /// <param name="constraints">constraints for the locate</param>
-        /// <returns>new instance</returns>
-        object Yields(Type type, string requestName = null, object constraints = null);
-    }
-
     /// <summary>
     /// Action provider
     /// </summary>
-    public class ActionProvider : IActionProvider
+    public class FixtureActionProvider : IActionProvider
     {
         protected readonly Fixture _fixture;
 
@@ -227,7 +19,7 @@ namespace SeleniumFixture.Impl
         /// Default constructor
         /// </summary>
         /// <param name="fixture"></param>
-        public ActionProvider(Fixture fixture)
+        public FixtureActionProvider(Fixture fixture)
         {
             _fixture = fixture;
         }
@@ -250,7 +42,7 @@ namespace SeleniumFixture.Impl
 
             return _fixture.Data.Locate<T>();
         }
-
+        
         public IWebElement Find(string element)
         {
             if (element == null)
@@ -261,7 +53,7 @@ namespace SeleniumFixture.Impl
             switch (_fixture.Configuration.Selector)
             {
                 case SelectorAlgorithm.JQuery:
-                    return FindByJQuery(element);
+                    return _fixture.Driver.FindElement(Using.JQuery(element));
 
                 case SelectorAlgorithm.CSS:
                     return _fixture.Driver.FindElement(By.CssSelector(element));
@@ -270,7 +62,7 @@ namespace SeleniumFixture.Impl
                     return _fixture.Driver.FindElement(By.XPath(element));
 
                 case SelectorAlgorithm.Auto:
-                    return FindByAuto(element);
+                    return _fixture.Driver.FindElement(Using.Auto(element));
 
                 default:
                     throw new Exception("Unknown SelectorAlgorithm " + _fixture.Configuration.Selector);
@@ -293,7 +85,7 @@ namespace SeleniumFixture.Impl
             switch (_fixture.Configuration.Selector)
             {
                 case SelectorAlgorithm.JQuery:
-                    return FindAllByJQuery(selector, true);
+                    return _fixture.Driver.FindElements(Using.JQuery(selector));
 
                 case SelectorAlgorithm.CSS:
                     return _fixture.Driver.FindElements(By.CssSelector(selector));
@@ -302,7 +94,7 @@ namespace SeleniumFixture.Impl
                     return _fixture.Driver.FindElements(By.XPath(selector));
 
                 case SelectorAlgorithm.Auto:
-                    return FindAllByAuto(selector);
+                    return _fixture.Driver.FindElements(Using.Auto(selector));
 
                 default:
                     throw new Exception("Unknown SelectorAlgorithm " + _fixture.Configuration.Selector);
@@ -323,6 +115,16 @@ namespace SeleniumFixture.Impl
         public bool CheckForElement(By element)
         {
             return FindAll(element).Any();
+        }
+
+        public int Count(string selector)
+        {
+            return FindAll(selector).Count;
+        }
+
+        public int Count(By selector)
+        {
+            return FindAll(selector).Count;
         }
 
         public IActionProvider Click(string selector, ClickMode clickMode = ClickMode.ClickAll)
@@ -400,7 +202,7 @@ namespace SeleniumFixture.Impl
         {
             throw new NotImplementedException();
         }
-        
+
         public IDragActionProvider Drag(string element)
         {
             throw new NotImplementedException();
@@ -426,6 +228,21 @@ namespace SeleniumFixture.Impl
             throw new NotImplementedException();
         }
 
+        public IThenSubmitActionProvider AutoFillAs<T>(string selector, string requestName = null, object constraints = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IThenSubmitActionProvider AutoFillAs<T>(By selector, string requestName = null, object constraints = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IThenSubmitActionProvider AutoFillAs<T>(IEnumerable<IWebElement> elements, string requestName = null, object constraints = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public IFillActionProvider Fill(string selector)
         {
             return Fill(FindAll(selector));
@@ -435,10 +252,13 @@ namespace SeleniumFixture.Impl
         {
             return Fill(FindAll(selector));
         }
-        
+
         public IFillActionProvider Fill(IEnumerable<IWebElement> elements)
         {
-            return new FillActionProvider(elements, _fixture);
+            ReadOnlyCollection<IWebElement> readOnlyElements = elements as ReadOnlyCollection<IWebElement> ??
+                                                               new ReadOnlyCollection<IWebElement>(new List<IWebElement>(elements));
+
+            return new FillActionProvider(readOnlyElements, _fixture);
         }
 
         public IWaitActionProvider Wait
@@ -451,6 +271,11 @@ namespace SeleniumFixture.Impl
             Find(element).Submit();
 
             return new YieldsActionProvider(_fixture);
+        }
+
+        public IYieldsActionProvider Submit(By selector)
+        {
+            throw new NotImplementedException();
         }
 
         public Fixture UsingFixture
@@ -468,14 +293,14 @@ namespace SeleniumFixture.Impl
             return new YieldsActionProvider(_fixture).Yields(type, requestName, constraints);
         }
 
-        private IWebElement FindByAuto(string selector)
+        private IWebElement FindByAuto(string selector, IWebElement startingElement)
         {
             if (selector.StartsWith("//"))
             {
                 return _fixture.Driver.FindElement(By.XPath(selector));
             }
 
-            var jqueryElements = FindAllByJQuery(selector, false);
+            var jqueryElements = FindAllByJQuery(selector, startingElement, false);
 
             if (jqueryElements != null)
             {
@@ -490,18 +315,19 @@ namespace SeleniumFixture.Impl
             return _fixture.Driver.FindElement(By.CssSelector(selector));
         }
 
-        private IWebElement FindByJQuery(string selector)
+        private IWebElement FindByJQuery(string selector, IWebElement startingElement)
         {
-            var elements = FindAllByJQuery(selector, true);
+            var elements = FindAllByJQuery(selector, startingElement, true);
 
             if (elements.Count == 0)
             {
                 throw new Exception("Could not find element element using jquery selector: " + selector);
             }
+
             return null;
         }
 
-        private ReadOnlyCollection<IWebElement> FindAllByJQuery(string selector, bool throwIfNoJQuery)
+        private ReadOnlyCollection<IWebElement> FindAllByJQuery(string selector, IWebElement startingElement, bool throwIfNoJQuery)
         {
             bool jqueryFound = false;
 
@@ -514,9 +340,9 @@ namespace SeleniumFixture.Impl
 
             if (jqueryFound)
             {
-                IEnumerable<object> matchedItems = (IEnumerable<object>)executor.ExecuteScript("return fluentjQuery.find('" + selector + "')");
-
-                return new ReadOnlyCollection<IWebElement>(matchedItems.Cast<IWebElement>().ToList());
+                return startingElement != null ?
+                       startingElement.FindElements(Using.JQuery(selector)) :
+                       _fixture.Driver.FindElements(Using.JQuery(selector));
             }
 
             if (throwIfNoJQuery)
@@ -527,14 +353,14 @@ namespace SeleniumFixture.Impl
             return null;
         }
 
-        private ReadOnlyCollection<IWebElement> FindAllByAuto(string selector)
+        private ReadOnlyCollection<IWebElement> FindAllByAuto(string selector, IWebElement startingElement)
         {
             if (selector.StartsWith("//"))
             {
                 return _fixture.Driver.FindElements(By.XPath(selector));
             }
 
-            var jqueryElements = FindAllByJQuery(selector, false);
+            var jqueryElements = FindAllByJQuery(selector, startingElement, false);
 
             if (jqueryElements != null)
             {

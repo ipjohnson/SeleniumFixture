@@ -25,6 +25,7 @@ namespace SeleniumFixture
         #endregion
 
         #region Constructor
+
         public Fixture(IWebDriver webDriver, string baseAddress = null)
             : this(webDriver, new SeleniumFixtureConfiguration { BaseAddress = baseAddress })
         {
@@ -46,7 +47,7 @@ namespace SeleniumFixture
         public SimpleFixture.Fixture Data { get; private set; }
 
         #endregion
-        
+
         #region IActionProvider
 
         /// <summary>
@@ -128,6 +129,26 @@ namespace SeleniumFixture
         public bool CheckForElement(By selector)
         {
             return _actionProvider.CheckForElement(selector);
+        }
+
+        /// <summary>
+        /// Count the number of elements present
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <returns>count of elements</returns>
+        public int Count(string selector)
+        {
+            return _actionProvider.Count(selector);
+        }
+
+        /// <summary>
+        /// Count the number of elements present
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <returns>count of elements</returns>
+        public int Count(By selector)
+        {
+            return _actionProvider.Count(selector);
         }
 
         /// <summary>
@@ -227,6 +248,21 @@ namespace SeleniumFixture
             return _actionProvider.AutoFill(elements, seedWith);
         }
 
+        public IThenSubmitActionProvider AutoFillAs<T>(string selector, string requestName = null, object constraints = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IThenSubmitActionProvider AutoFillAs<T>(By selector, string requestName = null, object constraints = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IThenSubmitActionProvider AutoFillAs<T>(IEnumerable<IWebElement> elements, string requestName = null, object constraints = null)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Fill elements with values
         /// </summary>
@@ -246,7 +282,7 @@ namespace SeleniumFixture
         {
             return _actionProvider.Fill(selector);
         }
-        
+
         /// <summary>
         /// Fill elements with values
         /// </summary>
@@ -273,6 +309,11 @@ namespace SeleniumFixture
         public IYieldsActionProvider Submit(string selector)
         {
             return _actionProvider.Submit(selector);
+        }
+
+        public IYieldsActionProvider Submit(By selector)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -312,12 +353,15 @@ namespace SeleniumFixture
 
         protected void Initialize(IWebDriver webDriver, SeleniumFixtureConfiguration configuration)
         {
+            Configuration = configuration;
+
             var dataConfiguration = new DefaultFixtureConfiguration();
 
             dataConfiguration.Export<ITypePropertySelector>(g => new SeleniumTypePropertySelector(g.Locate<IConstraintHelper>()));
+            dataConfiguration.Export<IPropertySetter>(g => new Impl.PropertySetter());
 
-            Data = new SimpleFixture.Fixture();
-            
+            Data = new SimpleFixture.Fixture(dataConfiguration);
+
             Data.Return(this);
             Data.Return(webDriver);
             Data.Return(configuration.BaseAddress).WhenNamed("BaseAddress");
@@ -337,8 +381,10 @@ namespace SeleniumFixture
                          });
 
             Data.Behavior.Add(ImportPropertiesOnLocate);
-            
-            _actionProvider = new ActionProvider(this);
+
+            _actionProvider = new FixtureActionProvider(this);
+
+            Data.Return(_actionProvider);
         }
 
         private object ImportPropertiesOnLocate(DataRequest r, object o)
@@ -351,7 +397,8 @@ namespace SeleniumFixture
             IModelService modelService = Data.Configuration.Locate<IModelService>();
 
             TypePopulator typePopulator = new TypePopulator(Data.Configuration.Locate<IConstraintHelper>(),
-                                                            new ImportSeleniumTypePropertySelector(Data.Configuration.Locate<IConstraintHelper>()));
+                                                            new ImportSeleniumTypePropertySelector(Data.Configuration.Locate<IConstraintHelper>()),
+                                                            new Impl.PropertySetter());
 
             typePopulator.Populate(o, r, modelService.GetModel(r.RequestedType));
 

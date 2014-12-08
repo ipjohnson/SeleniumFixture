@@ -21,7 +21,7 @@ namespace SeleniumFixture.Impl
     /// <summary>
     /// Then submit provider
     /// </summary>
-    public class ThenSubmitActionProvider : ActionProvider, IThenSubmitActionProvider
+    public class ThenSubmitActionProvider : FixtureActionProvider, IThenSubmitActionProvider
     {
         /// <summary>
         /// Default constructor

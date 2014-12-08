@@ -10,7 +10,9 @@ namespace SeleniumFixture.Impl
 {
     public interface IWaitActionProvider
     {
-        IWaitActionProvider For(string element, double? timeout = null);
+        IWaitActionProvider ForElement(string element, double? timeout = null);
+
+        IWaitActionProvider ForElement(By element, double? timeout = null);
 
         IWaitActionProvider ForAjax(double? timeout = null);
 
@@ -28,7 +30,12 @@ namespace SeleniumFixture.Impl
             _actionProvider = actionProvider;
         }
 
-        public IWaitActionProvider For(string element, double? timeout = null)
+        public IWaitActionProvider ForElement(string element, double? timeout = null)
+        {
+            return Until(i => i.CheckForElement(element), timeout);
+        }
+
+        public IWaitActionProvider ForElement(By element, double? timeout = null)
         {
             return Until(i => i.CheckForElement(element), timeout);
         }
