@@ -14,7 +14,7 @@ namespace SeleniumFixture.Impl
         private readonly string _selector;
         private readonly string _jQueryTest;
 
-        public AutoBy(string selector, string jQueryTest = "return window.jQuery;")
+        public AutoBy(string selector, string jQueryTest = "return typeof jQuery != 'undefined';")
         {
             if (string.IsNullOrEmpty(selector))
             {
