@@ -46,7 +46,7 @@ namespace SeleniumFixture
             DefaultWaitTimeout = 10;
             DefaultWaitInterval = 0.1;
 
-            AjaxActiveTest = "return (window.jQuery || { active : 0 }).active;";
+            AjaxActiveTest = "return (window.jQuery || { active : 0 }).active == 0;";
         }
 
         /// <summary>
