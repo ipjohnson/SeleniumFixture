@@ -35,7 +35,7 @@ namespace SeleniumFixture.Impl
         {
             FillElementsWithValues(fillValues);
 
-            return new ThenSubmitActionProvider(_fixture);
+            return new ThenSubmitActionProvider(_fixture, _elements.FirstOrDefault());
         }
 
         private void FillElementsWithValues(object fillValues)

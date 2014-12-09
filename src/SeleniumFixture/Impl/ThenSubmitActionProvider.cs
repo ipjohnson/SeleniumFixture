@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OpenQA.Selenium;
 
 namespace SeleniumFixture.Impl
 {
@@ -23,13 +24,16 @@ namespace SeleniumFixture.Impl
     /// </summary>
     public class ThenSubmitActionProvider : FixtureActionProvider, IThenSubmitActionProvider
     {
+        private readonly IWebElement _formElement;
+
         /// <summary>
         /// Default constructor
         /// </summary>
         /// <param name="fixture"></param>
-        public ThenSubmitActionProvider(Fixture fixture) : base(fixture)
+        /// <param name="formElement"></param>
+        public ThenSubmitActionProvider(Fixture fixture, IWebElement formElement) : base(fixture)
         {
-
+            _formElement = formElement;
         }
 
         /// <summary>
@@ -38,6 +42,8 @@ namespace SeleniumFixture.Impl
         /// <returns>this</returns>
         public IYieldsActionProvider ThenSubmit()
         {
+            _formElement.Submit();
+
             return new YieldsActionProvider(_fixture);
         }
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Internal;
 using SimpleFixture;
 
@@ -195,7 +196,65 @@ namespace SeleniumFixture.Impl
 
         public IActionProvider DoubleClick(string selector, ClickMode clickMode = ClickMode.ClickAll)
         {
-            throw new NotImplementedException();
+            switch (clickMode)
+            {
+                case ClickMode.ClickOne:
+                    {
+                        var element = Find(selector);
+
+                        Actions action = new Actions(_fixture.Driver);
+                        action.DoubleClick(element);
+                        action.Perform();
+                    }
+                    break;
+
+                case ClickMode.ClickAny:
+                    {
+                        FindAll(selector).Apply(element =>
+                                                {
+                                                    Actions action = new Actions(_fixture.Driver);
+                                                    action.DoubleClick(element);
+                                                    action.Perform();
+                                                });
+
+
+                    }
+                    break;
+                case ClickMode.ClickAll:
+                    {
+                        var all = FindAll(selector);
+
+                        if (all.Count == 0)
+                        {
+                            throw new Exception("Could not locate any using selector: " + selector);
+                        }
+
+                        all.Apply(element =>
+                                    {
+                                        Actions action = new Actions(_fixture.Driver);
+                                        action.DoubleClick(element);
+                                        action.Perform();
+                                    });
+                    }
+                    break;
+
+                case ClickMode.ClickFirst:
+                    {
+                        var firstList = FindAll(selector);
+
+                        if (firstList.Count == 0)
+                        {
+                            throw new Exception("Could not locate any using selector: " + selector);
+                        }
+
+                        Actions action = new Actions(_fixture.Driver);
+                        action.DoubleClick(firstList[0]);
+                        action.Perform();
+                    }
+                    break;
+            }
+
+            return this;
         }
 
         public IActionProvider DoubleClick(By selector, ClickMode clickMode = ClickMode.ClickAll)
@@ -266,16 +325,18 @@ namespace SeleniumFixture.Impl
             get { return new WaitActionProvider(this); }
         }
 
-        public IYieldsActionProvider Submit(string element)
+        public IYieldsActionProvider Submit(string selector)
         {
-            Find(element).Submit();
+            Find(selector).Submit();
 
             return new YieldsActionProvider(_fixture);
         }
 
         public IYieldsActionProvider Submit(By selector)
         {
-            throw new NotImplementedException();
+            Find(selector).Submit();
+
+            return new YieldsActionProvider(_fixture);
         }
 
         public Fixture UsingFixture
