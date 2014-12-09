@@ -59,7 +59,7 @@ namespace SeleniumFixture.Impl
             }
 
             DateTime expire = DateTime.Now.AddSeconds(timeout.Value);
-            bool untilResult = testFunc(_actionProvider);
+            bool untilResult = false;
 
             while (!untilResult)
             {
