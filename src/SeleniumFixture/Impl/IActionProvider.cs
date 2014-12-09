@@ -40,47 +40,37 @@ namespace SeleniumFixture.Impl
     public interface IActionProvider
     {
         /// <summary>
-        /// Navigate to a specified url, base address will be added to any relative URL
+        /// Navigate the fixture
         /// </summary>
-        /// <param name="url">url to navigate to</param>
-        /// <returns>this</returns>
-        IActionProvider NavigateTo(string url = null);
-
-        /// <summary>
-        /// Navigate and Yield a Page Object model
-        /// </summary>
-        /// <typeparam name="T">Page Object type</typeparam>
-        /// <param name="url">url to navigate to</param>
-        /// <returns>page object</returns>
-        T NavigateTo<T>(string url = null);
+        INavigateActionProvider Navigate { get; }
 
         /// <summary>
         /// Find a specified element by selector
         /// </summary>
         /// <param name="selector">selector to use to locate element</param>
         /// <returns>element or throws an exception</returns>
-        IWebElement Find(string selector);
+        IWebElement FindElement(string selector);
 
         /// <summary>
         /// Find a specified by selector
         /// </summary>
         /// <param name="selector">by selector</param>
         /// <returns>elements</returns>
-        IWebElement Find(By selector);
+        IWebElement FindElement(By selector);
 
         /// <summary>
         /// Find All elements meeting the specified selector
         /// </summary>
         /// <param name="selector">selector to use to find elements</param>
         /// <returns>elements</returns>
-        ReadOnlyCollection<IWebElement> FindAll(string selector);
+        ReadOnlyCollection<IWebElement> FindElements(string selector);
 
         /// <summary>
         /// Find all elements meeting the specified selector
         /// </summary>
         /// <param name="selector">selector to use to find elements</param>
         /// <returns>elements</returns>
-        ReadOnlyCollection<IWebElement> FindAll(By selector);
+        ReadOnlyCollection<IWebElement> FindElements(By selector);
 
         /// <summary>
         /// Check for the element specified in the selector

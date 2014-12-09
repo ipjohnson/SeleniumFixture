@@ -51,24 +51,11 @@ namespace SeleniumFixture
         #region IActionProvider
 
         /// <summary>
-        /// Navigate to a specified url, base address will be added to any relative URL
+        /// Navigate the fixture
         /// </summary>
-        /// <param name="url">url to navigate to</param>
-        /// <returns>this</returns>
-        public IActionProvider NavigateTo(string url = null)
+        public INavigateActionProvider Navigate
         {
-            return _actionProvider.NavigateTo(url);
-        }
-
-        /// <summary>
-        /// Navigate and Yield a Page Object model
-        /// </summary>
-        /// <typeparam name="T">Page Object type</typeparam>
-        /// <param name="url">url to navigate to</param>
-        /// <returns>page object</returns>
-        public T NavigateTo<T>(string url = null)
-        {
-            return _actionProvider.NavigateTo<T>(url);
+            get { return _actionProvider.Navigate; }
         }
 
         /// <summary>
@@ -76,9 +63,9 @@ namespace SeleniumFixture
         /// </summary>
         /// <param name="selector">selector to use to locate element</param>
         /// <returns>element or throws an exception</returns>
-        public IWebElement Find(string selector)
+        public IWebElement FindElement(string selector)
         {
-            return _actionProvider.Find(selector);
+            return _actionProvider.FindElement(selector);
         }
 
         /// <summary>
@@ -86,9 +73,9 @@ namespace SeleniumFixture
         /// </summary>
         /// <param name="selector">by selector</param>
         /// <returns>elements</returns>
-        public IWebElement Find(By selector)
+        public IWebElement FindElement(By selector)
         {
-            return _actionProvider.Find(selector);
+            return _actionProvider.FindElement(selector);
         }
 
         /// <summary>
@@ -96,9 +83,9 @@ namespace SeleniumFixture
         /// </summary>
         /// <param name="selector">selector to use to find elements</param>
         /// <returns>elements</returns>
-        public ReadOnlyCollection<IWebElement> FindAll(string selector)
+        public ReadOnlyCollection<IWebElement> FindElements(string selector)
         {
-            return _actionProvider.FindAll(selector);
+            return _actionProvider.FindElements(selector);
         }
 
         /// <summary>
@@ -106,9 +93,9 @@ namespace SeleniumFixture
         /// </summary>
         /// <param name="selector">selector to use to find elements</param>
         /// <returns>elements</returns>
-        public ReadOnlyCollection<IWebElement> FindAll(By selector)
+        public ReadOnlyCollection<IWebElement> FindElements(By selector)
         {
-            return _actionProvider.FindAll(selector);
+            return _actionProvider.FindElements(selector);
         }
 
         /// <summary>

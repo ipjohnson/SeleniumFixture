@@ -63,6 +63,7 @@
     <Compile Include="Impl\FormWrapper.cs" />
     <Compile Include="Impl\IActionProvider.cs" />
     <Compile Include="Impl\JQueryBy.cs" />
+    <Compile Include="Impl\NavigateActionProvider.cs" />
     <Compile Include="Impl\PropertySetter.cs" />
     <Compile Include="Impl\SelectActionProvider.cs" />
     <Compile Include="Impl\SeleniumFixtureCustomization.cs" />

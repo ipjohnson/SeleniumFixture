@@ -25,45 +25,39 @@ namespace SeleniumFixture.Impl
             _fixture = fixture;
         }
 
-        public IActionProvider NavigateTo(string url = null)
+        /// <summary>
+        /// Navigate the fixture
+        /// </summary>
+        public INavigateActionProvider Navigate
         {
-            if (url == null || !url.StartsWith("http", StringComparison.CurrentCultureIgnoreCase))
-            {
-                url = _fixture.Configuration.BaseAddress + url;
-            }
-
-            _fixture.Driver.Navigate().GoToUrl(url);
-
-            return this;
+            get { return new NavigateActionProvider(this); }
         }
 
-        public T NavigateTo<T>(string url = null)
+        /// <summary>
+        /// Find a specified element by selector
+        /// </summary>
+        /// <param name="selector">selector to use to locate element</param>
+        /// <returns>element or throws an exception</returns>
+        public IWebElement FindElement(string selector)
         {
-            NavigateTo(url);
-
-            return _fixture.Data.Locate<T>();
-        }
-        
-        public IWebElement Find(string element)
-        {
-            if (element == null)
+            if (selector == null)
             {
-                throw new ArgumentNullException("element");
+                throw new ArgumentNullException("selector");
             }
 
             switch (_fixture.Configuration.Selector)
             {
                 case SelectorAlgorithm.JQuery:
-                    return _fixture.Driver.FindElement(Using.JQuery(element));
+                    return _fixture.Driver.FindElement(Using.JQuery(selector));
 
                 case SelectorAlgorithm.CSS:
-                    return _fixture.Driver.FindElement(By.CssSelector(element));
+                    return _fixture.Driver.FindElement(By.CssSelector(selector));
 
                 case SelectorAlgorithm.XPath:
-                    return _fixture.Driver.FindElement(By.XPath(element));
+                    return _fixture.Driver.FindElement(By.XPath(selector));
 
                 case SelectorAlgorithm.Auto:
-                    return _fixture.Driver.FindElement(Using.Auto(element));
+                    return _fixture.Driver.FindElement(Using.Auto(selector));
 
                 default:
                     throw new Exception("Unknown SelectorAlgorithm " + _fixture.Configuration.Selector);
@@ -71,12 +65,22 @@ namespace SeleniumFixture.Impl
             }
         }
 
-        public IWebElement Find(By selector)
+        /// <summary>
+        /// Find a specified by selector
+        /// </summary>
+        /// <param name="selector">by selector</param>
+        /// <returns>elements</returns>
+        public IWebElement FindElement(By selector)
         {
             return _fixture.Driver.FindElement(selector);
         }
 
-        public ReadOnlyCollection<IWebElement> FindAll(string selector)
+        /// <summary>
+        /// Find All elements meeting the specified selector
+        /// </summary>
+        /// <param name="selector">selector to use to find elements</param>
+        /// <returns>elements</returns>
+        public ReadOnlyCollection<IWebElement> FindElements(string selector)
         {
             if (selector == null)
             {
@@ -103,29 +107,29 @@ namespace SeleniumFixture.Impl
             }
         }
 
-        public ReadOnlyCollection<IWebElement> FindAll(By element)
+        public ReadOnlyCollection<IWebElement> FindElements(By element)
         {
             return _fixture.Driver.FindElements(element);
         }
 
         public bool CheckForElement(string element)
         {
-            return FindAll(element).Any();
+            return FindElements(element).Any();
         }
 
         public bool CheckForElement(By element)
         {
-            return FindAll(element).Any();
+            return FindElements(element).Any();
         }
 
         public int Count(string selector)
         {
-            return FindAll(selector).Count;
+            return FindElements(selector).Count;
         }
 
         public int Count(By selector)
         {
-            return FindAll(selector).Count;
+            return FindElements(selector).Count;
         }
 
         public IActionProvider Click(string selector, ClickMode clickMode = ClickMode.ClickAll)
@@ -133,13 +137,13 @@ namespace SeleniumFixture.Impl
             switch (clickMode)
             {
                 case ClickMode.ClickOne:
-                    Find(selector).Click();
+                    FindElement(selector).Click();
                     break;
                 case ClickMode.ClickAny:
-                    FindAll(selector).Apply(c => c.Click());
+                    FindElements(selector).Apply(c => c.Click());
                     break;
                 case ClickMode.ClickAll:
-                    var all = FindAll(selector);
+                    var all = FindElements(selector);
 
                     if (all.Count == 0)
                     {
@@ -148,7 +152,7 @@ namespace SeleniumFixture.Impl
                     all.Apply(c => c.Click());
                     break;
                 case ClickMode.ClickFirst:
-                    var firstList = FindAll(selector);
+                    var firstList = FindElements(selector);
 
                     if (firstList.Count == 0)
                     {
@@ -166,13 +170,13 @@ namespace SeleniumFixture.Impl
             switch (clickMode)
             {
                 case ClickMode.ClickOne:
-                    Find(selector).Click();
+                    FindElement(selector).Click();
                     break;
                 case ClickMode.ClickAny:
-                    FindAll(selector).Apply(c => c.Click());
+                    FindElements(selector).Apply(c => c.Click());
                     break;
                 case ClickMode.ClickAll:
-                    var all = FindAll(selector);
+                    var all = FindElements(selector);
 
                     if (all.Count == 0)
                     {
@@ -181,7 +185,7 @@ namespace SeleniumFixture.Impl
                     all.Apply(c => c.Click());
                     break;
                 case ClickMode.ClickFirst:
-                    var firstList = FindAll(selector);
+                    var firstList = FindElements(selector);
 
                     if (firstList.Count == 0)
                     {
@@ -200,7 +204,7 @@ namespace SeleniumFixture.Impl
             {
                 case ClickMode.ClickOne:
                     {
-                        var element = Find(selector);
+                        var element = FindElement(selector);
 
                         Actions action = new Actions(_fixture.Driver);
                         action.DoubleClick(element);
@@ -210,7 +214,7 @@ namespace SeleniumFixture.Impl
 
                 case ClickMode.ClickAny:
                     {
-                        FindAll(selector).Apply(element =>
+                        FindElements(selector).Apply(element =>
                                                 {
                                                     Actions action = new Actions(_fixture.Driver);
                                                     action.DoubleClick(element);
@@ -222,7 +226,7 @@ namespace SeleniumFixture.Impl
                     break;
                 case ClickMode.ClickAll:
                     {
-                        var all = FindAll(selector);
+                        var all = FindElements(selector);
 
                         if (all.Count == 0)
                         {
@@ -240,7 +244,7 @@ namespace SeleniumFixture.Impl
 
                 case ClickMode.ClickFirst:
                     {
-                        var firstList = FindAll(selector);
+                        var firstList = FindElements(selector);
 
                         if (firstList.Count == 0)
                         {
@@ -304,12 +308,12 @@ namespace SeleniumFixture.Impl
 
         public IFillActionProvider Fill(string selector)
         {
-            return Fill(FindAll(selector));
+            return Fill(FindElements(selector));
         }
 
         public IFillActionProvider Fill(By selector)
         {
-            return Fill(FindAll(selector));
+            return Fill(FindElements(selector));
         }
 
         public IFillActionProvider Fill(IEnumerable<IWebElement> elements)
@@ -327,14 +331,14 @@ namespace SeleniumFixture.Impl
 
         public IYieldsActionProvider Submit(string selector)
         {
-            Find(selector).Submit();
+            FindElement(selector).Submit();
 
             return new YieldsActionProvider(_fixture);
         }
 
         public IYieldsActionProvider Submit(By selector)
         {
-            Find(selector).Submit();
+            FindElement(selector).Submit();
 
             return new YieldsActionProvider(_fixture);
         }
