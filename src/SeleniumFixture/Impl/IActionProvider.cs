@@ -40,113 +40,6 @@ namespace SeleniumFixture.Impl
     public interface IActionProvider
     {
         /// <summary>
-        /// Navigate the fixture
-        /// </summary>
-        INavigateActionProvider Navigate { get; }
-
-        /// <summary>
-        /// Find a specified element by selector
-        /// </summary>
-        /// <param name="selector">selector to use to locate element</param>
-        /// <returns>element or throws an exception</returns>
-        IWebElement FindElement(string selector);
-
-        /// <summary>
-        /// Find a specified by selector
-        /// </summary>
-        /// <param name="selector">by selector</param>
-        /// <returns>elements</returns>
-        IWebElement FindElement(By selector);
-
-        /// <summary>
-        /// Find All elements meeting the specified selector
-        /// </summary>
-        /// <param name="selector">selector to use to find elements</param>
-        /// <returns>elements</returns>
-        ReadOnlyCollection<IWebElement> FindElements(string selector);
-
-        /// <summary>
-        /// Find all elements meeting the specified selector
-        /// </summary>
-        /// <param name="selector">selector to use to find elements</param>
-        /// <returns>elements</returns>
-        ReadOnlyCollection<IWebElement> FindElements(By selector);
-
-        /// <summary>
-        /// Check for the element specified in the selector
-        /// </summary>
-        /// <param name="selector">selector to look for</param>
-        /// <returns>true if element exists</returns>
-        bool CheckForElement(string selector);
-
-        /// <summary>
-        /// Check for the element specified in the selector
-        /// </summary>
-        /// <param name="selector">selector to look for</param>
-        /// <returns>true if element exists</returns>
-        bool CheckForElement(By selector);
-
-        /// <summary>
-        /// Count the number of elements present
-        /// </summary>
-        /// <param name="selector">selector</param>
-        /// <returns>count of elements</returns>
-        int Count(string selector);
-
-        /// <summary>
-        /// Count the number of elements present
-        /// </summary>
-        /// <param name="selector">selector</param>
-        /// <returns>count of elements</returns>
-        int Count(By selector);
-
-        /// <summary>
-        /// Click the elements returned by the selector
-        /// </summary>
-        /// <param name="selector">selector to use when find elements to click</param>
-        /// <param name="clickMode">click mode, by default </param>
-        /// <returns>this</returns>
-        IActionProvider Click(string selector, ClickMode clickMode = ClickMode.ClickAll);
-
-        /// <summary>
-        /// Click the elements returned by the selector
-        /// </summary>
-        /// <param name="selector">selector to use when find elements to click</param>
-        /// <param name="clickMode">click mode, by default </param>
-        /// <returns>this</returns>
-        IActionProvider Click(By selector, ClickMode clickMode = ClickMode.ClickAll);
-
-        /// <summary>
-        /// Double click the selected elements
-        /// </summary>
-        /// <param name="selector">selector</param>
-        /// <param name="clickMode">click mode</param>
-        /// <returns>this</returns>
-        IActionProvider DoubleClick(string selector, ClickMode clickMode = ClickMode.ClickAll);
-
-        /// <summary>
-        /// Double click the selected elements
-        /// </summary>
-        /// <param name="selector">selector</param>
-        /// <param name="clickMode">click mode</param>
-        /// <returns>this</returns>
-        IActionProvider DoubleClick(By selector, ClickMode clickMode = ClickMode.ClickAll);
-
-        /// <summary>
-        /// Drag an element
-        /// </summary>
-        /// <param name="selector">selector</param>
-        /// <returns>this</returns>
-        IDragActionProvider Drag(string selector);
-
-        /// <summary>
-        /// Drag an element
-        /// </summary>
-        /// <param name="selector">element</param>
-        /// <returns>this</returns>
-        IDragActionProvider Drag(By selector);
-
-        /// <summary>
         /// Autofill elements using data from SimpleFixture
         /// </summary>
         /// <param name="selector">selector</param>
@@ -201,6 +94,67 @@ namespace SeleniumFixture.Impl
         IThenSubmitActionProvider AutoFillAs<T>(IEnumerable<IWebElement> elements, string requestName = null, object constraints = null);
 
         /// <summary>
+        /// Check for the element specified in the selector
+        /// </summary>
+        /// <param name="selector">selector to look for</param>
+        /// <returns>true if element exists</returns>
+        bool CheckForElement(string selector);
+
+        /// <summary>
+        /// Check for the element specified in the selector
+        /// </summary>
+        /// <param name="selector">selector to look for</param>
+        /// <returns>true if element exists</returns>
+        bool CheckForElement(By selector);
+        
+        /// <summary>
+        /// Click the elements returned by the selector
+        /// </summary>
+        /// <param name="selector">selector to use when find elements to click</param>
+        /// <param name="clickMode">click mode, by default </param>
+        /// <returns>this</returns>
+        IActionProvider Click(string selector, ClickMode clickMode = ClickMode.ClickAll);
+
+        /// <summary>
+        /// Click the elements returned by the selector
+        /// </summary>
+        /// <param name="selector">selector to use when find elements to click</param>
+        /// <param name="clickMode">click mode, by default </param>
+        /// <returns>this</returns>
+        IActionProvider Click(By selector, ClickMode clickMode = ClickMode.ClickAll);
+        
+
+        /// <summary>
+        /// Count the number of elements present
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <returns>count of elements</returns>
+        int Count(string selector);
+
+        /// <summary>
+        /// Count the number of elements present
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <returns>count of elements</returns>
+        int Count(By selector);
+
+        /// <summary>
+        /// Double click the selected elements
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <param name="clickMode">click mode</param>
+        /// <returns>this</returns>
+        IActionProvider DoubleClick(string selector, ClickMode clickMode = ClickMode.ClickAll);
+
+        /// <summary>
+        /// Double click the selected elements
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <param name="clickMode">click mode</param>
+        /// <returns>this</returns>
+        IActionProvider DoubleClick(By selector, ClickMode clickMode = ClickMode.ClickAll);
+        
+        /// <summary>
         /// Fill elements with values
         /// </summary>
         /// <param name="selector">selector</param>
@@ -222,9 +176,60 @@ namespace SeleniumFixture.Impl
         IFillActionProvider Fill(IEnumerable<IWebElement> elements);
 
         /// <summary>
-        /// Wait for something to happen
+        /// Find a specified element by selector
         /// </summary>
-        IWaitActionProvider Wait { get; }
+        /// <param name="selector">selector to use to locate element</param>
+        /// <returns>element or throws an exception</returns>
+        IWebElement FindElement(string selector);
+
+        /// <summary>
+        /// Find a specified by selector
+        /// </summary>
+        /// <param name="selector">by selector</param>
+        /// <returns>elements</returns>
+        IWebElement FindElement(By selector);
+
+        /// <summary>
+        /// Find All elements meeting the specified selector
+        /// </summary>
+        /// <param name="selector">selector to use to find elements</param>
+        /// <returns>elements</returns>
+        ReadOnlyCollection<IWebElement> FindElements(string selector);
+
+        /// <summary>
+        /// Find all elements meeting the specified selector
+        /// </summary>
+        /// <param name="selector">selector to use to find elements</param>
+        /// <returns>elements</returns>
+        ReadOnlyCollection<IWebElement> FindElements(By selector);
+
+        /// <summary>
+        /// Get values from a web element
+        /// </summary>
+        IGetActionProvider Get { get; }
+
+        /// <summary>
+        /// Move the mouse to a give element or x,y
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <param name="x">x offset</param>
+        /// <param name="y">y offset</param>
+        /// <returns></returns>
+        IActionProvider MoveTheMouseTo(string selector, int? x = null, int? y = null);
+
+        /// <summary>
+        /// Move the mouse to a give element or x,y
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <param name="x">x offset</param>
+        /// <param name="y">y offset</param>
+        /// <returns></returns>
+        IActionProvider MoveTheMouseTo(By selector, int? x = null, int? y = null);
+
+        /// <summary>
+        /// Navigate the fixture
+        /// </summary>
+        INavigateActionProvider Navigate { get; }
 
         /// <summary>
         /// Submit form.
@@ -241,9 +246,19 @@ namespace SeleniumFixture.Impl
         IYieldsActionProvider Submit(By selector);
 
         /// <summary>
+        /// Switch to
+        /// </summary>
+        ISwitchToActionProvider SwitchTo { get; }
+
+        /// <summary>
         /// Fixture for this action provider
         /// </summary>
         Fixture UsingFixture { get; }
+
+        /// <summary>
+        /// Wait for something to happen
+        /// </summary>
+        IWaitActionProvider Wait { get; }
 
         /// <summary>
         /// Yields a Page Object using SimpleFixture

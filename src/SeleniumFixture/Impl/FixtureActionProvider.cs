@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
@@ -23,6 +24,60 @@ namespace SeleniumFixture.Impl
         public FixtureActionProvider(Fixture fixture)
         {
             _fixture = fixture;
+        }
+
+        /// <summary>
+        /// Move the mouse to a give element or x,y
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <param name="x">x offset</param>
+        /// <param name="y">y offset</param>
+        /// <returns></returns>
+        public IActionProvider MoveTheMouseTo(string selector, int? x = null, int? y = null)
+        {
+            Actions action = new Actions(_fixture.Driver);
+
+            var element = FindElement(selector);
+
+            if (x.HasValue && y.HasValue)
+            {
+                action.MoveToElement(element, x.Value, y.Value);
+            }
+            else
+            {
+                action.MoveToElement(element);
+            }
+
+            action.Perform();
+
+            return this;
+        }
+
+        /// <summary>
+        /// Move the mouse to a give element or x,y
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <param name="x">x offset</param>
+        /// <param name="y">y offset</param>
+        /// <returns></returns>
+        public IActionProvider MoveTheMouseTo(By selector, int? x = null, int? y = null)
+        {
+            Actions action = new Actions(_fixture.Driver);
+
+            var element = FindElement(selector);
+
+            if (x.HasValue && y.HasValue)
+            {
+                action.MoveToElement(element, x.Value, y.Value);
+            }
+            else
+            {
+                action.MoveToElement(element);
+            }
+
+            action.Perform();
+
+            return this;
         }
 
         /// <summary>
@@ -103,13 +158,17 @@ namespace SeleniumFixture.Impl
 
                 default:
                     throw new Exception("Unknown SelectorAlgorithm " + _fixture.Configuration.Selector);
-
             }
         }
 
         public ReadOnlyCollection<IWebElement> FindElements(By element)
         {
             return _fixture.Driver.FindElements(element);
+        }
+
+        public IGetActionProvider Get
+        {
+            get { return new GetActionProvider(this); }
         }
 
         public bool CheckForElement(string element)
@@ -139,9 +198,11 @@ namespace SeleniumFixture.Impl
                 case ClickMode.ClickOne:
                     FindElement(selector).Click();
                     break;
+
                 case ClickMode.ClickAny:
                     FindElements(selector).Apply(c => c.Click());
                     break;
+
                 case ClickMode.ClickAll:
                     var all = FindElements(selector);
 
@@ -151,6 +212,7 @@ namespace SeleniumFixture.Impl
                     }
                     all.Apply(c => c.Click());
                     break;
+
                 case ClickMode.ClickFirst:
                     var firstList = FindElements(selector);
 
@@ -263,47 +325,95 @@ namespace SeleniumFixture.Impl
 
         public IActionProvider DoubleClick(By selector, ClickMode clickMode = ClickMode.ClickAll)
         {
-            throw new NotImplementedException();
+            switch (clickMode)
+            {
+                case ClickMode.ClickOne:
+                    {
+                        var element = FindElement(selector);
+
+                        Actions action = new Actions(_fixture.Driver);
+                        action.DoubleClick(element);
+                        action.Perform();
+                    }
+                    break;
+
+                case ClickMode.ClickAny:
+                    {
+                        FindElements(selector).Apply(element =>
+                        {
+                            Actions action = new Actions(_fixture.Driver);
+                            action.DoubleClick(element);
+                            action.Perform();
+                        });
+
+
+                    }
+                    break;
+                case ClickMode.ClickAll:
+                    {
+                        var all = FindElements(selector);
+
+                        if (all.Count == 0)
+                        {
+                            throw new Exception("Could not locate any using selector: " + selector);
+                        }
+
+                        all.Apply(element =>
+                        {
+                            Actions action = new Actions(_fixture.Driver);
+                            action.DoubleClick(element);
+                            action.Perform();
+                        });
+                    }
+                    break;
+
+                case ClickMode.ClickFirst:
+                    {
+                        var firstList = FindElements(selector);
+
+                        if (firstList.Count == 0)
+                        {
+                            throw new Exception("Could not locate any using selector: " + selector);
+                        }
+
+                        Actions action = new Actions(_fixture.Driver);
+                        action.DoubleClick(firstList[0]);
+                        action.Perform();
+                    }
+                    break;
+            }
+
+            return this;
         }
 
-        public IDragActionProvider Drag(string element)
+        public IThenSubmitActionProvider AutoFill(string selector, object seedWith = null)
         {
-            throw new NotImplementedException();
-        }
-
-        public IDragActionProvider Drag(By element)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IThenSubmitActionProvider AutoFill(string element, object seedWith = null)
-        {
-            throw new NotImplementedException();
+            return AutoFill(FindElements(selector), seedWith);
         }
 
         public IThenSubmitActionProvider AutoFill(By selector, object seedWith = null)
         {
-            throw new NotImplementedException();
+            return AutoFill(FindElements(selector), seedWith);
         }
 
         public IThenSubmitActionProvider AutoFill(IEnumerable<IWebElement> elements, object seedWith = null)
         {
-            throw new NotImplementedException();
+            return new AutoFillActionProvider(this, elements, seedWith).PerformFill();
         }
 
         public IThenSubmitActionProvider AutoFillAs<T>(string selector, string requestName = null, object constraints = null)
         {
-            throw new NotImplementedException();
+            return AutoFillAs<T>(FindElements(selector), requestName, constraints);
         }
 
         public IThenSubmitActionProvider AutoFillAs<T>(By selector, string requestName = null, object constraints = null)
         {
-            throw new NotImplementedException();
+            return AutoFillAs<T>(FindElements(selector), requestName, constraints);
         }
 
         public IThenSubmitActionProvider AutoFillAs<T>(IEnumerable<IWebElement> elements, string requestName = null, object constraints = null)
         {
-            throw new NotImplementedException();
+            return new AutoFillAsActionProvider<T>(this, elements).PerformFill(requestName,constraints);
         }
 
         public IFillActionProvider Fill(string selector)
@@ -343,6 +453,11 @@ namespace SeleniumFixture.Impl
             return new YieldsActionProvider(_fixture);
         }
 
+        public ISwitchToActionProvider SwitchTo
+        {
+            get { return new SwitchActionProvider(this); }
+        }
+
         public Fixture UsingFixture
         {
             get { return _fixture; }
@@ -350,89 +465,12 @@ namespace SeleniumFixture.Impl
 
         public T Yields<T>(string requestName = null, object constraints = null)
         {
-            return new YieldsActionProvider(_fixture).Yields<T>(requestName, constraints);
+            return new YieldsActionProvider(this).Yields<T>(requestName, constraints);
         }
 
         public object Yields(Type type, string requestName = null, object constraints = null)
         {
-            return new YieldsActionProvider(_fixture).Yields(type, requestName, constraints);
-        }
-
-        private IWebElement FindByAuto(string selector, IWebElement startingElement)
-        {
-            if (selector.StartsWith("//"))
-            {
-                return _fixture.Driver.FindElement(By.XPath(selector));
-            }
-
-            var jqueryElements = FindAllByJQuery(selector, startingElement, false);
-
-            if (jqueryElements != null)
-            {
-                if (jqueryElements.Count == 0)
-                {
-                    throw new Exception("Could not locate element with jquery selector: " + selector);
-                }
-
-                return jqueryElements[0];
-            }
-
-            return _fixture.Driver.FindElement(By.CssSelector(selector));
-        }
-
-        private IWebElement FindByJQuery(string selector, IWebElement startingElement)
-        {
-            var elements = FindAllByJQuery(selector, startingElement, true);
-
-            if (elements.Count == 0)
-            {
-                throw new Exception("Could not find element element using jquery selector: " + selector);
-            }
-
-            return null;
-        }
-
-        private ReadOnlyCollection<IWebElement> FindAllByJQuery(string selector, IWebElement startingElement, bool throwIfNoJQuery)
-        {
-            bool jqueryFound = false;
-
-            IJavaScriptExecutor executor = _fixture.Driver as IJavaScriptExecutor;
-
-            if (executor != null)
-            {
-                jqueryFound = (bool)executor.ExecuteScript("return typeof window.jQuery == 'undefined'");
-            }
-
-            if (jqueryFound)
-            {
-                return startingElement != null ?
-                       startingElement.FindElements(Using.JQuery(selector)) :
-                       _fixture.Driver.FindElements(Using.JQuery(selector));
-            }
-
-            if (throwIfNoJQuery)
-            {
-                throw new Exception("window.jQuery not found");
-            }
-
-            return null;
-        }
-
-        private ReadOnlyCollection<IWebElement> FindAllByAuto(string selector, IWebElement startingElement)
-        {
-            if (selector.StartsWith("//"))
-            {
-                return _fixture.Driver.FindElements(By.XPath(selector));
-            }
-
-            var jqueryElements = FindAllByJQuery(selector, startingElement, false);
-
-            if (jqueryElements != null)
-            {
-                return jqueryElements;
-            }
-
-            return _fixture.Driver.FindElements(By.CssSelector(selector));
+            return new YieldsActionProvider(this).Yields(type, requestName, constraints);
         }
     }
 }

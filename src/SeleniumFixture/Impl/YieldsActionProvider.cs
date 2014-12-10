@@ -18,7 +18,7 @@ namespace SeleniumFixture.Impl
         /// <returns>new T</returns>
         T Yields<T>(string requestName = null, object constraints = null);
 
-        /// <summary>
+                /// <summary>
         /// Yields a Page Object using SimpleFixture
         /// </summary>
         /// <param name="type">Type of object to Generate</param>
@@ -30,11 +30,11 @@ namespace SeleniumFixture.Impl
 
     public class YieldsActionProvider : IYieldsActionProvider
     {
-        private readonly Fixture _fixture;
+        private readonly IActionProvider _actionProvider;
 
-        public YieldsActionProvider(Fixture fixture)
+        public YieldsActionProvider(IActionProvider fixture)
         {
-            _fixture = fixture;
+            _actionProvider = fixture;
         }
 
         public T Yields<T>(string requestName = null, object constraints = null)
@@ -44,9 +44,9 @@ namespace SeleniumFixture.Impl
 
         public object Yields(Type type, string requestName = null, object constraints = null)
         {
-            var request = new DataRequest(null, _fixture.Data, type, requestName, false, constraints, null);
+            var request = new DataRequest(null, _actionProvider.UsingFixture.Data, type, requestName, false, constraints, null);
 
-            return _fixture.Data.Generate(request);
+            return _actionProvider.UsingFixture.Data.Generate(request);
         }
     }
 }

@@ -51,6 +51,30 @@ namespace SeleniumFixture
         #region IActionProvider
 
         /// <summary>
+        /// Move the mouse to a give element or x,y
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <param name="x">x offset</param>
+        /// <param name="y">y offset</param>
+        /// <returns></returns>
+        public IActionProvider MoveTheMouseTo(string selector, int? x = null, int? y = null)
+        {
+            return _actionProvider.MoveTheMouseTo(selector, x, y);
+        }
+
+        /// <summary>
+        /// Move the mouse to a give element or x,y
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <param name="x">x offset</param>
+        /// <param name="y">y offset</param>
+        /// <returns></returns>
+        public IActionProvider MoveTheMouseTo(By selector, int? x = null, int? y = null)
+        {
+            return _actionProvider.MoveTheMouseTo(selector, x, y);
+        }
+
+        /// <summary>
         /// Navigate the fixture
         /// </summary>
         public INavigateActionProvider Navigate
@@ -96,6 +120,14 @@ namespace SeleniumFixture
         public ReadOnlyCollection<IWebElement> FindElements(By selector)
         {
             return _actionProvider.FindElements(selector);
+        }
+
+        /// <summary>
+        /// Get values from a web element
+        /// </summary>
+        public IGetActionProvider Get
+        {
+            get { return _actionProvider.Get;}
         }
 
         /// <summary>
