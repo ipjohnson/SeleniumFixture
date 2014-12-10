@@ -213,27 +213,7 @@ namespace SeleniumFixture
         {
             return _actionProvider.DoubleClick(selector, clickMode);
         }
-
-        /// <summary>
-        /// Drag an element
-        /// </summary>
-        /// <param name="selector">selector</param>
-        /// <returns>this</returns>
-        public IDragActionProvider Drag(string selector)
-        {
-            return _actionProvider.Drag(selector);
-        }
-
-        /// <summary>
-        /// Drag an element
-        /// </summary>
-        /// <param name="selector">element</param>
-        /// <returns>this</returns>
-        public IDragActionProvider Drag(By selector)
-        {
-            return _actionProvider.Drag(selector);
-        }
-
+        
         /// <summary>
         /// Autofill elements using data from SimpleFixture
         /// </summary>
