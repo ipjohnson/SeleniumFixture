@@ -247,19 +247,43 @@ namespace SeleniumFixture
             return _actionProvider.AutoFill(elements, seedWith);
         }
 
+        /// <summary>
+        /// Auto fill elements as a specific type
+        /// </summary>
+        /// <typeparam name="T">Type of data to generate</typeparam>
+        /// <param name="selector">selector for elements</param>
+        /// <param name="requestName">request name</param>
+        /// <param name="constraints">constraints for generation</param>
+        /// <returns>this</returns>
         public IThenSubmitActionProvider AutoFillAs<T>(string selector, string requestName = null, object constraints = null)
         {
-            throw new NotImplementedException();
+            return _actionProvider.AutoFillAs<T>(selector, requestName, constraints);
         }
 
+        /// <summary>
+        /// Auto fill elements as a specific type
+        /// </summary>
+        /// <typeparam name="T">Type of data to generate</typeparam>
+        /// <param name="selector">selector for elements</param>
+        /// <param name="requestName">request name</param>
+        /// <param name="constraints">constraints for generation</param>
+        /// <returns>this</returns>
         public IThenSubmitActionProvider AutoFillAs<T>(By selector, string requestName = null, object constraints = null)
         {
-            throw new NotImplementedException();
+            return _actionProvider.AutoFillAs<T>(selector, requestName, constraints);
         }
 
+        /// <summary>
+        /// Auto fill elements as a specific type
+        /// </summary>
+        /// <typeparam name="T">Type of data to generate</typeparam>
+        /// <param name="elements">elements</param>
+        /// <param name="requestName">request name</param>
+        /// <param name="constraints">constraints for generation</param>
+        /// <returns>this</returns>
         public IThenSubmitActionProvider AutoFillAs<T>(IEnumerable<IWebElement> elements, string requestName = null, object constraints = null)
         {
-            throw new NotImplementedException();
+            return _actionProvider.AutoFillAs<T>(elements, requestName, constraints);
         }
 
         /// <summary>
@@ -312,7 +336,15 @@ namespace SeleniumFixture
 
         public IYieldsActionProvider Submit(By selector)
         {
-            throw new NotImplementedException();
+            return _actionProvider.Submit(selector);
+        }
+
+        /// <summary>
+        /// Switch to
+        /// </summary>
+        public ISwitchToActionProvider SwitchTo
+        {
+            get { return _actionProvider.SwitchTo; }
         }
 
         /// <summary>
