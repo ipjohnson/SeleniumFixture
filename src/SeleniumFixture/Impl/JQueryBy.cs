@@ -25,11 +25,26 @@ namespace SeleniumFixture.Impl
             _selector = selector;
         }
 
+        /// <summary>
+        /// Finds the first element matching the criteria.
+        /// </summary>
+        /// <param name="context">An <see cref="T:OpenQA.Selenium.ISearchContext"/> object to use to search for the elements.</param>
+        /// <returns>
+        /// The first matching <see cref="T:OpenQA.Selenium.IWebElement"/> on the current context.
+        /// </returns>
         public override IWebElement FindElement(ISearchContext context)
         {
             return FindElements(context).First();
         }
 
+        /// <summary>
+        /// Finds all elements matching the criteria.
+        /// </summary>
+        /// <param name="context">An <see cref="T:OpenQA.Selenium.ISearchContext"/> object to use to search for the elements.</param>
+        /// <returns>
+        /// A <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1"/> of all <see cref="T:OpenQA.Selenium.IWebElement">WebElements</see>
+        ///             matching the current criteria, or an empty list if nothing matches.
+        /// </returns>
         public override ReadOnlyCollection<IWebElement> FindElements(ISearchContext context)
         {
             if (context is IJavaScriptExecutor)

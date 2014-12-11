@@ -9,11 +9,19 @@ using OpenQA.Selenium.Internal;
 
 namespace SeleniumFixture.Impl
 {
+    /// <summary>
+    /// Selenium By selector that uses JQuery, CSS Selector, or XPath depending on the selector and if jquery is avaliable
+    /// </summary>
     public class AutoBy : By
     {
         private readonly string _selector;
         private readonly string _jQueryTest;
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <param name="jQueryTest"></param>
         public AutoBy(string selector, string jQueryTest = "return typeof jQuery != 'undefined';")
         {
             if (string.IsNullOrEmpty(selector))
@@ -30,11 +38,26 @@ namespace SeleniumFixture.Impl
             _jQueryTest = jQueryTest;
         }
 
+        /// <summary>
+        /// Finds the first element matching the criteria.
+        /// </summary>
+        /// <param name="context">An <see cref="T:OpenQA.Selenium.ISearchContext"/> object to use to search for the elements.</param>
+        /// <returns>
+        /// The first matching <see cref="T:OpenQA.Selenium.IWebElement"/> on the current context.
+        /// </returns>
         public override IWebElement FindElement(ISearchContext context)
         {
             return FindElements(context).First();
         }
 
+        /// <summary>
+        /// Finds all elements matching the criteria.
+        /// </summary>
+        /// <param name="context">An <see cref="T:OpenQA.Selenium.ISearchContext"/> object to use to search for the elements.</param>
+        /// <returns>
+        /// A <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1"/> of all <see cref="T:OpenQA.Selenium.IWebElement">WebElements</see>
+        ///             matching the current criteria, or an empty list if nothing matches.
+        /// </returns>
         public override ReadOnlyCollection<IWebElement> FindElements(ISearchContext context)
         {
             By by = null;

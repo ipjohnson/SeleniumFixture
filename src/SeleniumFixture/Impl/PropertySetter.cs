@@ -9,6 +9,9 @@ using SimpleFixture.Impl;
 
 namespace SeleniumFixture.Impl
 {
+    /// <summary>
+    /// SimpleFixture property setter, allows the user to inject properties into private members
+    /// </summary>
     public class PropertySetter : IPropertySetter
     {
         public void SetProperty(PropertyInfo propertyInfo, object instance, object value)

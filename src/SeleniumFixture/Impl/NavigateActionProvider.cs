@@ -68,15 +68,27 @@ namespace SeleniumFixture.Impl
         T Forward<T>();
     }
 
+    /// <summary>
+    /// Provide fluent syntax for Navigation
+    /// </summary>
     public class NavigateActionProvider : INavigateActionProvider
     {
         private readonly IActionProvider _actionProvider;
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="actionProvider">action provider</param>
         public NavigateActionProvider(IActionProvider actionProvider)
         {
             _actionProvider = actionProvider;
         }
 
+        /// <summary>
+        /// Navigate to the specified url
+        /// </summary>
+        /// <param name="url">url, if null navigate to base address</param>
+        /// <returns>action provider</returns>
         public IActionProvider To(string url = null)
         {
             if (url == null || !url.StartsWith("http", StringComparison.CurrentCultureIgnoreCase))
@@ -89,6 +101,12 @@ namespace SeleniumFixture.Impl
             return _actionProvider;
         }
 
+        /// <summary>
+        /// Navigate to specified url and return page object
+        /// </summary>
+        /// <typeparam name="T">page object type</typeparam>
+        /// <param name="url">url to navigate to</param>
+        /// <returns>page object</returns>
         public T To<T>(string url = null)
         {
             To(url);
@@ -96,6 +114,11 @@ namespace SeleniumFixture.Impl
             return _actionProvider.Yields<T>();
         }
 
+        /// <summary>
+        /// Navigate to provided Uri
+        /// </summary>
+        /// <param name="uri">uri to navigate to</param>
+        /// <returns></returns>
         public IActionProvider To(Uri uri)
         {
             _actionProvider.UsingFixture.Driver.Navigate().GoToUrl(uri);
@@ -103,6 +126,12 @@ namespace SeleniumFixture.Impl
             return _actionProvider;
         }
 
+        /// <summary>
+        /// Navigate to provided uri and return page object
+        /// </summary>
+        /// <typeparam name="T">page object type</typeparam>
+        /// <param name="uri">uri</param>
+        /// <returns>page object</returns>
         public T To<T>(Uri uri)
         {
             To(uri);
@@ -110,6 +139,10 @@ namespace SeleniumFixture.Impl
             return _actionProvider.Yields<T>();
         }
 
+        /// <summary>
+        /// Navigate the browser back
+        /// </summary>
+        /// <returns></returns>
         public IActionProvider Back()
         {
             _actionProvider.UsingFixture.Driver.Navigate().Back();
@@ -117,6 +150,11 @@ namespace SeleniumFixture.Impl
             return _actionProvider;
         }
 
+        /// <summary>
+        /// Navigate back and return page model
+        /// </summary>
+        /// <typeparam name="T">page object type</typeparam>
+        /// <returns>page object</returns>
         public T Back<T>()
         {
             _actionProvider.UsingFixture.Driver.Navigate().Back();
@@ -124,6 +162,10 @@ namespace SeleniumFixture.Impl
             return _actionProvider.Yields<T>();
         }
 
+        /// <summary>
+        /// Navigate the browser forward
+        /// </summary>
+        /// <returns></returns>
         public IActionProvider Forward()
         {
             _actionProvider.UsingFixture.Driver.Navigate().Forward();
@@ -131,6 +173,11 @@ namespace SeleniumFixture.Impl
             return _actionProvider;
         }
 
+        /// <summary>
+        /// Navigate forward and return page object
+        /// </summary>
+        /// <typeparam name="T">page object type</typeparam>
+        /// <returns></returns>
         public T Forward<T>()
         {
             _actionProvider.UsingFixture.Driver.Navigate().Forward();

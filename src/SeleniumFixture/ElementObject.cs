@@ -10,7 +10,7 @@ namespace SeleniumFixture
     /// <summary>
     /// Base object that represents a web element
     /// </summary>
-    public class PageObject
+    public class ElementObject
     {
         /// <summary>
         /// Allows you to perform actions on the page
