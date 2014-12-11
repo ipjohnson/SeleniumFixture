@@ -71,7 +71,7 @@ namespace SeleniumFixture.Impl
     }
 
     /// <summary>
-    /// 
+    /// For fluent syntax
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public interface IForAction<T>
