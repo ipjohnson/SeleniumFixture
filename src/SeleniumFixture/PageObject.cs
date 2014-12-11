@@ -7,12 +7,14 @@ using SeleniumFixture.Impl;
 
 namespace SeleniumFixture
 {
+    /// <summary>
+    /// Base object that represents a web element
+    /// </summary>
     public class PageObject
     {
-        private IActionProvider _i;
         /// <summary>
         /// Allows you to perform actions on the page
         /// </summary>
-        protected IActionProvider I { get { return _i; } private set { _i = value;}}
+        protected IActionProvider I { get; private set; }
     }
 }
