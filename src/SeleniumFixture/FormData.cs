@@ -8,5 +8,6 @@ namespace SeleniumFixture
 {
     public class FormData : Dictionary<string, object>
     {
+        
     }
 }

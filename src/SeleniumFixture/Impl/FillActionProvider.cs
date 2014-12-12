@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 
 namespace SeleniumFixture.Impl
 {
@@ -179,49 +180,104 @@ namespace SeleniumFixture.Impl
         {
             if (webElement.TagName == "input")
             {
-                var type = webElement.GetAttribute("type");
+                SetPrimitiveValueIntoInputElement(webElement, setValue);
+            }
+            else if (webElement.TagName == "select")
+            {
+                SetPrimitiveIntoSelectElement(webElement, setValue);
+            }
+        }
 
-                switch (type)
-                {
-                    case "radio":
-                        var value = webElement.GetAttribute("value");
+        private static void SetPrimitiveValueIntoInputElement(IWebElement webElement, object setValue)
+        {
+            var type = webElement.GetAttribute("type");
 
-                        if (setValue.ToString() == value)
+            switch (type)
+            {
+                case "radio":
+                    var value = webElement.GetAttribute("value");
+
+                    if (setValue.ToString() == value)
+                    {
+                        webElement.Click();
+                    }
+                    break;
+
+                case "checkbox":
+                    if (setValue is bool)
+                    {
+                        if ((bool)setValue != webElement.Selected)
                         {
                             webElement.Click();
                         }
-                        break;
-
-                    case "checkbox":
-                        if (setValue is bool)
+                    }
+                    else if (setValue is string)
+                    {
+                        bool setBool;
+                        if (bool.TryParse(setValue.ToString(), out setBool))
                         {
-                            if ((bool)setValue != webElement.Selected)
+                            if (setBool != webElement.Selected)
                             {
                                 webElement.Click();
                             }
                         }
-                        else if (setValue is string)
-                        {
-                            bool setBool;
-                            if (bool.TryParse(setValue.ToString(), out setBool))
-                            {
-                                if (setBool != webElement.Selected)
-                                {
-                                    webElement.Click();
-                                }
-                            }
-                        }
-                        break;
+                    }
+                    break;
 
-                    default:
-                        webElement.Clear();
-                        webElement.SendKeys(setValue.ToString());
-                        break;
+                default:
+                    webElement.Clear();
+                    webElement.SendKeys(setValue.ToString());
+                    break;
+            }
+        }
+
+        private static void SetPrimitiveIntoSelectElement(IWebElement webElement, object setValue)
+        {
+            SelectElement selectElement = new SelectElement(webElement);
+
+            selectElement.DeselectAll();
+            string valueString = null;
+
+            if (setValue is Enum)
+            {
+                object value = Convert.ChangeType(setValue, Enum.GetUnderlyingType(setValue.GetType()));
+                valueString = value.ToString();
+            }
+            else
+            {
+                valueString = setValue.ToString();
+            }
+
+            bool valueSet = false;
+
+            foreach (IWebElement element in selectElement.Options)
+            {
+                if (element.GetAttribute("value") == valueString)
+                {
+                    selectElement.SelectByValue(valueString);
+                    valueSet = true;
+                    break;
                 }
             }
-            else if (webElement.TagName == "select")
-            {
 
+            if (!valueSet)
+            {
+                foreach (IWebElement element in selectElement.Options)
+                {
+                    if (element.GetAttribute("text") == valueString)
+                    {
+                        selectElement.SelectByText(valueString);
+                        valueSet = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!valueSet)
+            {
+                throw new Exception(string.Format("Could not set value {0} on select {1}",
+                    valueString,
+                    webElement.GetAttribute("id") ?? webElement.GetAttribute("name") ?? "unknown"));
             }
         }
     }

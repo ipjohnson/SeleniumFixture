@@ -388,12 +388,12 @@ namespace SeleniumFixture.Impl
 
         public IThenSubmitActionProvider AutoFill(string selector, object seedWith = null)
         {
-            return AutoFill(FindElements(selector), seedWith);
+            return AutoFill(AutoFillActionProvider.FindInputElements(FindElements(selector)), seedWith);
         }
 
         public IThenSubmitActionProvider AutoFill(By selector, object seedWith = null)
         {
-            return AutoFill(FindElements(selector), seedWith);
+            return AutoFill(AutoFillActionProvider.FindInputElements(FindElements(selector)), seedWith);
         }
 
         public IThenSubmitActionProvider AutoFill(IEnumerable<IWebElement> elements, object seedWith = null)
@@ -403,12 +403,12 @@ namespace SeleniumFixture.Impl
 
         public IThenSubmitActionProvider AutoFillAs<T>(string selector, string requestName = null, object constraints = null)
         {
-            return AutoFillAs<T>(FindElements(selector), requestName, constraints);
+            return AutoFillAs<T>(AutoFillActionProvider.FindInputElements(FindElements(selector)), requestName, constraints);
         }
 
         public IThenSubmitActionProvider AutoFillAs<T>(By selector, string requestName = null, object constraints = null)
         {
-            return AutoFillAs<T>(FindElements(selector), requestName, constraints);
+            return AutoFillAs<T>(AutoFillActionProvider.FindInputElements(FindElements(selector)), requestName, constraints);
         }
 
         public IThenSubmitActionProvider AutoFillAs<T>(IEnumerable<IWebElement> elements, string requestName = null, object constraints = null)
@@ -472,5 +472,6 @@ namespace SeleniumFixture.Impl
         {
             return new YieldsActionProvider(this).Yields(type, requestName, constraints);
         }
+
     }
 }
