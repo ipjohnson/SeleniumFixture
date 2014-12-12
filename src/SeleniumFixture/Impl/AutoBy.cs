@@ -68,13 +68,13 @@ namespace SeleniumFixture.Impl
             }
             else
             {
-                by = IsJavaScriptEnabled(context) ? Using.JQuery(_selector) : CssSelector(_selector);
+                by = IsJavaScriptEnabled(context, _jQueryTest) ? Using.JQuery(_selector) : CssSelector(_selector);
             }
 
             return context.FindElements(by);
         }
 
-        private bool IsJavaScriptEnabled(ISearchContext context)
+        public static bool IsJavaScriptEnabled(ISearchContext context, string jQueryTest = "return typeof jQuery != 'undefined';")
         {
             IJavaScriptExecutor executor = context as IJavaScriptExecutor;
 
@@ -85,7 +85,7 @@ namespace SeleniumFixture.Impl
 
             if (executor != null)
             {
-                object returnValue = executor.ExecuteScript(_jQueryTest);
+                object returnValue = executor.ExecuteScript(jQueryTest);
 
                 if (returnValue is bool)
                 {

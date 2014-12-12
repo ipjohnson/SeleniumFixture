@@ -23,6 +23,7 @@ namespace SeleniumFixture.Impl
 
     public class FillActionProvider : IFillActionProvider
     {
+        protected readonly bool _jQueryEnabled;
         protected readonly Fixture _fixture;
         protected readonly ReadOnlyCollection<IWebElement> _elements;
 
@@ -30,6 +31,7 @@ namespace SeleniumFixture.Impl
         {
             _fixture = fixture;
             _elements = elements;
+            _jQueryEnabled = elements.Count != 0 && AutoBy.IsJavaScriptEnabled(elements[0]);
         }
 
         public virtual IThenSubmitActionProvider With(object fillValues)
@@ -105,8 +107,8 @@ namespace SeleniumFixture.Impl
                     runtimeProperty.GetMethod.IsPublic && 
                    !runtimeProperty.GetMethod.IsStatic)
                 {
-                    var elements = webElement.FindElements(Using.Auto("#" + runtimeProperty.Name));
-
+                    ReadOnlyCollection<IWebElement> elements = webElement.FindElements(By.Id(runtimeProperty.Name));
+                    
                     if (elements.Count == 0)
                     {
                         string searchString = char.IsUpper(runtimeProperty.Name[0]) ? 
@@ -118,7 +120,26 @@ namespace SeleniumFixture.Impl
                             searchString += runtimeProperty.Name.Substring(1);
                         }
 
-                        elements = webElement.FindElements(Using.Auto("#" + searchString));
+                        elements = webElement.FindElements(By.Id(searchString));
+                    }
+
+                    if (elements.Count == 0)
+                    {
+                        elements = webElement.FindElements(By.Name(runtimeProperty.Name));
+
+                        if (elements.Count == 0)
+                        {
+                            string searchString = char.IsUpper(runtimeProperty.Name[0]) ?
+                                                    "" + char.ToLower(runtimeProperty.Name[0]) :
+                                                    "" + char.ToUpper(runtimeProperty.Name[0]);
+
+                            if (runtimeProperty.Name.Length > 1)
+                            {
+                                searchString += runtimeProperty.Name.Substring(1);
+                            }
+
+                            elements = webElement.FindElements(By.Name(searchString));
+                        }
                     }
 
                     if (elements.Count == 0)
@@ -170,7 +191,7 @@ namespace SeleniumFixture.Impl
                                                                                                    p.GetMethod.IsPublic &&
                                                                                                   !p.GetMethod.IsStatic))
             {
-                returnValue.Add(new KeyValuePair<string, object>("#" + runtimeProperty.Name, runtimeProperty.GetValue(fillValues)));
+                returnValue.Add(new KeyValuePair<string, object>(runtimeProperty.Name, runtimeProperty.GetValue(fillValues)));
             }
 
             return returnValue;
