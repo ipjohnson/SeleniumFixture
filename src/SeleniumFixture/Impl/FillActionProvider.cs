@@ -235,7 +235,6 @@ namespace SeleniumFixture.Impl
         {
             SelectElement selectElement = new SelectElement(webElement);
 
-            selectElement.DeselectAll();
             string valueString = null;
 
             if (setValue is Enum)
