@@ -211,12 +211,12 @@ namespace SeleniumFixture.Impl
 
         private static void SetPrimitiveValueIntoInputElement(IWebElement webElement, object setValue)
         {
-            var type = webElement.GetAttribute("type");
+            var type = webElement.GetAttribute(ElementContants.TypeAttribute);
 
             switch (type)
             {
-                case "radio":
-                    var value = webElement.GetAttribute("value");
+                case ElementContants.RadioButtonType:
+                    var value = webElement.GetAttribute(ElementContants.ValueAttribute);
 
                     if (setValue.ToString() == value)
                     {
@@ -224,7 +224,7 @@ namespace SeleniumFixture.Impl
                     }
                     break;
 
-                case "checkbox":
+                case ElementContants.CheckBoxType:
                     if (setValue is bool)
                     {
                         if ((bool)setValue != webElement.Selected)
@@ -272,7 +272,7 @@ namespace SeleniumFixture.Impl
 
             foreach (IWebElement element in selectElement.Options)
             {
-                if (element.GetAttribute("value") == valueString)
+                if (element.GetAttribute(ElementContants.ValueAttribute) == valueString)
                 {
                     selectElement.SelectByValue(valueString);
                     valueSet = true;

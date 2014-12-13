@@ -204,6 +204,15 @@ namespace SeleniumFixture.Impl
         ReadOnlyCollection<IWebElement> FindElements(By selector);
 
         /// <summary>
+        /// Generate a random T
+        /// </summary>
+        /// <typeparam name="T">data type to generate</typeparam>
+        /// <param name="requestName">request name to use</param>
+        /// <param name="constraints">constraints for the generate</param>
+        /// <returns>new type to generate</returns>
+        T Generate<T>(string requestName = null, object constraints = null);
+
+        /// <summary>
         /// Get values from a web element
         /// </summary>
         IGetActionProvider Get { get; }
@@ -272,7 +281,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Yields a Page Object using SimpleFixture
         /// </summary>
-        /// <param name="type">Type of object to Generate</param>
+        /// <param name=ElementContants.TypeAttribute>Type of object to Generate</param>
         /// <param name="requestName">request name</param>
         /// <param name="constraints">constraints for the locate</param>
         /// <returns>new instance</returns>

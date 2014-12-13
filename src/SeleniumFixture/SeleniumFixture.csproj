@@ -56,6 +56,7 @@
     <Compile Include="Impl\AutoBy.cs" />
     <Compile Include="Impl\AutoFillActionProvider.cs" />
     <Compile Include="Impl\AutoFillAsActionProvider.cs" />
+    <Compile Include="ElementContants.cs" />
     <Compile Include="Impl\FixtureActionProvider.cs" />
     <Compile Include="Fixture.cs" />
     <Compile Include="FormData.cs" />

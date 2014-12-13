@@ -166,6 +166,11 @@ namespace SeleniumFixture.Impl
             return _fixture.Driver.FindElements(element);
         }
 
+        public T Generate<T>(string requestName = null, object constraints = null)
+        {
+            return _fixture.Data.Generate<T>(requestName, constraints);
+        }
+
         public IGetActionProvider Get
         {
             get { return new GetActionProvider(this); }
@@ -388,12 +393,12 @@ namespace SeleniumFixture.Impl
 
         public IThenSubmitActionProvider AutoFill(string selector, object seedWith = null)
         {
-            return AutoFill(AutoFillActionProvider.FindInputElements(FindElements(selector)), seedWith);
+            return AutoFill(FindElements(selector), seedWith);
         }
 
         public IThenSubmitActionProvider AutoFill(By selector, object seedWith = null)
         {
-            return AutoFill(AutoFillActionProvider.FindInputElements(FindElements(selector)), seedWith);
+            return AutoFill(FindElements(selector), seedWith);
         }
 
         public IThenSubmitActionProvider AutoFill(IEnumerable<IWebElement> elements, object seedWith = null)
@@ -403,12 +408,12 @@ namespace SeleniumFixture.Impl
 
         public IThenSubmitActionProvider AutoFillAs<T>(string selector, string requestName = null, object constraints = null)
         {
-            return AutoFillAs<T>(AutoFillActionProvider.FindInputElements(FindElements(selector)), requestName, constraints);
+            return AutoFillAs<T>(FindElements(selector), requestName, constraints);
         }
 
         public IThenSubmitActionProvider AutoFillAs<T>(By selector, string requestName = null, object constraints = null)
         {
-            return AutoFillAs<T>(AutoFillActionProvider.FindInputElements(FindElements(selector)), requestName, constraints);
+            return AutoFillAs<T>(FindElements(selector), requestName, constraints);
         }
 
         public IThenSubmitActionProvider AutoFillAs<T>(IEnumerable<IWebElement> elements, string requestName = null, object constraints = null)

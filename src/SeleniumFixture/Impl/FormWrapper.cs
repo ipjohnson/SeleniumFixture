@@ -110,9 +110,9 @@ namespace SeleniumFixture
 
             foreach (IWebElement inputElement in inputElements)
             {
-                var type = inputElement.GetAttribute("type");
+                var type = inputElement.GetAttribute(ElementContants.TypeAttribute);
 
-                if (type == "check" || type == "radio")
+                if (type == "checkbox" || type == "radio")
                 {
                     continue;
                 }
@@ -248,7 +248,7 @@ namespace SeleniumFixture
                 constraintValueString = constraintValue.ToString();
 
                 IWebElement foundElement =
-                    radioButtonGroup.Value.FirstOrDefault(e => e.GetAttribute("value") == constraintValueString);
+                    radioButtonGroup.Value.FirstOrDefault(e => e.GetAttribute(ElementContants.ValueAttribute) == constraintValueString);
 
                 if (foundElement != null)
                 {
@@ -360,14 +360,14 @@ namespace SeleniumFixture
 
         private object GetInputElementValue(IWebElement findElement)
         {
-            string typeStr = findElement.GetAttribute("type");
+            string typeStr = findElement.GetAttribute(ElementContants.TypeAttribute);
 
             switch (typeStr)
             {
                 case "password":
                 case "hidden":
                 case "text":
-                    return findElement.GetAttribute("value");
+                    return findElement.GetAttribute(ElementContants.ValueAttribute);
 
                 case "checkbox":
                     return findElement.Selected;

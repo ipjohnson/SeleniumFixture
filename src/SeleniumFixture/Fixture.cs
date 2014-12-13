@@ -123,6 +123,18 @@ namespace SeleniumFixture
         }
 
         /// <summary>
+        /// Generate a random T
+        /// </summary>
+        /// <typeparam name="T">data type to generate</typeparam>
+        /// <param name="requestName">request name to use</param>
+        /// <param name="constraints">constraints for the generate</param>
+        /// <returns>new type to generate</returns>
+        public T Generate<T>(string requestName = null, object constraints = null)
+        {
+            return _actionProvider.Generate<T>(requestName, constraints);
+        }
+
+        /// <summary>
         /// Get values from a web element
         /// </summary>
         public IGetActionProvider Get
@@ -370,7 +382,7 @@ namespace SeleniumFixture
         /// <summary>
         /// Yields a Page Object using SimpleFixture
         /// </summary>
-        /// <param name="type">Type of object to Generate</param>
+        /// <param name=ElementContants.TypeAttribute>Type of object to Generate</param>
         /// <param name="requestName">request name</param>
         /// <param name="constraints">constraints for the locate</param>
         /// <returns>new instance</returns>
@@ -396,6 +408,7 @@ namespace SeleniumFixture
             Data.Return(this);
             Data.Return(webDriver);
             Data.Return(configuration.BaseAddress).WhenNamed("BaseAddress");
+            Data.Return(() => Data.Configuration.Locate<IConstraintHelper>());
 
             Driver = webDriver;
 

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 
 namespace SeleniumFixture.Impl
 {
@@ -30,29 +33,29 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Get the value for a web element 
         /// </summary>
-        IForAction<string> Value { get; }
-            
+        IFromAction<string> Value { get; }
+
         /// <summary>
         /// Get the text value for a web element
         /// </summary>
-        IForAction<string> Text { get; }
+        IFromAction<string> Text { get; }
 
         /// <summary>
         /// Tag for an element
         /// </summary>
-        IForAction<string> Tag { get; }
+        IFromAction<string> Tag { get; }
 
         /// <summary>
         /// Class for an element
         /// </summary>
-        IForAction<string> Class { get; }
-        
+        IFromAction<string> Class { get; }
+
         /// <summary>
         /// Get an attribute for a web element
         /// </summary>
         /// <param name="attr">attribute name</param>
         /// <returns></returns>
-        IForAction<string> Attribute(string attr);
+        IFromAction<string> Attribute(string attr);
 
         /// <summary>
         /// Get a typed attribute for a web element
@@ -60,35 +63,47 @@ namespace SeleniumFixture.Impl
         /// <typeparam name="T">type to return attribute as</typeparam>
         /// <param name="attr">attribute name</param>
         /// <returns></returns>
-        IForAction<T> Attribute<T>(string attr);
+        IFromAction<T> Attribute<T>(string attr);
 
         /// <summary>
         /// Get css value for provided
         /// </summary>
         /// <param name="propertyName">property name</param>
         /// <returns></returns>
-        IForAction<string> CssValue(string propertyName);
+        IFromAction<string> CssValue(string propertyName);
+
+        /// <summary>
+        /// Convert data from form into specified Type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        IFromAction<T> DataAs<T>();
+
+        /// <summary>
+        /// Get key value pair from all form elements
+        /// </summary>
+        IFromAction<FormData> Data { get; }
     }
 
     /// <summary>
     /// For fluent syntax
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IForAction<T>
+    public interface IFromAction<T>
     {
         /// <summary>
         /// For a specified element
         /// </summary>
         /// <param name="selector">element selector</param>
         /// <returns>return type of T</returns>
-        T For(string selector);
+        T From(string selector);
 
         /// <summary>
         /// For a specified element
         /// </summary>
         /// <param name="selector">element selector</param>
         /// <returns>return type of T</returns>
-        T For(By selector);
+        T From(By selector);
     }
 
     /// <summary>
@@ -134,15 +149,15 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Get the value for a specified element
         /// </summary>
-        public IForAction<string> Value
+        public IFromAction<string> Value
         {
-            get { return new ForAction<string>(_actionProvider,e => e.GetAttribute("value"));}
+            get { return new ForAction<string>(_actionProvider, e => e.GetAttribute(ElementContants.ValueAttribute)); }
         }
 
         /// <summary>
         /// Get the text for the specified element
         /// </summary>
-        public IForAction<string> Text
+        public IFromAction<string> Text
         {
             get { return new ForAction<string>(_actionProvider, e => e.Text); }
         }
@@ -150,7 +165,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Get the element Tag for the specified element
         /// </summary>
-        public IForAction<string> Tag
+        public IFromAction<string> Tag
         {
             get { return new ForAction<string>(_actionProvider, e => e.TagName); }
         }
@@ -158,7 +173,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Get the css class for a specified element
         /// </summary>
-        public IForAction<string> Class
+        public IFromAction<string> Class
         {
             get { return new ForAction<string>(_actionProvider, e => e.GetAttribute("class")); }
         }
@@ -168,7 +183,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="attr">attribute name</param>
         /// <returns></returns>
-        public IForAction<string> Attribute(string attr)
+        public IFromAction<string> Attribute(string attr)
         {
             return new ForAction<string>(_actionProvider, e => e.GetAttribute(attr));
         }
@@ -179,9 +194,9 @@ namespace SeleniumFixture.Impl
         /// <typeparam name="T">attribute type</typeparam>
         /// <param name="attr">attribute name</param>
         /// <returns></returns>
-        public IForAction<T> Attribute<T>(string attr)
+        public IFromAction<T> Attribute<T>(string attr)
         {
-            return new ForAction<T>(_actionProvider, e => (T)Convert.ChangeType(e.GetAttribute(attr),typeof(T)));
+            return new ForAction<T>(_actionProvider, e => (T)Convert.ChangeType(e.GetAttribute(attr), typeof(T)));
         }
 
         /// <summary>
@@ -189,9 +204,249 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        public IForAction<string> CssValue(string propertyName)
+        public IFromAction<string> CssValue(string propertyName)
         {
             return new ForAction<string>(_actionProvider, e => e.GetCssValue(propertyName));
+        }
+
+        /// <summary>
+        /// Convert data from form into specified Type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public IFromAction<T> DataAs<T>()
+        {
+            return new ForAction<T>(_actionProvider, MatchFormValuesToData<T>);
+        }
+
+        /// <summary>
+        /// Get key value pair from all form elements
+        /// </summary>
+        public IFromAction<FormData> Data
+        {
+            get { return new ForAction<FormData>(_actionProvider, GetFormData); }
+        }
+
+        private FormData GetFormData(IWebElement element)
+        {
+            var returnValue = new FormData();
+
+            foreach (IWebElement findElement in element.FindElements(By.CssSelector("input, select, textarea, datalist")))
+            {
+                var name = findElement.GetAttribute(ElementContants.IdAttribute) ??
+                           findElement.GetAttribute(ElementContants.NameAttribute);
+
+                var type = findElement.GetAttribute(ElementContants.TypeAttribute);
+
+                if (name != null)
+                {
+                    switch (findElement.TagName)
+                    {
+                        case "input":
+                            if ((type != ElementContants.CheckBoxType && type != ElementContants.RadioButtonType) ||
+                                element.Selected)
+                            {
+                                returnValue[name] = findElement.GetAttribute(ElementContants.ValueAttribute);
+                            }
+                            break;
+                        case "select":
+                        case "textarea":
+                        case "datalist":
+                            returnValue[name] = findElement.GetAttribute(ElementContants.ValueAttribute);
+                            break;
+                    }
+                }
+            }
+
+            return returnValue;
+        }
+
+        private T MatchFormValuesToData<T>(IWebElement element)
+        {
+            T returnValue = _actionProvider.UsingFixture.Data.Locate<T>();
+
+            foreach (PropertyInfo propertyInfo in returnValue.GetType().GetProperties())
+            {
+                if (propertyInfo.SetMethod != null &&
+                    propertyInfo.SetMethod.IsPublic &&
+                   !propertyInfo.SetMethod.IsStatic &&
+                    propertyInfo.SetMethod.GetParameters().Count() == 1)
+                {
+                    string propertyName = propertyInfo.Name;
+
+                    var elements = FindMatchingElements<T>(element, propertyName);
+
+                    if (elements.Count > 0)
+                    {
+                        foreach (IWebElement webElement in elements)
+                        {
+                            if (FillPropertyUsingElement(propertyInfo, webElement, returnValue))
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return returnValue;
+        }
+
+        private bool FillPropertyUsingElement(PropertyInfo propertyInfo, IWebElement webElement, object fillObject)
+        {
+            bool returnValue = false;
+
+            switch (webElement.TagName)
+            {
+                case "input":
+                    returnValue = FillPropertyFromInput(propertyInfo, webElement, fillObject);
+                    break;
+                case "select":
+                    returnValue = FillPropertyFromSelect(propertyInfo, webElement, fillObject);
+                    break;
+                case "datalist":
+                    returnValue = FillPropertyFromInput(propertyInfo, webElement, fillObject);
+                    break;
+                case "textarea":
+                    returnValue = FillPropertyFromInput(propertyInfo, webElement, fillObject);
+                    break;
+            }
+
+            return returnValue;
+        }
+
+        private bool FillPropertyFromSelect(PropertyInfo propertyInfo, IWebElement webElement, object fillObject)
+        {
+            SelectElement selectElement = new SelectElement(webElement);
+
+            if (selectElement.SelectedOption != null)
+            {
+                string value = selectElement.SelectedOption.GetAttribute(ElementContants.ValueAttribute);
+
+                if (value != null)
+                {
+                    object finalValue = null;
+
+                    try
+                    {
+                        finalValue = Convert.ChangeType(value, propertyInfo.PropertyType);
+                    }
+                    catch (Exception exp)
+                    {
+                        Console.WriteLine("Could not convert {0} to type {1} {2}", value, propertyInfo.PropertyType.FullName, exp.Message);
+                        finalValue = null;
+                    }
+
+                    if (finalValue != null)
+                    {
+                        propertyInfo.SetValue(fillObject, finalValue);
+                    }
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool FillPropertyFromInput(PropertyInfo propertyInfo, IWebElement webElement, object fillObject)
+        {
+            bool returnValue = false;
+            object setValue = null;
+            var type = webElement.GetAttribute(ElementContants.TypeAttribute);
+
+            if (type == ElementContants.CheckBoxType)
+            {
+                if (webElement.Selected)
+                {
+                    setValue = true;
+                }
+            }
+            else if (type == ElementContants.RadioButtonType)
+            {
+                if (webElement.Selected)
+                {
+                    setValue = webElement.GetAttribute(ElementContants.ValueAttribute);
+                }
+            }
+            else
+            {
+                setValue = webElement.GetAttribute(ElementContants.ValueAttribute);
+            }
+
+            if (setValue != null)
+            {
+                if (!propertyInfo.PropertyType.IsInstanceOfType(setValue))
+                {
+                    try
+                    {
+                        setValue = Convert.ChangeType(setValue, propertyInfo.PropertyType);
+                    }
+                    catch (Exception exp)
+                    {
+                        Console.WriteLine("Could not convert: {0} to {1} {2}", setValue, propertyInfo.PropertyType.FullName, exp.Message);
+                        setValue = null;
+                    }
+                }
+            }
+
+            if (setValue != null)
+            {
+                propertyInfo.SetValue(fillObject, setValue);
+
+                returnValue = true;
+            }
+
+            return returnValue;
+        }
+
+        private static ReadOnlyCollection<IWebElement> FindMatchingElements<T>(IWebElement element, string propertyName)
+        {
+            var elements = element.FindElements(By.Id(propertyName));
+
+            if (elements.Count == 0)
+            {
+                elements = element.FindElements(By.Name(propertyName));
+            }
+
+            if (elements.Count == 0)
+            {
+                bool keepSearching = false;
+
+                if (char.IsUpper(propertyName[0]))
+                {
+                    propertyName = "" + char.ToLower(propertyName[0]);
+
+                    if (propertyName.Length > 1)
+                    {
+                        propertyName += propertyName.Substring(1);
+                    }
+
+                    keepSearching = true;
+                }
+                else if (char.IsLower(propertyName[0]))
+                {
+                    propertyName = "" + char.ToUpper(propertyName[0]);
+
+                    if (propertyName.Length > 1)
+                    {
+                        propertyName += propertyName.Substring(1);
+                    }
+
+                    keepSearching = true;
+                }
+
+                if (keepSearching)
+                {
+                    elements = element.FindElements(By.Id(propertyName));
+
+                    if (elements.Count == 0)
+                    {
+                        elements = element.FindElements(By.Name(propertyName));
+                    }
+                }
+            }
+            return elements;
         }
     }
 
@@ -199,7 +454,7 @@ namespace SeleniumFixture.Impl
     /// Provides fluent syntax for fetching a value for a specified element
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ForAction<T> : IForAction<T>
+    public class ForAction<T> : IFromAction<T>
     {
         private readonly IActionProvider _actionProvider;
         private readonly Func<IWebElement, T> _getFunc;
@@ -220,7 +475,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="selector">element selector</param>
         /// <returns>return type of T</returns>
-        public T For(string selector)
+        public T From(string selector)
         {
             var element = _actionProvider.FindElement(selector);
 
@@ -232,7 +487,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="selector">element selector</param>
         /// <returns>return type of T</returns>
-        public T For(By selector)
+        public T From(By selector)
         {
             var element = _actionProvider.FindElement(selector);
 

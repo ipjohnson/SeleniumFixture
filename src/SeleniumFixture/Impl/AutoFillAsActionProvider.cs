@@ -17,10 +17,12 @@ namespace SeleniumFixture.Impl
             _actionProvider = actionProvider;
             _elements = elements;
         }
-        
+
         public IThenSubmitActionProvider PerformFill(string requestName, object constraints)
         {
-            return new ThenSubmitActionProvider(_actionProvider.UsingFixture, _elements.First());
+            T seedValue = _actionProvider.UsingFixture.Data.Generate<T>(requestName, constraints);
+
+            return new AutoFillActionProvider(_actionProvider, _elements, seedValue).PerformFill();
         }
     }
 }

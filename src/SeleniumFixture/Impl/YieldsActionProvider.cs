@@ -21,7 +21,7 @@ namespace SeleniumFixture.Impl
                 /// <summary>
         /// Yields a Page Object using SimpleFixture
         /// </summary>
-        /// <param name="type">Type of object to Generate</param>
+        /// <param name=ElementContants.TypeAttribute>Type of object to Generate</param>
         /// <param name="requestName">request name</param>
         /// <param name="constraints">constraints for the locate</param>
         /// <returns>new instance</returns>
@@ -59,7 +59,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Yields a Page Object using SimpleFixture
         /// </summary>
-        /// <param name="type">Type of object to Generate</param>
+        /// <param name=ElementContants.TypeAttribute>Type of object to Generate</param>
         /// <param name="requestName">request name</param>
         /// <param name="constraints">constraints for the locate</param>
         /// <returns>new instance</returns>
