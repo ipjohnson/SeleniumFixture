@@ -61,7 +61,6 @@
     <Compile Include="Fixture.cs" />
     <Compile Include="FormData.cs" />
     <Compile Include="Impl\FillActionProvider.cs" />
-    <Compile Include="Impl\FormWrapper.cs" />
     <Compile Include="Impl\GetActionProvider.cs" />
     <Compile Include="Impl\IActionProvider.cs" />
     <Compile Include="Impl\JQueryBy.cs" />

@@ -262,13 +262,22 @@ namespace SeleniumFixture.Impl
                 {
                     string stringValue = GetStringFromValue(value);
 
-                    var option = selectElement.Options.FirstOrDefault(e => e.GetAttribute(ElementContants.ValueAttribute) == stringValue) ??
-                                 selectElement.Options.FirstOrDefault(e => e.GetAttribute("text") == stringValue);
+                    var option = selectElement.Options.FirstOrDefault(e => e.GetAttribute(ElementContants.ValueAttribute) == stringValue);
 
                     if (option != null)
                     {
                         selectElement.SelectByValue(stringValue);
                         setValue = true;
+                    }
+                    else
+                    {
+                       option = selectElement.Options.FirstOrDefault(e => e.GetAttribute("text") == stringValue);
+
+                       if (option != null)
+                       {
+                           selectElement.SelectByText(stringValue);
+                           setValue = true;
+                       }
                     }
                 }
             }

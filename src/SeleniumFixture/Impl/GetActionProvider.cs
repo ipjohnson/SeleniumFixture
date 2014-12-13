@@ -238,11 +238,16 @@ namespace SeleniumFixture.Impl
 
                 var type = findElement.GetAttribute(ElementContants.TypeAttribute);
 
-                if (name != null)
+                if (!string.IsNullOrEmpty(name))
                 {
                     switch (findElement.TagName)
                     {
                         case "input":
+                            if (type == ElementContants.SubmitType)
+                            {
+                                continue;
+                            }
+
                             if ((type != ElementContants.CheckBoxType && type != ElementContants.RadioButtonType) ||
                                 element.Selected)
                             {
