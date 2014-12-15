@@ -218,7 +218,7 @@ namespace SeleniumFixture.Impl
                 case ElementContants.RadioButtonType:
                     var value = webElement.GetAttribute(ElementContants.ValueAttribute);
 
-                    if (setValue.ToString() == value)
+                    if (setValue != null && setValue.ToString() == value)
                     {
                         webElement.Click();
                     }
@@ -243,11 +243,19 @@ namespace SeleniumFixture.Impl
                             }
                         }
                     }
+                    else if (setValue == null && webElement.Selected)
+                    {
+                        webElement.Click();
+                    }
                     break;
 
                 default:
                     webElement.Clear();
-                    webElement.SendKeys(setValue.ToString());
+
+                    if (setValue != null)
+                    {
+                        webElement.SendKeys(setValue.ToString());
+                    }
                     break;
             }
         }
@@ -263,37 +271,37 @@ namespace SeleniumFixture.Impl
                 object value = Convert.ChangeType(setValue, Enum.GetUnderlyingType(setValue.GetType()));
                 valueString = value.ToString();
             }
-            else
+            else if(setValue != null)
             {
                 valueString = setValue.ToString();
             }
 
-            bool valueSet = false;
+            bool valueWasSet = false;
 
             foreach (IWebElement element in selectElement.Options)
             {
                 if (element.GetAttribute(ElementContants.ValueAttribute) == valueString)
                 {
                     selectElement.SelectByValue(valueString);
-                    valueSet = true;
+                    valueWasSet = true;
                     break;
                 }
             }
 
-            if (!valueSet)
+            if (!valueWasSet)
             {
                 foreach (IWebElement element in selectElement.Options)
                 {
                     if (element.GetAttribute("text") == valueString)
                     {
                         selectElement.SelectByText(valueString);
-                        valueSet = true;
+                        valueWasSet = true;
                         break;
                     }
                 }
             }
 
-            if (!valueSet)
+            if (!valueWasSet)
             {
                 throw new Exception(string.Format("Could not set value {0} on select {1}",
                     valueString,
