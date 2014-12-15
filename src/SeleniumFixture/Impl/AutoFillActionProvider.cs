@@ -165,7 +165,7 @@ namespace SeleniumFixture.Impl
 
             if (setValue == null)
             {
-                setValue = _actionProvider.Generate<string>(elementId);
+                setValue = _actionProvider.Generate<string>(elementId, new { stringType = StringType.AlphaNumeric });
             }
 
             element.Clear();
@@ -271,20 +271,20 @@ namespace SeleniumFixture.Impl
                     }
                     else
                     {
-                       option = selectElement.Options.FirstOrDefault(e => e.GetAttribute("text") == stringValue);
+                        option = selectElement.Options.FirstOrDefault(e => e.GetAttribute("text") == stringValue);
 
-                       if (option != null)
-                       {
-                           selectElement.SelectByText(stringValue);
-                           setValue = true;
-                       }
+                        if (option != null)
+                        {
+                            selectElement.SelectByText(stringValue);
+                            setValue = true;
+                        }
                     }
                 }
             }
 
             if (!setValue)
             {
-                var selectedOption = 
+                var selectedOption =
                     _actionProvider.Generate<IRandomDataGeneratorService>().NextInSet(
                         selectElement.Options.Where(e => !string.IsNullOrEmpty(e.GetAttribute(ElementContants.ValueAttribute))));
 
