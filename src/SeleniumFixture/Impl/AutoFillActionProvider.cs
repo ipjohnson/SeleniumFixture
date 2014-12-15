@@ -284,7 +284,9 @@ namespace SeleniumFixture.Impl
 
             if (!setValue)
             {
-                var selectedOption = _actionProvider.Generate<IRandomDataGeneratorService>().NextInSet(selectElement.Options);
+                var selectedOption = 
+                    _actionProvider.Generate<IRandomDataGeneratorService>().NextInSet(
+                        selectElement.Options.Where(e => !string.IsNullOrEmpty(e.GetAttribute(ElementContants.ValueAttribute))));
 
                 if (selectedOption != null)
                 {
