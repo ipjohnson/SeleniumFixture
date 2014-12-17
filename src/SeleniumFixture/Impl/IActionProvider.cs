@@ -37,7 +37,7 @@ namespace SeleniumFixture.Impl
     /// <summary>
     /// Performs actions on IWebDriver
     /// </summary>
-    public interface IActionProvider
+    public interface IActionProvider : ISearchContext
     {
         /// <summary>
         /// Autofill elements using data from SimpleFixture

@@ -151,7 +151,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         public IFromAction<string> Value
         {
-            get { return new ForAction<string>(_actionProvider, e => e.GetAttribute(ElementContants.ValueAttribute)); }
+            get { return new FromAction<string>(_actionProvider, e => e.GetAttribute(ElementContants.ValueAttribute)); }
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         public IFromAction<string> Text
         {
-            get { return new ForAction<string>(_actionProvider, e => e.Text); }
+            get { return new FromAction<string>(_actionProvider, e => e.Text); }
         }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         public IFromAction<string> Tag
         {
-            get { return new ForAction<string>(_actionProvider, e => e.TagName); }
+            get { return new FromAction<string>(_actionProvider, e => e.TagName); }
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         public IFromAction<string> Class
         {
-            get { return new ForAction<string>(_actionProvider, e => e.GetAttribute("class")); }
+            get { return new FromAction<string>(_actionProvider, e => e.GetAttribute("class")); }
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public IFromAction<string> Attribute(string attr)
         {
-            return new ForAction<string>(_actionProvider, e => e.GetAttribute(attr));
+            return new FromAction<string>(_actionProvider, e => e.GetAttribute(attr));
         }
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public IFromAction<T> Attribute<T>(string attr)
         {
-            return new ForAction<T>(_actionProvider, e => (T)Convert.ChangeType(e.GetAttribute(attr), typeof(T)));
+            return new FromAction<T>(_actionProvider, e => (T)Convert.ChangeType(e.GetAttribute(attr), typeof(T)));
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public IFromAction<string> CssValue(string propertyName)
         {
-            return new ForAction<string>(_actionProvider, e => e.GetCssValue(propertyName));
+            return new FromAction<string>(_actionProvider, e => e.GetCssValue(propertyName));
         }
 
         /// <summary>
@@ -216,7 +216,7 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public IFromAction<T> DataAs<T>()
         {
-            return new ForAction<T>(_actionProvider, MatchFormValuesToData<T>);
+            return new FromAction<T>(_actionProvider, MatchFormValuesToData<T>);
         }
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         public IFromAction<FormData> Data
         {
-            get { return new ForAction<FormData>(_actionProvider, GetFormData); }
+            get { return new FromAction<FormData>(_actionProvider, GetFormData); }
         }
 
         private FormData GetFormData(IWebElement element)
@@ -268,18 +268,46 @@ namespace SeleniumFixture.Impl
 
         private T MatchFormValuesToData<T>(IWebElement element)
         {
+            var compareType = typeof(T);
+            var nullableType = Nullable.GetUnderlyingType(typeof(T));
+
+            if (nullableType != null)
+            {
+                compareType = nullableType;
+            }
+
+            if (compareType.IsPrimitive ||
+                compareType == typeof(decimal) ||
+                compareType == typeof(DateTime) ||
+                compareType == typeof(string))
+            {
+                return ReturnElementAsPrimitive<T>(element);
+            }
+
+            return ReturnElementsAsComplex<T>(element);
+        }
+
+        private T ReturnElementAsPrimitive<T>(IWebElement element)
+        {
+            string valueString = element.GetAttribute(ElementContants.ValueAttribute);
+
+            return (T)Convert.ChangeType(valueString, typeof(T));
+        }
+
+        private T ReturnElementsAsComplex<T>(IWebElement element)
+        {
             T returnValue = _actionProvider.UsingFixture.Data.Locate<T>();
 
             foreach (PropertyInfo propertyInfo in returnValue.GetType().GetProperties())
             {
                 if (propertyInfo.SetMethod != null &&
                     propertyInfo.SetMethod.IsPublic &&
-                   !propertyInfo.SetMethod.IsStatic &&
+                    !propertyInfo.SetMethod.IsStatic &&
                     propertyInfo.SetMethod.GetParameters().Count() == 1)
                 {
                     string propertyName = propertyInfo.Name;
 
-                    var elements = FindMatchingElements<T>(element, propertyName);
+                    var elements = FindMatchingElements(element, propertyName);
 
                     if (elements.Count > 0)
                     {
@@ -293,7 +321,6 @@ namespace SeleniumFixture.Impl
                     }
                 }
             }
-
             return returnValue;
         }
 
@@ -405,7 +432,7 @@ namespace SeleniumFixture.Impl
             return returnValue;
         }
 
-        private static ReadOnlyCollection<IWebElement> FindMatchingElements<T>(IWebElement element, string propertyName)
+        private static ReadOnlyCollection<IWebElement> FindMatchingElements(ISearchContext element, string propertyName)
         {
             var elements = element.FindElements(By.Id(propertyName));
 
@@ -459,7 +486,7 @@ namespace SeleniumFixture.Impl
     /// Provides fluent syntax for fetching a value for a specified element
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ForAction<T> : IFromAction<T>
+    public class FromAction<T> : IFromAction<T>
     {
         private readonly IActionProvider _actionProvider;
         private readonly Func<IWebElement, T> _getFunc;
@@ -469,7 +496,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="actionProvider">action provider</param>
         /// <param name="getFunc">function to get value</param>
-        public ForAction(IActionProvider actionProvider, Func<IWebElement, T> getFunc)
+        public FromAction(IActionProvider actionProvider, Func<IWebElement, T> getFunc)
         {
             _actionProvider = actionProvider;
             _getFunc = getFunc;
