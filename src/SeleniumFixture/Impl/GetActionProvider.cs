@@ -289,9 +289,37 @@ namespace SeleniumFixture.Impl
 
         private T ReturnElementAsPrimitive<T>(IWebElement element)
         {
-            string valueString = element.GetAttribute(ElementContants.ValueAttribute);
+            string returnString = null;
 
-            return (T)Convert.ChangeType(valueString, typeof(T));
+            if (element.TagName == "select")
+            {
+                SelectElement selectElement = new SelectElement(element);
+
+                if (selectElement.SelectedOption != null)
+                {
+                    returnString = selectElement.SelectedOption.GetAttribute(ElementContants.ValueAttribute);
+                }
+            }
+            else if (element.TagName == "input" || 
+                     element.TagName == "textarea" || 
+                     element.TagName == "datalist")
+            {
+                string type = element.GetAttribute(ElementContants.TypeAttribute);
+
+                switch (type)
+                {
+                    case ElementContants.RadioButtonType:
+                    case ElementContants.CheckBoxType:
+                        returnString = element.Selected.ToString();
+                        break;
+
+                    default:
+                        returnString = element.GetAttribute(ElementContants.ValueAttribute);
+                        break;
+                }
+            }
+
+            return (T)Convert.ChangeType(returnString,typeof(T));
         }
 
         private T ReturnElementsAsComplex<T>(IWebElement element)
