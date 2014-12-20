@@ -230,17 +230,17 @@ namespace SeleniumFixture.Impl
             {
                 return stringObject as string;
             }
-            if (_seedWith is DateTime)
+            if (stringObject is DateTime)
             {
-                return ((DateTime)_seedWith).ToShortDateString();
+                return ((DateTime)stringObject).ToShortDateString();
             }
 
-            if (_seedWith is Enum)
+            if (stringObject is Enum)
             {
-                return Convert.ChangeType(_seedWith, Enum.GetUnderlyingType(_seedWith.GetType())).ToString();
+                return Convert.ChangeType(stringObject, Enum.GetUnderlyingType(stringObject.GetType())).ToString();
             }
 
-            return _seedWith.ToString();
+            return stringObject.ToString();
         }
 
         private void AutoFillSelectElement(IWebElement element)
