@@ -232,7 +232,7 @@ namespace SeleniumFixture.Impl
             }
             if (stringObject is DateTime)
             {
-                return ((DateTime)stringObject).ToShortDateString();
+                return ((DateTime)stringObject).ToString("MM/dd/yyyy");
             }
 
             if (stringObject is Enum)
