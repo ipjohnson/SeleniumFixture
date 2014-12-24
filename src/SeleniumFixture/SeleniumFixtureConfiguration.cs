@@ -49,6 +49,7 @@ namespace SeleniumFixture
             AjaxActiveTest = "return (window.jQuery || { active : 0 }).active == 0;";
 
             ExecuteValidate = true;
+            WrapValidationExceptions = true;
             ValidateMember = "Validate";
         }
 
@@ -86,5 +87,10 @@ namespace SeleniumFixture
         /// Name of member to execute on validation
         /// </summary>
         public string ValidateMember { get; set; }
+
+        /// <summary>
+        /// Wrap validation exception with extra information
+        /// </summary>
+        public bool WrapValidationExceptions { get; set; }
     }
 }

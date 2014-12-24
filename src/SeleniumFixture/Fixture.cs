@@ -480,19 +480,30 @@ namespace SeleniumFixture
                         }
                         catch (Exception exp)
                         {
+                            if (!Configuration.WrapValidationExceptions)
+                            {
+                                throw;
+                            }
+
                             string formatString = AssertionFailedException.FormatErrorMessage(exp, instance.GetType());
 
                             Exception newException = null;
+
                             try
                             {
                                 newException = (Exception)Activator.CreateInstance(exp.GetType(), formatString);
                             }
                             catch (Exception)
                             {
-                                newException = new AssertionFailedException(exp, instance.GetType());
+                                
                             }
 
-                            throw newException;
+                            if (newException != null)
+                            {
+                                throw newException;
+                            }
+
+                            throw;
                         }
                     }
                 }
