@@ -47,6 +47,9 @@ namespace SeleniumFixture
             DefaultWaitInterval = 0.1;
 
             AjaxActiveTest = "return (window.jQuery || { active : 0 }).active == 0;";
+
+            ExecuteValidate = true;
+            ValidateMember = "Validate";
         }
 
         /// <summary>
@@ -73,5 +76,15 @@ namespace SeleniumFixture
         /// String to test if ajax is still active
         /// </summary>
         public string AjaxActiveTest { get; set; }
+
+        /// <summary>
+        /// Execute validate on page objects
+        /// </summary>
+        public bool ExecuteValidate { get; set; }
+
+        /// <summary>
+        /// Name of member to execute on validation
+        /// </summary>
+        public string ValidateMember { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -139,7 +140,7 @@ namespace SeleniumFixture
         /// </summary>
         public IGetActionProvider Get
         {
-            get { return _actionProvider.Get;}
+            get { return _actionProvider.Get; }
         }
 
         /// <summary>
@@ -225,7 +226,7 @@ namespace SeleniumFixture
         {
             return _actionProvider.DoubleClick(selector, clickMode);
         }
-        
+
         /// <summary>
         /// Autofill elements using data from SimpleFixture
         /// </summary>
@@ -429,6 +430,53 @@ namespace SeleniumFixture
             _actionProvider = new FixtureActionProvider(this);
 
             Data.Return(_actionProvider);
+
+            if (Configuration.ExecuteValidate)
+            {
+                Data.Behavior.Add(ValidateBehavior);
+            }
+        }
+
+        private object ValidateBehavior(DataRequest request, object instance)
+        {
+            if (instance != null &&
+               !instance.GetType().IsPrimitive &&
+               !(instance is DateTime) &&
+               !(instance is string))
+            {
+                var member = instance.GetType()
+                    .GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
+                    .FirstOrDefault(m => m.Name == Configuration.ValidateMember);
+
+                if (member != null)
+                {
+                    Action action = null;
+
+                    switch (member.MemberType)
+                    {
+                        case MemberTypes.Property:
+                            PropertyInfo propertyInfo = (PropertyInfo)member;
+
+                            action = propertyInfo.GetValue(instance) as Action;
+                            break;
+                        case MemberTypes.Method:
+                            MethodInfo methodInfo = (MethodInfo)member;
+
+                            if (!methodInfo.GetParameters().Any() && methodInfo.ReturnType == typeof(void))
+                            {
+                                action = (Action)methodInfo.CreateDelegate(typeof(Action), instance);
+                            }
+                            break;
+                    }
+
+                    if (action != null)
+                    {
+                        action();
+                    }
+                }
+            }
+
+            return instance;
         }
 
         private object ImportPropertiesOnLocate(DataRequest r, object o)

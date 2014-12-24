@@ -13,6 +13,11 @@ namespace SeleniumFixture
     public class PageObject
     {
         /// <summary>
+        /// Action that will be called after the page has been created and imports satisfied
+        /// </summary>
+        protected Action Validate { get; set; }
+
+        /// <summary>
         /// Perform action on a page
         /// </summary>
         protected IActionProvider I { get; private set; }
