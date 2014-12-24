@@ -9,14 +9,14 @@ namespace SeleniumFixture.Exceptions
     /// <summary>
     /// Exception thrown while executing 
     /// </summary>
-    public class ValidationException : Exception
+    public class AssertionFailedException : Exception
     {
         /// <summary>
         /// Default constructor
         /// </summary>
         /// <param name="innerException"></param>
         /// <param name="pageType"></param>
-        public ValidationException(Exception innerException, Type pageType)
+        public AssertionFailedException(Exception innerException, Type pageType)
             : base(FormatErrorMessage(innerException, pageType), innerException)
         {
             PageType = pageType;

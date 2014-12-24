@@ -480,7 +480,7 @@ namespace SeleniumFixture
                         }
                         catch (Exception exp)
                         {
-                            throw new ValidationException(exp, instance.GetType());
+                            throw new AssertionFailedException(exp, instance.GetType());
                         }
                     }
                 }
