@@ -53,6 +53,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\ValidationException.cs" />
     <Compile Include="Impl\AutoBy.cs" />
     <Compile Include="Impl\AutoFillActionProvider.cs" />
     <Compile Include="Impl\AutoFillAsActionProvider.cs" />

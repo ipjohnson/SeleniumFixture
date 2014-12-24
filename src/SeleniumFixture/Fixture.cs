@@ -10,6 +10,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.PageObjects;
 using OpenQA.Selenium.Support.UI;
+using SeleniumFixture.Exceptions;
 using SeleniumFixture.Impl;
 using SimpleFixture;
 using SimpleFixture.Impl;
@@ -473,7 +474,14 @@ namespace SeleniumFixture
 
                     if (action != null)
                     {
-                        action();
+                        try
+                        {
+                            action();
+                        }
+                        catch (Exception exp)
+                        {
+                            throw new ValidationException(exp, instance.GetType());
+                        }
                     }
                 }
             }
