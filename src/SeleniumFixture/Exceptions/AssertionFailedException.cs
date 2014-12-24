@@ -28,7 +28,7 @@ namespace SeleniumFixture.Exceptions
         public Type PageType { get; private set; }
 
 
-        private static string FormatErrorMessage(Exception innerException, Type pageType)
+        public static string FormatErrorMessage(Exception innerException, Type pageType)
         {
             return string.Format("Validation failure while constructing page: {0}{1}{2}", pageType.Name, Environment.NewLine, innerException.Message);
         }

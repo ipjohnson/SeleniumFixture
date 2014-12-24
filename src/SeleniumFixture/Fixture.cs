@@ -480,7 +480,19 @@ namespace SeleniumFixture
                         }
                         catch (Exception exp)
                         {
-                            throw new AssertionFailedException(exp, instance.GetType());
+                            string formatString = AssertionFailedException.FormatErrorMessage(exp, instance.GetType());
+
+                            Exception newException = null;
+                            try
+                            {
+                                newException = (Exception)Activator.CreateInstance(exp.GetType(), formatString);
+                            }
+                            catch (Exception)
+                            {
+                                newException = new AssertionFailedException(exp, instance.GetType());
+                            }
+
+                            throw newException;
                         }
                     }
                 }
