@@ -439,10 +439,9 @@ namespace SeleniumFixture
 
         private object ValidateBehavior(DataRequest request, object instance)
         {
-            if (instance != null &&
-               !instance.GetType().IsPrimitive &&
-               !(instance is DateTime) &&
-               !(instance is string))
+            if (!request.Populate &&
+                !instance.GetType().IsValueType &&
+                !(instance is string))
             {
                 var member = instance.GetType()
                     .GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
@@ -457,7 +456,10 @@ namespace SeleniumFixture
                         case MemberTypes.Property:
                             PropertyInfo propertyInfo = (PropertyInfo)member;
 
-                            action = propertyInfo.GetValue(instance) as Action;
+                            if (propertyInfo.GetMethod != null)
+                            {
+                                action = propertyInfo.GetValue(instance) as Action;
+                            }
                             break;
                         case MemberTypes.Method:
                             MethodInfo methodInfo = (MethodInfo)member;
