@@ -113,7 +113,7 @@ namespace SeleniumFixture.Impl
         /// <param name="selector">selector to use when find elements to click</param>
         /// <param name="clickMode">click mode, by default </param>
         /// <returns>this</returns>
-        IActionProvider Click(string selector, ClickMode clickMode = ClickMode.ClickAll);
+        IActionProvider Click(string selector, ClickMode clickMode = ClickMode.ClickOne);
 
         /// <summary>
         /// Click the elements returned by the selector
@@ -121,8 +121,7 @@ namespace SeleniumFixture.Impl
         /// <param name="selector">selector to use when find elements to click</param>
         /// <param name="clickMode">click mode, by default </param>
         /// <returns>this</returns>
-        IActionProvider Click(By selector, ClickMode clickMode = ClickMode.ClickAll);
-        
+        IActionProvider Click(By selector, ClickMode clickMode = ClickMode.ClickOne);
 
         /// <summary>
         /// Count the number of elements present
@@ -144,7 +143,7 @@ namespace SeleniumFixture.Impl
         /// <param name="selector">selector</param>
         /// <param name="clickMode">click mode</param>
         /// <returns>this</returns>
-        IActionProvider DoubleClick(string selector, ClickMode clickMode = ClickMode.ClickAll);
+        IActionProvider DoubleClick(string selector, ClickMode clickMode = ClickMode.ClickOne);
 
         /// <summary>
         /// Double click the selected elements
@@ -152,7 +151,7 @@ namespace SeleniumFixture.Impl
         /// <param name="selector">selector</param>
         /// <param name="clickMode">click mode</param>
         /// <returns>this</returns>
-        IActionProvider DoubleClick(By selector, ClickMode clickMode = ClickMode.ClickAll);
+        IActionProvider DoubleClick(By selector, ClickMode clickMode = ClickMode.ClickOne);
         
         /// <summary>
         /// Fill elements with values
@@ -183,25 +182,11 @@ namespace SeleniumFixture.Impl
         IWebElement FindElement(string selector);
 
         /// <summary>
-        /// Find a specified by selector
-        /// </summary>
-        /// <param name="selector">by selector</param>
-        /// <returns>elements</returns>
-        IWebElement FindElement(By selector);
-
-        /// <summary>
         /// Find All elements meeting the specified selector
         /// </summary>
         /// <param name="selector">selector to use to find elements</param>
         /// <returns>elements</returns>
         ReadOnlyCollection<IWebElement> FindElements(string selector);
-
-        /// <summary>
-        /// Find all elements meeting the specified selector
-        /// </summary>
-        /// <param name="selector">selector to use to find elements</param>
-        /// <returns>elements</returns>
-        ReadOnlyCollection<IWebElement> FindElements(By selector);
 
         /// <summary>
         /// Generate a random T
@@ -281,7 +266,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Yields a Page Object using SimpleFixture
         /// </summary>
-        /// <param name=ElementContants.TypeAttribute>Type of object to Generate</param>
+        /// <param name="type">Type of object to Generate</param>
         /// <param name="requestName">request name</param>
         /// <param name="constraints">constraints for the locate</param>
         /// <returns>new instance</returns>
