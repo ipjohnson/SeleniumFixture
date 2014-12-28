@@ -13,7 +13,7 @@ namespace SeleniumFixture.xUnit.Impl
 {
     public class ChromeDriverDataDiscoverer : IDataDiscoverer
     {
-        public IEnumerable<object[]> GetData(IAttributeInfo dataAttribute, IMethodInfo testMethod)
+        public virtual IEnumerable<object[]> GetData(IAttributeInfo dataAttribute, IMethodInfo testMethod)
         {
             var parameters = testMethod.GetParameters().ToArray();
 
@@ -29,7 +29,7 @@ namespace SeleniumFixture.xUnit.Impl
             else if (parameters[0].ParameterType.ToRuntimeType() == typeof(Fixture))
             {
                 var driver = new ChromeDriver();
-
+                
                 yield return new object[] { FixtureCreationAttribute.GetNewFixture(driver, testMethod.ToRuntimeMethod()) };
             }
             else
@@ -38,9 +38,28 @@ namespace SeleniumFixture.xUnit.Impl
             }
         }
 
-        public bool SupportsDiscoveryEnumeration(IAttributeInfo dataAttribute, IMethodInfo testMethod)
+        public virtual bool SupportsDiscoveryEnumeration(IAttributeInfo dataAttribute, IMethodInfo testMethod)
         {
             return false;
+        }
+
+        protected virtual ChromeDriver CreateChromeDriver(IMethodInfo methodInfo)
+        {
+            ChromeOptionsAttribute attribute =
+                ReflectionHelper.GetAttribute<ChromeOptionsAttribute>(methodInfo.ToRuntimeMethod());
+            ChromeOptions options = null;
+
+            if (attribute != null)
+            {
+                options = attribute.ProvideOptions();
+            }
+
+            if (options == null)
+            {
+                options = new ChromeOptions();
+            }
+
+            return new ChromeDriver(options);
         }
     }
 }

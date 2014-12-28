@@ -62,7 +62,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChromeDriverAttribute.cs" />
+    <Compile Include="ChromeOptionsAttribute.cs" />
     <Compile Include="FireFoxDriverAttribute.cs" />
+    <Compile Include="FireFoxProfileAttribute.cs" />
     <Compile Include="Impl\AsyncManualResetEvent.cs" />
     <Compile Include="Impl\AsyncTestSyncContext.cs" />
     <Compile Include="Impl\ChromeDriverDataDiscoverer.cs" />
@@ -76,6 +78,7 @@
     <Compile Include="Impl\SeleniumTheoryTestCaseRunner.cs" />
     <Compile Include="Impl\XunitWorkerThread.cs" />
     <Compile Include="InternetExplorerDriverAttribute.cs" />
+    <Compile Include="InternetExplorerOptionsAttribute.cs" />
     <Compile Include="ISeleniumDriverDataAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Impl\ReflectionHelper.cs" />

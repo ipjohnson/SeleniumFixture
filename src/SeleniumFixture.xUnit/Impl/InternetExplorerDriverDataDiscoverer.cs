@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
@@ -41,6 +42,25 @@ namespace SeleniumFixture.xUnit.Impl
         public bool SupportsDiscoveryEnumeration(IAttributeInfo dataAttribute, IMethodInfo testMethod)
         {
             return false;
+        }
+
+        protected InternetExplorerDriver CreateInternetExplorerDriver(IMethodInfo method)
+        {
+            InternetExplorerOptionsAttribute attribute =
+                ReflectionHelper.GetAttribute<InternetExplorerOptionsAttribute>(method.ToRuntimeMethod());
+            InternetExplorerOptions options = null;
+
+            if (attribute != null)
+            {
+                options = attribute.ProvideProfile();
+            }
+
+            if (options == null)
+            {
+                options = new InternetExplorerOptions();
+            }
+
+            return new InternetExplorerDriver(options);
         }
     }
 }

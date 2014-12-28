@@ -21,13 +21,11 @@ namespace SeleniumFixture.xUnit.Impl
 
             if (parameters[0].ParameterType.ToRuntimeType() == typeof(IWebDriver))
             {
-                yield return new object[] { new FirefoxDriver() };
+                yield return new object[] { CreateFireFoxDriver(testMethod) };
             }
             else if (parameters[0].ParameterType.ToRuntimeType() == typeof(Fixture))
             {
-                var driver = new FirefoxDriver();
-
-                yield return new object[] { FixtureCreationAttribute.GetNewFixture(driver, testMethod.ToRuntimeMethod()) };
+                yield return new object[] { FixtureCreationAttribute.GetNewFixture(CreateFireFoxDriver(testMethod), testMethod.ToRuntimeMethod()) };
             }
             else
             {
@@ -38,6 +36,24 @@ namespace SeleniumFixture.xUnit.Impl
         public bool SupportsDiscoveryEnumeration(IAttributeInfo dataAttribute, IMethodInfo testMethod)
         {
             return false;
+        }
+
+        private FirefoxDriver CreateFireFoxDriver(IMethodInfo testMethod)
+        {
+            var profileProvider = ReflectionHelper.GetAttribute<FireFoxProfileAttribute>(testMethod.ToRuntimeMethod());
+            FirefoxProfile profile = null;
+
+            if (profileProvider != null)
+            {
+                profile = profileProvider.CreateProfile();
+            }
+
+            if (profile != null)
+            {
+                profile = new FirefoxProfile();
+            }
+
+            return new FirefoxDriver(profile);
         }
     }
 }
