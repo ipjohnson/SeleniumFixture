@@ -8,11 +8,11 @@ namespace SeleniumFixture.xUnit.Impl
     {
         public static T GetAttribute<T>(MethodInfo methodInfo) where T : Attribute
         {
-            T returnAttribute = methodInfo.GetCustomAttribute(typeof(T), true) as T ??
-                                (methodInfo.DeclaringType.GetCustomAttribute(typeof(T), true) as T ??
-                                 methodInfo.DeclaringType.Assembly.GetCustomAttributes(typeof(T), true).FirstOrDefault() as T);
+            Attribute returnAttribute = methodInfo.GetCustomAttributes().FirstOrDefault(a => a is T) ??
+                                (methodInfo.DeclaringType.GetCustomAttributes().FirstOrDefault(a => a is T) ??
+                                 methodInfo.DeclaringType.Assembly.GetCustomAttributes().FirstOrDefault(a => a is T));
 
-            return returnAttribute;
+            return returnAttribute as T;
         }
     }
 }
