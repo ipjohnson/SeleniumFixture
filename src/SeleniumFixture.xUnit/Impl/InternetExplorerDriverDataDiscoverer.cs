@@ -25,11 +25,11 @@ namespace SeleniumFixture.xUnit.Impl
 
             if (parameters[0].ParameterType.ToRuntimeType() == typeof(IWebDriver))
             {
-                yield return new object[] { new InternetExplorerDriver() };
+                yield return new object[] { CreateInternetExplorerDriver(testMethod) };
             }
             else if (parameters[0].ParameterType.ToRuntimeType() == typeof(Fixture))
             {
-                var driver = new InternetExplorerDriver();
+                var driver = CreateInternetExplorerDriver(testMethod);
 
                 yield return new object[] { FixtureCreationAttribute.GetNewFixture(driver, testMethod.ToRuntimeMethod()) };
             }
