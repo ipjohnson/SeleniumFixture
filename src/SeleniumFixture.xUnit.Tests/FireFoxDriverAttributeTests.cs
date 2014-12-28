@@ -10,11 +10,10 @@ namespace SeleniumFixture.xUnit.Tests
 {
     public class FireFoxDriverAttributeTests
     {
-        [Theory,FireFoxDriver]
-        public void FireFoxDriverAttribute_DriverParameter_ExecuteCorrectly(IWebDriver driver)
+        [SeleniumTheory, FireFoxDriver, InternetExplorerDriver, ChromeDriver]
+        public void FireFoxDriverAttribute_DriverParameter_ExecuteCorrectly(Fixture fixture)
         {
-
-            
+            fixture.Navigate.To("http://www.google.com");
         }
     }
 }
