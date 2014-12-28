@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="SeleniumFixture.xUnit.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SeleniumFixture\SeleniumFixture.csproj">
