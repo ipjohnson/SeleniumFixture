@@ -11,6 +11,8 @@
     <releaseNotes>$releaseNotes$</releaseNotes>
     <copyright>Copyright ©  2015</copyright>
     <tags>Selenium Test Fixture Data Generation PageObject</tags>
-    <dependencies />
+    <dependencies >
+      <dependency id="SeleniumFixture" version="$version" />
+    </dependencies>
   </metadata>
 </package>
