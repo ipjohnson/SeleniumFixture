@@ -107,7 +107,7 @@ public class HomePage
     
     protected Action Validate { get; private set; } 
     
-    protected IActionProvider I { get; private set;
+    protected IActionProvider I { get; private set; }
 }
 ```
 
@@ -119,7 +119,8 @@ Creating new PageObject can be done by calling Yields.
 I.Click("#submitButton").Yields<HomePage>();
 
 // click the link Some Text then yield new OtherPage object and pass the value 5 into the constructor param someParam
-I.Click(By.LinkText("Some Text").Yields<OtherPage>(constraints: new { someParam = 5 });
+I.Click(By.LinkText("Some Text")
+ .Yields<OtherPage>(constraints: new { someParam = 5 });
 ```
 
 ###xUnit support
