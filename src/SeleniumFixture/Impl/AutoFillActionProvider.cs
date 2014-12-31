@@ -35,8 +35,7 @@ namespace SeleniumFixture.Impl
 
             return new ThenSubmitActionProvider(_actionProvider.UsingFixture, _elements.First());
         }
-
-
+        
         private void AutoFillElement()
         {
             Dictionary<string, List<IWebElement>> radioButtons = new Dictionary<string, List<IWebElement>>();

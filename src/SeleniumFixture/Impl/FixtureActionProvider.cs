@@ -161,16 +161,35 @@ namespace SeleniumFixture.Impl
             }
         }
 
+        /// <summary>
+        /// Finds all <see cref="T:OpenQA.Selenium.IWebElement">IWebElements</see> within the current context 
+        ///             using the given mechanism.
+        /// </summary>
+        /// <param name="element">The locating mechanism to use.</param>
+        /// <returns>
+        /// A <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1"/> of all <see cref="T:OpenQA.Selenium.IWebElement">WebElements</see>
+        ///             matching the current criteria, or an empty list if nothing matches.
+        /// </returns>
         public ReadOnlyCollection<IWebElement> FindElements(By element)
         {
             return _fixture.Driver.FindElements(element);
         }
 
+        /// <summary>
+        /// Generate randome data
+        /// </summary>
+        /// <param name="requestName"></param>
+        /// <param name="constraints"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public T Generate<T>(string requestName = null, object constraints = null)
         {
             return _fixture.Data.Generate<T>(requestName, constraints);
         }
 
+        /// <summary>
+        /// Get values from page
+        /// </summary>
         public IGetActionProvider Get
         {
             get { return new GetActionProvider(this); }

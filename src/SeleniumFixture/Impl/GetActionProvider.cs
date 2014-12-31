@@ -73,16 +73,11 @@ namespace SeleniumFixture.Impl
         IFromAction<string> CssValue(string propertyName);
 
         /// <summary>
-        /// Convert data from form into specified Type
+        /// Convert values from specified elements into specified Type
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        IFromAction<T> DataAs<T>();
-
-        /// <summary>
-        /// Get key value pair from all form elements
-        /// </summary>
-        IFromAction<FormData> Data { get; }
+        IFromAction<T> ValueAs<T>();
     }
 
     /// <summary>
@@ -214,59 +209,53 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public IFromAction<T> DataAs<T>()
+        public IFromAction<T> ValueAs<T>()
         {
-            return new FromAction<T>(_actionProvider, MatchFormValuesToData<T>);
+            return new MultipleElementFromAction<T>(_actionProvider, MatchFormValuesToData<T>);
         }
 
-        /// <summary>
-        /// Get key value pair from all form elements
-        /// </summary>
-        public IFromAction<FormData> Data
+        private FormData GetFormData(IEnumerable<IWebElement> elements, FormData formData)
         {
-            get { return new FromAction<FormData>(_actionProvider, GetFormData); }
-        }
-
-        private FormData GetFormData(IWebElement element)
-        {
-            var returnValue = new FormData();
-
-            foreach (IWebElement findElement in element.FindElements(By.CssSelector("input, select, textarea, datalist")))
+            foreach (IWebElement webElement in elements)
             {
-                var name = findElement.GetAttribute(ElementContants.IdAttribute) ??
-                           findElement.GetAttribute(ElementContants.NameAttribute);
+                var name = webElement.GetAttribute(ElementContants.IdAttribute) ??
+                           webElement.GetAttribute(ElementContants.NameAttribute);
 
-                var type = findElement.GetAttribute(ElementContants.TypeAttribute);
+                var type = webElement.GetAttribute(ElementContants.TypeAttribute);
 
-                if (!string.IsNullOrEmpty(name))
+                switch (webElement.TagName)
                 {
-                    switch (findElement.TagName)
-                    {
-                        case "input":
-                            if (type == ElementContants.SubmitType)
-                            {
-                                continue;
-                            }
+                    case "input":
+                        if (type == ElementContants.SubmitType || string.IsNullOrEmpty(name))
+                        {
+                            continue;
+                        }
 
-                            if ((type != ElementContants.CheckBoxType && type != ElementContants.RadioButtonType) ||
-                                element.Selected)
-                            {
-                                returnValue[name] = findElement.GetAttribute(ElementContants.ValueAttribute);
-                            }
-                            break;
-                        case "select":
-                        case "textarea":
-                        case "datalist":
-                            returnValue[name] = findElement.GetAttribute(ElementContants.ValueAttribute);
-                            break;
-                    }
+                        if ((type != ElementContants.CheckBoxType && type != ElementContants.RadioButtonType) ||
+                            webElement.Selected)
+                        {
+                            formData[name] = webElement.GetAttribute(ElementContants.ValueAttribute);
+                        }
+                        break;
+                    case "select":
+                    case "textarea":
+                    case "datalist":
+                        if (!string.IsNullOrEmpty(name))
+                        {
+                            formData[name] = webElement.GetAttribute(ElementContants.ValueAttribute);
+                        }
+                        break;
+
+                    default:
+                        GetFormData(webElement.FindElements(By.CssSelector("input, select, textarea, datalist")), formData);
+                        break;
                 }
             }
 
-            return returnValue;
+            return formData;
         }
 
-        private T MatchFormValuesToData<T>(IWebElement element)
+        private T MatchFormValuesToData<T>(IEnumerable<IWebElement> elements)
         {
             var compareType = typeof(T);
             var nullableType = Nullable.GetUnderlyingType(typeof(T));
@@ -281,27 +270,101 @@ namespace SeleniumFixture.Impl
                 compareType == typeof(DateTime) ||
                 compareType == typeof(string))
             {
-                return ReturnElementAsPrimitive<T>(element);
+                return ReturnElementsAsSimpleType<T>(elements);
             }
 
-            return ReturnElementsAsComplex<T>(element);
+            if (compareType == typeof(FormData) || 
+                compareType == typeof(Dictionary<string,string>) || 
+                compareType == typeof(IDictionary<string,string>) || 
+                compareType == typeof(IEnumerable<KeyValuePair<string,string>>))
+            {
+                return (T)((object)GetFormData(elements, new FormData()));
+            }
+
+            if (compareType == typeof(List<string>) || 
+                compareType == typeof(IList<string>) ||
+                compareType == typeof(ICollection<string>) || 
+                compareType == typeof(IEnumerable<string>))
+            {
+                return (T)(object)ReturnAsListOfStrings(elements);
+            }
+
+            return ReturnElementsAsComplex<T>(elements);
         }
 
-        private T ReturnElementAsPrimitive<T>(IWebElement element)
+        private List<string> ReturnAsListOfStrings(IEnumerable<IWebElement> elements)
         {
-            string returnString = null;
+            return new List<string>(ReturnElementsListOfStrings(elements));
+        }
 
+        private T ReturnElementsAsSimpleType<T>(IEnumerable<IWebElement> elements)
+        {
+            if (typeof(T) == typeof(string))
+            {
+                return (T)(object)(ReturnElementsListOfStrings(elements).Aggregate((string)null, (x,y) => x != null ? x + "," + y : y));
+            }
+
+            string returnString = null;
+            IWebElement element = elements.FirstOrDefault();
+
+            if (element != null)
+            {
+                if (element.TagName == "select")
+                {
+                    SelectElement selectElement = new SelectElement(element);
+
+                    if (selectElement.SelectedOption != null)
+                    {
+                        returnString = selectElement.SelectedOption.GetAttribute(ElementContants.ValueAttribute);
+                    }
+                }
+                else if (element.TagName == "input" ||
+                         element.TagName == "textarea" ||
+                         element.TagName == "datalist")
+                {
+                    string type = element.GetAttribute(ElementContants.TypeAttribute);
+
+                    switch (type)
+                    {
+                        case ElementContants.RadioButtonType:
+                        case ElementContants.CheckBoxType:
+                            returnString = element.Selected.ToString();
+                            break;
+
+                        default:
+                            returnString = element.GetAttribute(ElementContants.ValueAttribute);
+                            break;
+                    }
+                }
+            }
+
+            return (T)Convert.ChangeType(returnString, typeof(T));
+        }
+
+        private IEnumerable<string> ReturnElementsListOfStrings(IEnumerable<IWebElement> elements)
+        {
+            foreach (IWebElement webElement in elements)
+            {
+                foreach (string s in ReturnElementAsString(webElement))
+                {
+                    yield return s;
+                }
+            }
+        }
+
+        private IEnumerable<string> ReturnElementAsString(IWebElement element)
+        {
             if (element.TagName == "select")
             {
                 SelectElement selectElement = new SelectElement(element);
 
                 if (selectElement.SelectedOption != null)
                 {
-                    returnString = selectElement.SelectedOption.GetAttribute(ElementContants.ValueAttribute);
+                    yield return selectElement.SelectedOption.GetAttribute(ElementContants.ValueAttribute);
                 }
             }
-            else if (element.TagName == "input" || 
-                     element.TagName == "textarea" || 
+            else if (element.TagName == "input" ||
+                     element.TagName == "textarea" ||
                      element.TagName == "datalist")
             {
                 string type = element.GetAttribute(ElementContants.TypeAttribute);
@@ -310,21 +373,28 @@ namespace SeleniumFixture.Impl
                 {
                     case ElementContants.RadioButtonType:
                     case ElementContants.CheckBoxType:
-                        returnString = element.Selected.ToString();
+                        yield return element.Selected.ToString();
                         break;
 
                     default:
-                        returnString = element.GetAttribute(ElementContants.ValueAttribute);
+                        yield return element.GetAttribute(ElementContants.ValueAttribute);
                         break;
                 }
             }
-
-            return (T)Convert.ChangeType(returnString,typeof(T));
+            else
+            {
+                foreach (string returnElementsListOfString in 
+                    ReturnElementsListOfStrings(element.FindElements(By.CssSelector("input, select, textarea, datalist"))))
+                {
+                    yield return returnElementsListOfString;
+                }
+            }
         }
 
-        private T ReturnElementsAsComplex<T>(IWebElement element)
+        private T ReturnElementsAsComplex<T>(IEnumerable<IWebElement> elements)
         {
             T returnValue = _actionProvider.UsingFixture.Data.Locate<T>();
+            List<IWebElement> localElements = new List<IWebElement>(elements);
 
             foreach (PropertyInfo propertyInfo in returnValue.GetType().GetProperties())
             {
@@ -335,11 +405,11 @@ namespace SeleniumFixture.Impl
                 {
                     string propertyName = propertyInfo.Name;
 
-                    var elements = FindMatchingElements(element, propertyName);
+                    var matchedElements = FindMatchingElements(localElements, propertyName);
 
-                    if (elements.Count > 0)
+                    if (matchedElements.Count > 0)
                     {
-                        foreach (IWebElement webElement in elements)
+                        foreach (IWebElement webElement in matchedElements)
                         {
                             if (FillPropertyUsingElement(propertyInfo, webElement, returnValue))
                             {
@@ -460,53 +530,71 @@ namespace SeleniumFixture.Impl
             return returnValue;
         }
 
-        private static ReadOnlyCollection<IWebElement> FindMatchingElements(ISearchContext element, string propertyName)
+        private static ReadOnlyCollection<IWebElement> FindMatchingElements(IEnumerable<IWebElement> localElements, string propertyName)
         {
-            var elements = element.FindElements(By.Id(propertyName));
+            List<IWebElement> returnValue = new List<IWebElement>();
 
-            if (elements.Count == 0)
+            foreach (IWebElement localElement in localElements)
             {
-                elements = element.FindElements(By.Name(propertyName));
-            }
+                var localName = localElement.GetAttribute(ElementContants.IdAttribute) ??
+                                localElement.GetAttribute(ElementContants.NameAttribute);
 
-            if (elements.Count == 0)
-            {
-                bool keepSearching = false;
-
-                if (char.IsUpper(propertyName[0]))
+                if (string.Compare(localName, propertyName, StringComparison.OrdinalIgnoreCase) == 0)
                 {
-                    propertyName = "" + char.ToLower(propertyName[0]);
-
-                    if (propertyName.Length > 1)
-                    {
-                        propertyName += propertyName.Substring(1);
-                    }
-
-                    keepSearching = true;
+                    returnValue.Add(localElement);
                 }
-                else if (char.IsLower(propertyName[0]))
+                else
                 {
-                    propertyName = "" + char.ToUpper(propertyName[0]);
-
-                    if (propertyName.Length > 1)
-                    {
-                        propertyName += propertyName.Substring(1);
-                    }
-
-                    keepSearching = true;
-                }
-
-                if (keepSearching)
-                {
-                    elements = element.FindElements(By.Id(propertyName));
+                    var elements = localElement.FindElements(By.Id(propertyName));
 
                     if (elements.Count == 0)
                     {
-                        elements = element.FindElements(By.Name(propertyName));
+                        elements = localElement.FindElements(By.Name(propertyName));
                     }
+
+                    if (elements.Count == 0)
+                    {
+                        bool keepSearching = false;
+
+                        if (char.IsUpper(propertyName[0]))
+                        {
+                            propertyName = "" + char.ToLower(propertyName[0]);
+
+                            if (propertyName.Length > 1)
+                            {
+                                propertyName += propertyName.Substring(1);
+                            }
+
+                            keepSearching = true;
+                        }
+                        else if (char.IsLower(propertyName[0]))
+                        {
+                            propertyName = "" + char.ToUpper(propertyName[0]);
+
+                            if (propertyName.Length > 1)
+                            {
+                                propertyName += propertyName.Substring(1);
+                            }
+
+                            keepSearching = true;
+                        }
+
+                        if (keepSearching)
+                        {
+                            elements = localElement.FindElements(By.Id(propertyName));
+
+                            if (elements.Count == 0)
+                            {
+                                elements = localElement.FindElements(By.Name(propertyName));
+                            }
+                        }
+                    }
+
+                    returnValue.AddRange(elements);
                 }
             }
-            return elements;
+            
+            return new ReadOnlyCollection<IWebElement>(returnValue);
         }
     }
 
@@ -550,6 +638,51 @@ namespace SeleniumFixture.Impl
         public T From(By selector)
         {
             var element = _actionProvider.FindElement(selector);
+
+            return _getFunc(element);
+        }
+    }
+
+    /// <summary>
+    /// Multiple element
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class MultipleElementFromAction<T> : IFromAction<T>
+    {
+        private readonly IActionProvider _actionProvider;
+        private readonly Func<IEnumerable<IWebElement>, T> _getFunc;
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="actionProvider">action provider</param>
+        /// <param name="getFunc">function to get value</param>
+        public MultipleElementFromAction(IActionProvider actionProvider, Func<IEnumerable<IWebElement>, T> getFunc)
+        {
+            _actionProvider = actionProvider;
+            _getFunc = getFunc;
+        }
+
+        /// <summary>
+        /// For a specified element
+        /// </summary>
+        /// <param name="selector">element selector</param>
+        /// <returns>return type of T</returns>
+        public T From(string selector)
+        {
+            var element = _actionProvider.FindElements(selector);
+
+            return _getFunc(element);
+        }
+
+        /// <summary>
+        /// For a specified element
+        /// </summary>
+        /// <param name="selector">element selector</param>
+        /// <returns>return type of T</returns>
+        public T From(By selector)
+        {
+            var element = _actionProvider.FindElements(selector);
 
             return _getFunc(element);
         }
