@@ -59,7 +59,7 @@ fixture.AutoFill("#someDiv");
 ```
 
 ###Wait
-It's useful to wait for certain things to happen on page, the Wait api provides a number of helpful wait method for things like ajax or for elements to exists.
+It's useful to wait for certain things to happen on page, the Wait API provides a number of helpful wait method for things like ajax or for elements to exists.
 
 ```C#
 // wait for ajax calls to finish
