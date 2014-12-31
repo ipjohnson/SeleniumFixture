@@ -12,19 +12,6 @@ fixture.Navigate.To("http://ipjohnson.github.io/SeleniumFixture/TestSite/InputFo
 fixture.AutoFill("//form");
 ```
 
-###PageObject Pattern
-The [PageObject](http://martinfowler.com/bliki/PageObject.html) pattern is very useful and SeleniumFixture fully supports using PageObject classes to help package logic. [SimpleFixture](https://github.com/ipjohnson/SimpleFixture) is used to create instance of PageObjects allowing for very complex object including injecting constructor parameters and properties (using [[Import]] attribute).
-
-```C#
-var driver = new FirefoxDriver();
-
-var fixture = new Fixture(driver, "http://ipjohnson.github.io/SeleniumFixture/TestSite/");
-
-var formPage = fixture.Navigate.To<FormPage>("InputForm.html");
-
-formPage.FillOutForm();
-```
-
 ###Click & DoubleClick
 Provide short hands for clicking and double clicking.
 
@@ -83,6 +70,19 @@ fixture.Wait.ForElement("#someElement");
 
 // long hand for waiting for element 20 seconds
 fixture.Wait.Until(i => i.CheckForElement("#someElement"), 20);
+```
+
+###PageObject Pattern
+The [PageObject](http://martinfowler.com/bliki/PageObject.html) pattern is very useful and SeleniumFixture fully supports using PageObject classes to help package logic. [SimpleFixture](https://github.com/ipjohnson/SimpleFixture) is used to create instance of PageObjects allowing for very complex object including injecting constructor parameters and properties (using [[Import]] attribute).
+
+```C#
+var driver = new FirefoxDriver();
+
+var fixture = new Fixture(driver, "http://ipjohnson.github.io/SeleniumFixture/TestSite/");
+
+var formPage = fixture.Navigate.To<FormPage>("InputForm.html");
+
+formPage.FillOutForm();
 ```
 
 ###IActionProvider Property
