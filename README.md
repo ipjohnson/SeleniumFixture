@@ -18,7 +18,7 @@ The [PageObject](http://martinfowler.com/bliki/PageObject.html) pattern is very 
 ```C#
 var driver = new FirefoxDriver();
 
-var fixture = new Fixture(driver, http://ipjohnson.github.io/SeleniumFixture/TestSite/");
+var fixture = new Fixture(driver, "http://ipjohnson.github.io/SeleniumFixture/TestSite/");
 
 var formPage = fixture.Navigate.To<FormPage>("InputForm.html");
 
