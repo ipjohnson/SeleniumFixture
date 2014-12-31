@@ -118,7 +118,8 @@ Creating new PageObject can be done by calling Yields.
 // click the submit button and yield a new HomePage object 
 I.Click("#submitButton").Yields<HomePage>();
 
-// click the link Some Text then yield new OtherPage object and pass the value 5 into the constructor param someParam
+// click the link Some Text then yield new OtherPage object
+// and pass the value 5 into the constructor param someParam
 I.Click(By.LinkText("Some Text")
  .Yields<OtherPage>(constraints: new { someParam = 5 });
 ```
