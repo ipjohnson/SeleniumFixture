@@ -13,7 +13,7 @@ fixture.AutoFill("//form");
 ```
 
 ###Click & DoubleClick
-Provide short hands for clicking and double clicking.
+Provides short hand for clicking and double clicking elements
 
 ```C#
 // click button with id someButton
