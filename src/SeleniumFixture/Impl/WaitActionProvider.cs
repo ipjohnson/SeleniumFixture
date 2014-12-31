@@ -68,7 +68,7 @@ namespace SeleniumFixture.Impl
         }
 
         /// <summary>
-        /// Wait for an element to be visible
+        /// Wait for an element to be present
         /// </summary>
         /// <param name="selector">element selector</param>
         /// <param name="timeout">timeout in seconds</param>
@@ -79,7 +79,7 @@ namespace SeleniumFixture.Impl
         }
 
         /// <summary>
-        /// Wait for an element to be visible
+        /// Wait for an element to be present
         /// </summary>
         /// <param name="selector">element selector</param>
         /// <param name="timeout">timeout in seconds</param>

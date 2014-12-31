@@ -152,7 +152,7 @@ namespace SeleniumFixture.Impl
         /// <param name="clickMode">click mode</param>
         /// <returns>this</returns>
         IActionProvider DoubleClick(By selector, ClickMode clickMode = ClickMode.ClickOne);
-        
+
         /// <summary>
         /// Fill elements with values
         /// </summary>

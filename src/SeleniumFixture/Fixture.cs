@@ -227,7 +227,7 @@ namespace SeleniumFixture
         {
             return _actionProvider.DoubleClick(selector, clickMode);
         }
-
+        
         /// <summary>
         /// Autofill elements using data from SimpleFixture
         /// </summary>
