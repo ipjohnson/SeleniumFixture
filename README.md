@@ -22,7 +22,7 @@ fixture.Click("#someButton");
 // click input button of type submit
 fixture.Click("input[type='submit']");
 
-// DoubleClick any button that has the css class 'some-css-class'
+// DoubleClick all buttons that have the css class 'some-css-class'
 fixture.DoubleClick("button.some-css-class", ClickMode.Any);
 ```
 
