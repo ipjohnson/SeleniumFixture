@@ -129,6 +129,11 @@ I.Click(By.LinkText("Some Text")
 ```C#
     public class AutoFillTests
     {
+        /// <summary>
+        /// Test navigates to the input form and auto fills the form.
+        /// Runs against Chrome, Firefox and Internet Explorer
+        /// </summary>
+        /// <param name="fixture">populated fixture</param>
         [SeleniumTheory]
         [ChromeDriver]
         [FireFoxDriver]
