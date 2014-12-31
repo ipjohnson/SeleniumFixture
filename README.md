@@ -54,7 +54,7 @@ fixture.AutoFill("//form");
 // AutoFill form but use Bob to will the FirstName field
 fixture.AutoFill("//form", seedWith: new { FirstName = "Bob"});
 
-// AutoFill all input & select located in the div with id someDiv
+// AutoFill all input & select elements in the div with id someDiv
 fixture.AutoFill("#someDiv");
 ```
 
