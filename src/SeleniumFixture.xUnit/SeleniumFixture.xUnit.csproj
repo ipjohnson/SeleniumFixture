@@ -69,7 +69,7 @@
     <Compile Include="Impl\AsyncTestSyncContext.cs" />
     <Compile Include="Impl\ChromeDriverDataDiscoverer.cs" />
     <Compile Include="Impl\ExceptionExtensions.cs" />
-    <Compile Include="Impl\FireFoxDriverDataDiscoverer.cs" />
+    <Compile Include="Impl\FirefoxDriverDataDiscoverer.cs" />
     <Compile Include="FixtureCreationAttribute.cs" />
     <Compile Include="Impl\InternetExplorerDriverDataDiscoverer.cs" />
     <Compile Include="Impl\SeleniumTestInvoker.cs" />

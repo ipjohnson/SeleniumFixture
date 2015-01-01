@@ -8,7 +8,7 @@ using Xunit.Sdk;
 
 namespace SeleniumFixture.xUnit.Impl
 {
-    public class FireFoxDriverDataDiscoverer : IDataDiscoverer
+    public class FirefoxDriverDataDiscoverer : IDataDiscoverer
     {
         public IEnumerable<object[]> GetData(IAttributeInfo dataAttribute, IMethodInfo testMethod)
         {

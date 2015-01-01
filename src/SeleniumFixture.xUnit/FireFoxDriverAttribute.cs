@@ -12,7 +12,7 @@ using Xunit.Sdk;
 
 namespace SeleniumFixture.xUnit
 {
-    [DataDiscoverer("SeleniumFixture.xUnit.Impl.FireFoxDriverDataDiscoverer", "SeleniumFixture.xUnit")]
+    [DataDiscoverer("SeleniumFixture.xUnit.Impl.FirefoxDriverDataDiscoverer", "SeleniumFixture.xUnit")]
     public class FirefoxDriverAttribute : DataAttribute
     {
         private Guid _guid = Guid.NewGuid();
