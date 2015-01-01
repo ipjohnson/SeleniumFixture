@@ -7,7 +7,7 @@ using OpenQA.Selenium.Firefox;
 
 namespace SeleniumFixture.xUnit
 {
-    public abstract class FireFoxProfileAttribute : Attribute
+    public abstract class FirefoxProfileAttribute : Attribute
     {
         public abstract FirefoxProfile CreateProfile();
     }

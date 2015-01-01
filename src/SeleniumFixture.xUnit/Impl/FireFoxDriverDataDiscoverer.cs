@@ -40,7 +40,7 @@ namespace SeleniumFixture.xUnit.Impl
 
         private FirefoxDriver CreateFireFoxDriver(IMethodInfo testMethod)
         {
-            var profileProvider = ReflectionHelper.GetAttribute<FireFoxProfileAttribute>(testMethod.ToRuntimeMethod());
+            var profileProvider = ReflectionHelper.GetAttribute<FirefoxProfileAttribute>(testMethod.ToRuntimeMethod());
             FirefoxProfile profile = null;
 
             if (profileProvider != null)

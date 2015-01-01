@@ -63,8 +63,8 @@
   <ItemGroup>
     <Compile Include="ChromeDriverAttribute.cs" />
     <Compile Include="ChromeOptionsAttribute.cs" />
-    <Compile Include="FireFoxDriverAttribute.cs" />
-    <Compile Include="FireFoxProfileAttribute.cs" />
+    <Compile Include="FirefoxDriverAttribute.cs" />
+    <Compile Include="FirefoxProfileAttribute.cs" />
     <Compile Include="Impl\AsyncManualResetEvent.cs" />
     <Compile Include="Impl\AsyncTestSyncContext.cs" />
     <Compile Include="Impl\ChromeDriverDataDiscoverer.cs" />
