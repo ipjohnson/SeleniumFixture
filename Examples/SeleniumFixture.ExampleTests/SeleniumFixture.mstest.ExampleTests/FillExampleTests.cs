@@ -1,0 +1,63 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using FluentAssertions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OpenQA.Selenium.Firefox;
+
+namespace SeleniumFixture.ExampleTests
+{
+    [TestClass]
+    public class FillExampleTests
+    {
+        [TestMethod]
+        public void Fixture_FillForm_PopulatesCorrectly()
+        {
+            using (var driver = new FirefoxDriver())
+            {
+                var fixture = new Fixture(driver);
+
+                fixture.Navigate.To("http://ipjohnson.github.io/SeleniumFixture/TestSite/InputForm.html");
+
+                var fillInfo = new
+                               {
+                                   FirstName = "Sterling",
+                                   LastName = "Archer",
+                                   Email = "sterling.archer@isis.gov",
+                                   Password = "HelloWorld1!",
+                                   Active = true,
+                                   OptionsCheckbox1 = false,
+                                   OptionsCheckbox2 = true,
+                                   Gender = "Male",
+                                   AccountType = "SuperAdmin"
+                               };
+
+                fixture.Fill("//form")
+                    .With(fillInfo);
+
+                fixture.Get.Value.From("#FirstName").ShouldBeEquivalentTo(fillInfo.FirstName);
+
+                fixture.Get.Value.From("#LastName").ShouldBeEquivalentTo(fillInfo.LastName);
+
+                fixture.Get.Value.From("#Email").ShouldBeEquivalentTo(fillInfo.Email);
+
+                fixture.Get.Value.From("#Password").ShouldBeEquivalentTo(fillInfo.Password);
+
+                fixture.Get.DataAs<bool>().From("#Active").ShouldBeEquivalentTo(fillInfo.Active);
+
+                fixture.Get.DataAs<bool>().From("#OptionsCheckbox1").ShouldBeEquivalentTo(fillInfo.OptionsCheckbox1);
+
+                fixture.Get.DataAs<bool>().From("#OptionsCheckbox2").ShouldBeEquivalentTo(fillInfo.OptionsCheckbox2);
+
+                fixture.Get.DataAs<bool>().From("#OptionsRadios1").ShouldBeEquivalentTo(true);
+
+                fixture.Get.DataAs<bool>().From("#OptionsRadios2").ShouldBeEquivalentTo(false);
+
+                fixture.Get.DataAs<string>().From("#AccountType").ShouldBeEquivalentTo(fillInfo.AccountType);
+            }
+        }
+    }
+}
