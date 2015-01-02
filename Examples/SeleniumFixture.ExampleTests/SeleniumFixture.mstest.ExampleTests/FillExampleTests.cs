@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium.Firefox;
 
-namespace SeleniumFixture.ExampleTests
+namespace SeleniumFixture.mstest.ExampleTests
 {
     [TestClass]
     public class FillExampleTests
