@@ -451,6 +451,7 @@ namespace SeleniumFixture
             Data.Export<GetAction>().As<IGetAction>();
             Data.Export<MouseMoveAction>().As<IMouseMoveAction>();
             Data.Export<NavigateAction>().As<INavigateAction>();
+            Data.Export<SwitchAction>().As<ISwitchToAction>();
             Data.Export<WaitAction>().As<IWaitAction>();
             Data.Export<YieldsAction>().As<IYieldsAction>();
         }
