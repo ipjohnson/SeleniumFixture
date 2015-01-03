@@ -84,7 +84,7 @@ namespace SeleniumFixture.xUnit
         {
             return new Fixture(CreateWebDriver(testMethod, capability));
         }
-        
+
         protected virtual IWebDriver CreateWebDriver(MethodInfo testMethod, RemoteWebDriverCapability capability)
         {
             DesiredCapabilities capabilities = null;
@@ -115,6 +115,9 @@ namespace SeleniumFixture.xUnit
                 case RemoteWebDriverCapability.IPhone:
                     capabilities = DesiredCapabilities.IPhone();
                     break;
+                case RemoteWebDriverCapability.Safari:
+                    capabilities = DesiredCapabilities.Safari();
+                    break;
             }
 
             string hub = Hub;
@@ -134,12 +137,7 @@ namespace SeleniumFixture.xUnit
 
         protected virtual IWebDriver CreateWebDriverInstance(MethodInfo testMethod, string hub, DesiredCapabilities capabilities)
         {
-            if (!string.IsNullOrEmpty(hub))
-            {
-                return new RemoteWebDriver(new Uri(hub), capabilities);
-            }
-
-            return new RemoteWebDriver(capabilities);
+            return string.IsNullOrEmpty(hub) ? new RemoteWebDriver(capabilities) : new RemoteWebDriver(new Uri(hub), capabilities);
         }
     }
 }
