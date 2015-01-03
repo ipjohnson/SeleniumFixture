@@ -12,7 +12,7 @@
     <copyright>Copyright ©  2015</copyright>
     <tags>Selenium Test Fixture Data Generation PageObject</tags>
     <dependencies >
-      <dependency id="SeleniumFixture" version="$version$" />
+      <dependency id="SeleniumFixture" version="1.0.0-CI10000" />
     </dependencies>
   </metadata>
 </package>
