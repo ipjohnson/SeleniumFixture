@@ -12,7 +12,12 @@ using SimpleFixture.Impl;
 
 namespace SeleniumFixture.Impl
 {
-    public class AutoFillActionProvider
+    public interface IAutoFillActionProvider
+    {
+        IThenSubmitActionProvider PerformFill();
+    }
+
+    public class AutoFillActionProvider : IAutoFillActionProvider
     {
         private readonly IActionProvider _actionProvider;
         private readonly IEnumerable<IWebElement> _elements;

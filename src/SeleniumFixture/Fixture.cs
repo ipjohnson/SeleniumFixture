@@ -333,7 +333,7 @@ namespace SeleniumFixture
         /// <summary>
         /// Wait for something to happen
         /// </summary>
-        public IWaitActionProvider Wait
+        public IWaitAction Wait
         {
             get { return _actionProvider.Wait; }
         }
@@ -343,12 +343,12 @@ namespace SeleniumFixture
         /// </summary>
         /// <param name="selector"></param>
         /// <returns></returns>
-        public IYieldsActionProvider Submit(string selector)
+        public IYieldsAction Submit(string selector)
         {
             return _actionProvider.Submit(selector);
         }
 
-        public IYieldsActionProvider Submit(By selector)
+        public IYieldsAction Submit(By selector)
         {
             return _actionProvider.Submit(selector);
         }
@@ -405,6 +405,13 @@ namespace SeleniumFixture
             dataConfiguration.Export<ITypePropertySelector>(g => new SeleniumTypePropertySelector(g.Locate<IConstraintHelper>()));
             dataConfiguration.Export<IPropertySetter>(g => new Impl.PropertySetter());
 
+            SetupDependencyInjection(webDriver, configuration, dataConfiguration);
+        }
+
+        private void SetupDependencyInjection(IWebDriver webDriver,
+            SeleniumFixtureConfiguration configuration,
+            DefaultFixtureConfiguration dataConfiguration)
+        {
             Data = new SimpleFixture.Fixture(dataConfiguration);
 
             Data.Return(this);
@@ -415,16 +422,16 @@ namespace SeleniumFixture
             Driver = webDriver;
 
             Data.Behavior.Add((r, o) =>
-                         {
-                             if (o.GetType().IsValueType || o is string)
-                             {
-                                 return o;
-                             }
+                              {
+                                  if (o.GetType().IsValueType || o is string)
+                                  {
+                                      return o;
+                                  }
 
-                             PageFactory.InitElements(webDriver, o);
+                                  PageFactory.InitElements(webDriver, o);
 
-                             return o;
-                         });
+                                  return o;
+                              });
 
             Data.Behavior.Add(ImportPropertiesOnLocate);
 
@@ -436,6 +443,14 @@ namespace SeleniumFixture
             {
                 Data.Behavior.Add(ValidateBehavior);
             }
+
+            Data.Export<AutoFillActionProvider>().As<IAutoFillActionProvider>();
+            Data.Export<ClickProvider>().As<IClickProvider>();
+            Data.Export<FillActionProvider>().As<IFillActionProvider>();
+            Data.Export<GetActionProvider>().As<IGetActionProvider>();
+            Data.Export<MouseMoveActionProvider>().As<IMouseMoveActionProvider>();
+            Data.Export<WaitAction>().As<IWaitAction>();
+            Data.Export<YieldsAction>().As<IYieldsAction>();
         }
 
         private object ValidateBehavior(DataRequest request, object instance)

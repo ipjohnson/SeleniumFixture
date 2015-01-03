@@ -230,14 +230,14 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="selector"></param>
         /// <returns></returns>
-        IYieldsActionProvider Submit(string selector);
+        IYieldsAction Submit(string selector);
 
         /// <summary>
         /// Submit form.
         /// </summary>
         /// <param name="selector">selector</param>
         /// <returns></returns>
-        IYieldsActionProvider Submit(By selector);
+        IYieldsAction Submit(By selector);
 
         /// <summary>
         /// Switch to
@@ -252,7 +252,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Wait for something to happen
         /// </summary>
-        IWaitActionProvider Wait { get; }
+        IWaitAction Wait { get; }
 
         /// <summary>
         /// Yields a Page Object using SimpleFixture

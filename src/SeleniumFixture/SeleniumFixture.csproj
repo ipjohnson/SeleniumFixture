@@ -58,6 +58,8 @@
     <Compile Include="Impl\AutoFillActionProvider.cs" />
     <Compile Include="Impl\AutoFillAsActionProvider.cs" />
     <Compile Include="ElementContants.cs" />
+    <Compile Include="Impl\ClickProvider.cs" />
+    <Compile Include="Impl\DoubleClickProvider.cs" />
     <Compile Include="Impl\FixtureActionProvider.cs" />
     <Compile Include="Fixture.cs" />
     <Compile Include="FormData.cs" />
@@ -65,12 +67,13 @@
     <Compile Include="Impl\GetActionProvider.cs" />
     <Compile Include="Impl\IActionProvider.cs" />
     <Compile Include="Impl\JQueryBy.cs" />
+    <Compile Include="Impl\MouseMoveActionProvider.cs" />
     <Compile Include="Impl\NavigateActionProvider.cs" />
     <Compile Include="Impl\PropertySetter.cs" />
     <Compile Include="Impl\SwitchActionProvider.cs" />
     <Compile Include="Impl\ThenSubmitActionProvider.cs" />
-    <Compile Include="Impl\WaitActionProvider.cs" />
-    <Compile Include="Impl\YieldsActionProvider.cs" />
+    <Compile Include="Impl\WaitAction.cs" />
+    <Compile Include="Impl\YieldsAction.cs" />
     <Compile Include="ImportAttribute.cs" />
     <Compile Include="Impl\ImportSeleniumTypePropertySelector.cs" />
     <Compile Include="LanguageExtensions.cs" />

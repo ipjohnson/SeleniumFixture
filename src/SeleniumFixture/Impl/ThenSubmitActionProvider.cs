@@ -16,7 +16,7 @@ namespace SeleniumFixture.Impl
         /// Submit the form you just filled
         /// </summary>
         /// <returns>this</returns>
-        IYieldsActionProvider ThenSubmit();
+        IYieldsAction ThenSubmit();
     }
 
     /// <summary>
@@ -40,11 +40,11 @@ namespace SeleniumFixture.Impl
         /// Submit the form you just filled
         /// </summary>
         /// <returns>this</returns>
-        public IYieldsActionProvider ThenSubmit()
+        public IYieldsAction ThenSubmit()
         {
             _formElement.Submit();
 
-            return new YieldsActionProvider(_fixture);
+            return new YieldsAction(_fixture);
         }
     }
 }

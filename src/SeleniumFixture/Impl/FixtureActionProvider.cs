@@ -35,22 +35,7 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public IActionProvider MoveTheMouseTo(string selector, int? x = null, int? y = null)
         {
-            Actions action = new Actions(_fixture.Driver);
-
-            var element = FindElement(selector);
-
-            if (x.HasValue && y.HasValue)
-            {
-                action.MoveToElement(element, x.Value, y.Value);
-            }
-            else
-            {
-                action.MoveToElement(element);
-            }
-
-            action.Perform();
-
-            return this;
+            return _fixture.Data.Locate<IMouseMoveActionProvider>().MoveTheMouseTo(selector, x, y);
         }
 
         /// <summary>
@@ -62,22 +47,7 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public IActionProvider MoveTheMouseTo(By selector, int? x = null, int? y = null)
         {
-            Actions action = new Actions(_fixture.Driver);
-
-            var element = FindElement(selector);
-
-            if (x.HasValue && y.HasValue)
-            {
-                action.MoveToElement(element, x.Value, y.Value);
-            }
-            else
-            {
-                action.MoveToElement(element);
-            }
-
-            action.Perform();
-
-            return this;
+            return _fixture.Data.Locate<IMouseMoveActionProvider>().MoveTheMouseTo(selector, x, y);
         }
 
         /// <summary>
@@ -217,197 +187,22 @@ namespace SeleniumFixture.Impl
 
         public IActionProvider Click(string selector, ClickMode clickMode = ClickMode.ClickAll)
         {
-            switch (clickMode)
-            {
-                case ClickMode.ClickOne:
-                    FindElement(selector).Click();
-                    break;
-
-                case ClickMode.ClickAny:
-                    FindElements(selector).Apply(c => c.Click());
-                    break;
-
-                case ClickMode.ClickAll:
-                    var all = FindElements(selector);
-
-                    if (all.Count == 0)
-                    {
-                        throw new Exception("Could not locate any using selector: " + selector);
-                    }
-                    all.Apply(c => c.Click());
-                    break;
-
-                case ClickMode.ClickFirst:
-                    var firstList = FindElements(selector);
-
-                    if (firstList.Count == 0)
-                    {
-                        throw new Exception("Could not locate any using selector: " + selector);
-                    }
-                    firstList[0].Click();
-                    break;
-            }
-
-            return this;
+            return _fixture.Data.Locate<IClickProvider>().Click(selector, clickMode);
         }
 
         public IActionProvider Click(By selector, ClickMode clickMode = ClickMode.ClickAll)
         {
-            switch (clickMode)
-            {
-                case ClickMode.ClickOne:
-                    FindElement(selector).Click();
-                    break;
-                case ClickMode.ClickAny:
-                    FindElements(selector).Apply(c => c.Click());
-                    break;
-                case ClickMode.ClickAll:
-                    var all = FindElements(selector);
-
-                    if (all.Count == 0)
-                    {
-                        throw new Exception("Could not locate any using selector: " + selector);
-                    }
-                    all.Apply(c => c.Click());
-                    break;
-                case ClickMode.ClickFirst:
-                    var firstList = FindElements(selector);
-
-                    if (firstList.Count == 0)
-                    {
-                        throw new Exception("Could not locate any using selector: " + selector);
-                    }
-                    firstList[0].Click();
-                    break;
-            }
-
-            return this;
+            return _fixture.Data.Locate<IClickProvider>().Click(selector, clickMode);
         }
 
         public IActionProvider DoubleClick(string selector, ClickMode clickMode = ClickMode.ClickAll)
         {
-            switch (clickMode)
-            {
-                case ClickMode.ClickOne:
-                    {
-                        var element = FindElement(selector);
-
-                        Actions action = new Actions(_fixture.Driver);
-                        action.DoubleClick(element);
-                        action.Perform();
-                    }
-                    break;
-
-                case ClickMode.ClickAny:
-                    {
-                        FindElements(selector).Apply(element =>
-                                                {
-                                                    Actions action = new Actions(_fixture.Driver);
-                                                    action.DoubleClick(element);
-                                                    action.Perform();
-                                                });
-
-
-                    }
-                    break;
-                case ClickMode.ClickAll:
-                    {
-                        var all = FindElements(selector);
-
-                        if (all.Count == 0)
-                        {
-                            throw new Exception("Could not locate any using selector: " + selector);
-                        }
-
-                        all.Apply(element =>
-                                    {
-                                        Actions action = new Actions(_fixture.Driver);
-                                        action.DoubleClick(element);
-                                        action.Perform();
-                                    });
-                    }
-                    break;
-
-                case ClickMode.ClickFirst:
-                    {
-                        var firstList = FindElements(selector);
-
-                        if (firstList.Count == 0)
-                        {
-                            throw new Exception("Could not locate any using selector: " + selector);
-                        }
-
-                        Actions action = new Actions(_fixture.Driver);
-                        action.DoubleClick(firstList[0]);
-                        action.Perform();
-                    }
-                    break;
-            }
-
-            return this;
+            return _fixture.Data.Locate<IDoubleClickProvider>().DoubleClick(selector, clickMode);
         }
 
         public IActionProvider DoubleClick(By selector, ClickMode clickMode = ClickMode.ClickAll)
         {
-            switch (clickMode)
-            {
-                case ClickMode.ClickOne:
-                    {
-                        var element = FindElement(selector);
-
-                        Actions action = new Actions(_fixture.Driver);
-                        action.DoubleClick(element);
-                        action.Perform();
-                    }
-                    break;
-
-                case ClickMode.ClickAny:
-                    {
-                        FindElements(selector).Apply(element =>
-                        {
-                            Actions action = new Actions(_fixture.Driver);
-                            action.DoubleClick(element);
-                            action.Perform();
-                        });
-
-
-                    }
-                    break;
-                case ClickMode.ClickAll:
-                    {
-                        var all = FindElements(selector);
-
-                        if (all.Count == 0)
-                        {
-                            throw new Exception("Could not locate any using selector: " + selector);
-                        }
-
-                        all.Apply(element =>
-                        {
-                            Actions action = new Actions(_fixture.Driver);
-                            action.DoubleClick(element);
-                            action.Perform();
-                        });
-                    }
-                    break;
-
-                case ClickMode.ClickFirst:
-                    {
-                        var firstList = FindElements(selector);
-
-                        if (firstList.Count == 0)
-                        {
-                            throw new Exception("Could not locate any using selector: " + selector);
-                        }
-
-                        Actions action = new Actions(_fixture.Driver);
-                        action.DoubleClick(firstList[0]);
-                        action.Perform();
-                    }
-                    break;
-            }
-
-            return this;
+            return _fixture.Data.Locate<IDoubleClickProvider>().DoubleClick(selector, clickMode);
         }
 
         public IThenSubmitActionProvider AutoFill(string selector, object seedWith = null)
@@ -458,23 +253,23 @@ namespace SeleniumFixture.Impl
             return new FillActionProvider(readOnlyElements, _fixture);
         }
 
-        public IWaitActionProvider Wait
+        public IWaitAction Wait
         {
-            get { return new WaitActionProvider(this); }
+            get { return new WaitAction(this); }
         }
 
-        public IYieldsActionProvider Submit(string selector)
+        public IYieldsAction Submit(string selector)
         {
             FindElement(selector).Submit();
 
-            return new YieldsActionProvider(_fixture);
+            return _fixture.Data.Locate<IYieldsAction>();
         }
 
-        public IYieldsActionProvider Submit(By selector)
+        public IYieldsAction Submit(By selector)
         {
             FindElement(selector).Submit();
 
-            return new YieldsActionProvider(_fixture);
+            return _fixture.Data.Locate<IYieldsAction>();
         }
 
         public ISwitchToActionProvider SwitchTo
@@ -489,12 +284,12 @@ namespace SeleniumFixture.Impl
 
         public T Yields<T>(string requestName = null, object constraints = null)
         {
-            return new YieldsActionProvider(this).Yields<T>(requestName, constraints);
+            return _fixture.Data.Locate<IYieldsAction>().Yields<T>(requestName, constraints);
         }
 
         public object Yields(Type type, string requestName = null, object constraints = null)
         {
-            return new YieldsActionProvider(this).Yields(type, requestName, constraints);
+            return _fixture.Data.Locate<IYieldsAction>().Yields(type, requestName, constraints);
         }
 
     }

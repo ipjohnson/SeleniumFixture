@@ -41,7 +41,7 @@ namespace SeleniumFixture.Impl
             return new ThenSubmitActionProvider(_fixture, _elements.FirstOrDefault());
         }
 
-        private void FillElementsWithValues(object fillValues)
+        protected virtual void FillElementsWithValues(object fillValues)
         {
             foreach (var webElement in _elements)
             {
@@ -49,7 +49,7 @@ namespace SeleniumFixture.Impl
             }
         }
 
-        private void FillElementWithValues(IWebElement element, object fillValues)
+        protected virtual void FillElementWithValues(IWebElement element, object fillValues)
         {
             if (fillValues == null || 
                 fillValues.GetType().IsPrimitive ||
@@ -65,7 +65,7 @@ namespace SeleniumFixture.Impl
             }
         }
 
-        private void SetComplexValuesIntoElement(IWebElement webElement,object fillValues)
+        protected virtual void SetComplexValuesIntoElement(IWebElement webElement, object fillValues)
         {
             switch (webElement.TagName)
             {
@@ -86,7 +86,7 @@ namespace SeleniumFixture.Impl
             }
         }
 
-        private void SetComplexValuesIntoForm(IWebElement webElement, object fillValues)
+        protected virtual void SetComplexValuesIntoForm(IWebElement webElement, object fillValues)
         {
             if (fillValues is IEnumerable<KeyValuePair<string, object>>)
             {
@@ -98,7 +98,7 @@ namespace SeleniumFixture.Impl
             }
         }
 
-        private void SetObjectValuesIntoForm(IWebElement webElement, object fillValues)
+        protected virtual void SetObjectValuesIntoForm(IWebElement webElement, object fillValues)
         {
             foreach (PropertyInfo runtimeProperty in fillValues.GetType().GetRuntimeProperties())
             {
@@ -160,7 +160,7 @@ namespace SeleniumFixture.Impl
             }
         }
 
-        private void SetDictionaryValuesIntoForm(IWebElement webElement, IEnumerable<KeyValuePair<string, object>> keyValuePairs)
+        protected virtual void SetDictionaryValuesIntoForm(IWebElement webElement, IEnumerable<KeyValuePair<string, object>> keyValuePairs)
         {
             foreach (KeyValuePair<string, object> keyValuePair in keyValuePairs)
             {
@@ -178,7 +178,7 @@ namespace SeleniumFixture.Impl
             }
         }
 
-        private IEnumerable<KeyValuePair<string, object>> GetSetValues(object fillValues)
+        protected virtual IEnumerable<KeyValuePair<string, object>> GetSetValues(object fillValues)
         {
             if (fillValues is IEnumerable<KeyValuePair<string, object>>)
             {
@@ -197,7 +197,7 @@ namespace SeleniumFixture.Impl
             return returnValue;
         }
 
-        private void SetPrimitiveValueIntoElement(IWebElement webElement, object setValue)
+        protected virtual void SetPrimitiveValueIntoElement(IWebElement webElement, object setValue)
         {
             if (webElement.TagName == "input")
             {
@@ -209,7 +209,7 @@ namespace SeleniumFixture.Impl
             }
         }
 
-        private static void SetPrimitiveValueIntoInputElement(IWebElement webElement, object setValue)
+        protected static void SetPrimitiveValueIntoInputElement(IWebElement webElement, object setValue)
         {
             var type = webElement.GetAttribute(ElementContants.TypeAttribute);
 
@@ -260,7 +260,7 @@ namespace SeleniumFixture.Impl
             }
         }
 
-        private static void SetPrimitiveIntoSelectElement(IWebElement webElement, object setValue)
+        protected static void SetPrimitiveIntoSelectElement(IWebElement webElement, object setValue)
         {
             SelectElement selectElement = new SelectElement(webElement);
 
