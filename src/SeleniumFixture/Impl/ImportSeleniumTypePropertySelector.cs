@@ -21,7 +21,15 @@ namespace SeleniumFixture.Impl
             {
                 if (runtimeProperty.GetSetMethod(true) == null)
                 {
-                    continue;
+                    if (runtimeProperty.DeclaringType == null ||
+                        runtimeProperty.DeclaringType == instance.GetType())
+                        continue;
+
+                    var baseProperty = runtimeProperty.DeclaringType.GetProperty(runtimeProperty.Name,
+                        BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+                    if(baseProperty == null || baseProperty.GetSetMethod(true) == null)
+                        continue;
                 }
 
                 if(runtimeProperty.GetCustomAttributes(true).Any(o => o.GetType() == typeof(ImportAttribute)) ||
