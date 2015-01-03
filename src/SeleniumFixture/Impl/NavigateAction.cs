@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SeleniumFixture.Impl
@@ -98,6 +99,13 @@ namespace SeleniumFixture.Impl
 
             _actionProvider.UsingFixture.Driver.Navigate().GoToUrl(url);
 
+            var waitTime = (int)(_actionProvider.UsingFixture.Configuration.FixtureImplicitWait * 1000);
+
+            if (waitTime >= 0)
+            {
+                Thread.Sleep(waitTime);
+            }
+
             return _actionProvider;
         }
 
@@ -146,6 +154,13 @@ namespace SeleniumFixture.Impl
         public IActionProvider Back()
         {
             _actionProvider.UsingFixture.Driver.Navigate().Back();
+            
+            var waitTime = (int)(_actionProvider.UsingFixture.Configuration.FixtureImplicitWait * 1000);
+
+            if (waitTime >= 0)
+            {
+                Thread.Sleep(waitTime);
+            }
 
             return _actionProvider;
         }
@@ -157,7 +172,7 @@ namespace SeleniumFixture.Impl
         /// <returns>page object</returns>
         public T Back<T>()
         {
-            _actionProvider.UsingFixture.Driver.Navigate().Back();
+            Back();
 
             return _actionProvider.Yields<T>();
         }
@@ -170,6 +185,13 @@ namespace SeleniumFixture.Impl
         {
             _actionProvider.UsingFixture.Driver.Navigate().Forward();
 
+            var waitTime = (int)(_actionProvider.UsingFixture.Configuration.FixtureImplicitWait * 1000);
+
+            if (waitTime >= 0)
+            {
+                Thread.Sleep(waitTime);
+            }
+
             return _actionProvider;
         }
 
@@ -180,7 +202,7 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public T Forward<T>()
         {
-            _actionProvider.UsingFixture.Driver.Navigate().Forward();
+            Forward();
 
             return _actionProvider.Yields<T>();
         }

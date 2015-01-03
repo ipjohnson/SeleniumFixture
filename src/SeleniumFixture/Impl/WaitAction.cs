@@ -115,7 +115,7 @@ namespace SeleniumFixture.Impl
         {
             if (!timeout.HasValue)
             {
-                timeout = _actionProvider.UsingFixture.Configuration.DefaultWaitTimeout;
+                timeout = _actionProvider.UsingFixture.Configuration.DefaultTimeout;
             }
 
             DateTime expire = DateTime.Now.AddSeconds(timeout.Value);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
 
@@ -43,6 +44,13 @@ namespace SeleniumFixture.Impl
         public IYieldsAction ThenSubmit()
         {
             _formElement.Submit();
+
+            var waitTime = (int)(_fixture.Configuration.FixtureImplicitWait * 1000);
+
+            if (waitTime >= 0)
+            {
+                Thread.Sleep(waitTime);
+            }
 
             return new YieldsAction(_fixture);
         }

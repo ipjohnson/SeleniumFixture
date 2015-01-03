@@ -43,8 +43,9 @@ namespace SeleniumFixture
         {
             Selector = SelectorAlgorithm.Auto;
             
-            DefaultWaitTimeout = 10;
+            DefaultTimeout = 10;
             DefaultWaitInterval = 0.1;
+            FixtureImplicitWait = 0.05;
 
             AjaxActiveTest = "return (window.jQuery || { active : 0 }).active == 0;";
 
@@ -61,12 +62,17 @@ namespace SeleniumFixture
         /// <summary>
         /// Default timeout for actions, in seconds
         /// </summary>
-        public double DefaultWaitTimeout { get; set; }
+        public double DefaultTimeout { get; set; }
 
         /// <summary>
         /// Time to wait in between testing for wait condition
         /// </summary>
         public double DefaultWaitInterval { get; set; }
+
+        /// <summary>
+        /// Fixture will wait a small amount of time after every time Click, DoubleClick and Navigate is called
+        /// </summary>
+        public double FixtureImplicitWait { get; set; }
 
         /// <summary>
         /// Element selector algorithm

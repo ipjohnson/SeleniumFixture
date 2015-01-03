@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
@@ -86,6 +87,13 @@ namespace SeleniumFixture.Impl
                     break;
             }
 
+            var waitTime = (int)(_fixture.Configuration.FixtureImplicitWait * 1000);
+
+            if (waitTime >= 0)
+            {
+                Thread.Sleep(waitTime);
+            }
+
             return _actionProvider;
         }
 
@@ -147,6 +155,13 @@ namespace SeleniumFixture.Impl
                         action.Perform();
                     }
                     break;
+            }
+
+            var waitTime = (int)(_fixture.Configuration.FixtureImplicitWait * 1000);
+
+            if (waitTime >= 0)
+            {
+                Thread.Sleep(waitTime);
             }
 
             return _actionProvider;
