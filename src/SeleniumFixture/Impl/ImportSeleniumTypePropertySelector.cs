@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using SimpleFixture;
@@ -18,14 +19,16 @@ namespace SeleniumFixture.Impl
         {
             foreach (PropertyInfo runtimeProperty in instance.GetType().GetRuntimeProperties())
             {
-                if(runtimeProperty.GetCustomAttributes(true).All(o => o.GetType() != typeof(ImportAttribute)) && 
-                   runtimeProperty.PropertyType != typeof(IActionProvider) && 
-                   runtimeProperty.GetSetMethod(true) != null)
+                if (runtimeProperty.GetSetMethod(true) == null)
                 {
                     continue;
                 }
 
-                yield return runtimeProperty;
+                if(runtimeProperty.GetCustomAttributes(true).Any(o => o.GetType() == typeof(ImportAttribute)) ||
+                   runtimeProperty.PropertyType == typeof(IActionProvider))
+                {
+                    yield return runtimeProperty;
+                }
             }
         }
     }
