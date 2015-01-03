@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -7,19 +8,30 @@ using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Remote;
+using SeleniumFixture.xUnit.Impl;
 using Xunit;
+using Xunit.Abstractions;
 using Xunit.Sdk;
 
 namespace SeleniumFixture.xUnit
 {
-    [DataDiscoverer("SeleniumFixture.xUnit.Impl.FirefoxDriverDataDiscoverer", "SeleniumFixture.xUnit")]
-    public class FirefoxDriverAttribute : DataAttribute
+    public class FirefoxDriverAttribute : WebDriverAttribute
     {
-        private Guid _guid = Guid.NewGuid();
-
-        public override IEnumerable<object[]> GetData(MethodInfo testMethod)
+        protected override IWebDriver CreateWebDriver(MethodInfo testMethod)
         {
-            yield break;
+            var firefoxDriverProvider = ReflectionHelper.GetAttribute<FirefoxDriverProviderAttribute>(testMethod);
+
+            if (firefoxDriverProvider != null)
+            {
+                return firefoxDriverProvider.ProvideDriver(testMethod);
+            }
+
+            var provider = ReflectionHelper.GetAttribute<FirefoxProfileAttribute>(testMethod);
+
+
+            return new FirefoxDriver(provider != null ? 
+                                     provider.CreateProfile(testMethod) : 
+                                     new FirefoxProfile());
         }
     }
 }

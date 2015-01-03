@@ -5,11 +5,12 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using OpenQA.Selenium.Chrome;
+using Xunit.Abstractions;
 
 namespace SeleniumFixture.xUnit
 {
-    public abstract class ChromeOptionsAttribute : Attribute
+    public abstract class ChromeDriverProviderAttribute : Attribute
     {
-        public abstract ChromeOptions ProvideOptions(MethodInfo testMethod);
+        public abstract ChromeDriver ProvideDriver(MethodInfo testMethod);
     }
 }

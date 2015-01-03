@@ -4,16 +4,30 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.IE;
+using SeleniumFixture.xUnit.Impl;
 using Xunit.Sdk;
 
 namespace SeleniumFixture.xUnit
 {
-    [DataDiscoverer("SeleniumFixture.xUnit.Impl.InternetExplorerDriverDataDiscoverer", "SeleniumFixture.xUnit")]
-    public class InternetExplorerDriverAttribute : DataAttribute
+    public class InternetExplorerDriverAttribute : WebDriverAttribute
     {
-        public override IEnumerable<object[]> GetData(MethodInfo testMethod)
+        protected override IWebDriver CreateWebDriver(MethodInfo testMethod)
         {
-            yield break;
+            var chromeDriverProvider = ReflectionHelper.GetAttribute<InternetExplorerDriverProviderAttribute>(testMethod);
+
+            if (chromeDriverProvider != null)
+            {
+                return chromeDriverProvider.ProvideDriver(testMethod);
+            }
+
+            var optionsProvider = ReflectionHelper.GetAttribute<InternetExplorerOptionsAttribute>(testMethod);
+
+            return new InternetExplorerDriver(optionsProvider != null ? 
+                                              optionsProvider.ProvideOptions(testMethod) : 
+                                              new InternetExplorerOptions());
         }
     }
 }

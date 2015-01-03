@@ -5,11 +5,13 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using OpenQA.Selenium.Firefox;
+using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace SeleniumFixture.xUnit
 {
-    public abstract class FirefoxProfileAttribute : Attribute
+    public abstract class FirefoxDriverProviderAttribute : Attribute
     {
-        public abstract FirefoxProfile CreateProfile(MethodInfo methodInfo);
+        public abstract FirefoxDriver ProvideDriver(MethodInfo methodInfo);
     }
 }

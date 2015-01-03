@@ -27,36 +27,21 @@ namespace SeleniumFixture.xUnit.Impl
             {
                 var dataAttributes = TestCase.TestMethod.Method.GetCustomAttributes(typeof(DataAttribute));
 
-                foreach (IAttributeInfo dataAttribute in dataAttributes)
+                if(await RunDataAttributeTests(dataAttributes, runSummary))
                 {
-                    var discovererAttribute = dataAttribute.GetCustomAttributes(typeof(DataDiscovererAttribute)).First();
-                    var args = discovererAttribute.GetConstructorArguments().Cast<string>().ToList();
-                    var discovererType = Reflector.GetType(args[1], args[0]);
-                    var discoverer = ExtensibilityPointFactory.GetDataDiscoverer(discovererType);
-
-                    foreach (var dataRow in discoverer.GetData(dataAttribute, TestCase.TestMethod.Method))
-                    {
-                        ITypeInfo[] resolvedTypes = null;
-                        var methodToRun = TestMethod;
-
-                        if (methodToRun.IsGenericMethodDefinition)
-                        {
-                            resolvedTypes = TypeUtility.ResolveGenericTypes(TestCase.TestMethod.Method, dataRow);
-                            methodToRun = methodToRun.MakeGenericMethod(resolvedTypes.Select(t => ((IReflectionTypeInfo)t).Type).ToArray());
-                        }
-
-                        var parameterTypes = methodToRun.GetParameters().Select(p => p.ParameterType).ToArray();
-                        var convertedDataRow = Reflector.ConvertArguments(dataRow, parameterTypes);
-                        var theoryDisplayName = CreateTheoryDisplayName(TestCase.TestMethod.Method, DisplayName, convertedDataRow, resolvedTypes);
-
-                        var test = new XunitTest(TestCase, theoryDisplayName);
-
-                        runSummary.Aggregate(
-                            await new XunitTestRunner(test, MessageBus, TestClass, ConstructorArguments, methodToRun, convertedDataRow, SkipReason, BeforeAfterAttributes, Aggregator, CancellationTokenSource).RunAsync());
-
-                        DisposeOfData(dataRow);
-                    }
+                    return runSummary;
                 }
+
+                dataAttributes = TestCase.TestMethod.TestClass.Class.GetCustomAttributes(typeof(DataAttribute));
+
+                if (await RunDataAttributeTests(dataAttributes, runSummary))
+                {
+                    return runSummary;
+                }
+
+                dataAttributes = TestCase.TestMethod.TestClass.Class.Assembly.GetCustomAttributes(typeof(DataAttribute));
+
+                await RunDataAttributeTests(dataAttributes, runSummary);
             }
             catch (Exception ex)
             {
@@ -77,6 +62,60 @@ namespace SeleniumFixture.xUnit.Impl
             }
 
             return runSummary;
+        }
+
+        private async Task<bool> RunDataAttributeTests(IEnumerable<IAttributeInfo> dataAttributes, RunSummary runSummary)
+        {
+            bool foundTest = false;
+
+            foreach (IAttributeInfo dataAttribute in dataAttributes)
+            {
+                var discovererAttribute = dataAttribute.GetCustomAttributes(typeof(DataDiscovererAttribute)).First();
+                var args = discovererAttribute.GetConstructorArguments().Cast<string>().ToList();
+                var discovererType = Reflector.GetType(args[1], args[0]);
+                var discoverer = ExtensibilityPointFactory.GetDataDiscoverer(discovererType);
+
+                foreach (var dataRow in discoverer.GetData(dataAttribute, TestCase.TestMethod.Method))
+                {
+                    ITypeInfo[] resolvedTypes = null;
+                    var methodToRun = TestMethod;
+
+                    if (methodToRun.IsGenericMethodDefinition)
+                    {
+                        resolvedTypes = TypeUtility.ResolveGenericTypes(TestCase.TestMethod.Method, dataRow);
+                        methodToRun =
+                            methodToRun.MakeGenericMethod(resolvedTypes.Select(t => ((IReflectionTypeInfo)t).Type).ToArray());
+                    }
+
+                    var parameterTypes = methodToRun.GetParameters().Select(p => p.ParameterType).ToArray();
+                    var convertedDataRow = Reflector.ConvertArguments(dataRow, parameterTypes);
+                    var theoryDisplayName = CreateTheoryDisplayName(TestCase.TestMethod.Method,
+                        DisplayName,
+                        convertedDataRow,
+                        resolvedTypes);
+
+                    var test = new XunitTest(TestCase, theoryDisplayName);
+
+                    runSummary.Aggregate(
+                        await
+                            new XunitTestRunner(test,
+                                MessageBus,
+                                TestClass,
+                                ConstructorArguments,
+                                methodToRun,
+                                convertedDataRow,
+                                SkipReason,
+                                BeforeAfterAttributes,
+                                Aggregator,
+                                CancellationTokenSource).RunAsync());
+
+                    DisposeOfData(dataRow);
+
+                    foundTest = true;
+                }
+            }
+
+            return foundTest;
         }
 
         private string CreateTheoryDisplayName(IMethodInfo method, string displayName, object[] convertedDataRow, ITypeInfo[] resolvedTypes)

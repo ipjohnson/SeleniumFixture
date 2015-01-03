@@ -62,27 +62,29 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChromeDriverAttribute.cs" />
+    <Compile Include="ChromeDriverProviderAttribute.cs" />
     <Compile Include="ChromeOptionsAttribute.cs" />
     <Compile Include="FirefoxDriverAttribute.cs" />
+    <Compile Include="FirefoxDriverProviderAttribute.cs" />
     <Compile Include="FirefoxProfileAttribute.cs" />
     <Compile Include="Impl\AsyncManualResetEvent.cs" />
     <Compile Include="Impl\AsyncTestSyncContext.cs" />
-    <Compile Include="Impl\ChromeDriverDataDiscoverer.cs" />
     <Compile Include="Impl\ExceptionExtensions.cs" />
-    <Compile Include="Impl\FirefoxDriverDataDiscoverer.cs" />
     <Compile Include="FixtureCreationAttribute.cs" />
-    <Compile Include="Impl\InternetExplorerDriverDataDiscoverer.cs" />
     <Compile Include="Impl\SeleniumTestInvoker.cs" />
     <Compile Include="Impl\SeleniumTestRunner.cs" />
     <Compile Include="Impl\SeleniumTheoryTestCase.cs" />
     <Compile Include="Impl\SeleniumTheoryTestCaseRunner.cs" />
     <Compile Include="Impl\XunitWorkerThread.cs" />
     <Compile Include="InternetExplorerDriverAttribute.cs" />
+    <Compile Include="InternetExplorerDriverProviderAttribute.cs" />
     <Compile Include="InternetExplorerOptionsAttribute.cs" />
-    <Compile Include="ISeleniumDriverDataAttribute.cs" />
+    <Compile Include="RemoteWebDriverHubAddressAttribute.cs" />
+    <Compile Include="WebDriverAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Impl\ReflectionHelper.cs" />
     <Compile Include="RemoteDriverAttribute.cs" />
+    <Compile Include="RemoteWebDriverProviderAttribute.cs" />
     <Compile Include="SeleniumTheoryAttribute.cs" />
     <Compile Include="Impl\SeleniumTheoryDiscoverer.cs" />
   </ItemGroup>

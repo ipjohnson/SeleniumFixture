@@ -5,11 +5,12 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using OpenQA.Selenium.IE;
+using Xunit.Abstractions;
 
 namespace SeleniumFixture.xUnit
 {
-    public abstract class InternetExplorerOptionsAttribute : Attribute
+    public abstract class InternetExplorerDriverProviderAttribute : Attribute
     {
-        public abstract InternetExplorerOptions ProvideOptions(MethodInfo methodInfo);
+        public abstract InternetExplorerDriver ProvideDriver(MethodInfo methodInfo);
     }
 }

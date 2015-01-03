@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
 using SeleniumFixture.xUnit.Impl;
+using Xunit.Abstractions;
 
 namespace SeleniumFixture.xUnit
 {
