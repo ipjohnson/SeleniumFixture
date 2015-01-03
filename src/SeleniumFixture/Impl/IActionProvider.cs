@@ -45,7 +45,7 @@ namespace SeleniumFixture.Impl
         /// <param name="selector">selector</param>
         /// <param name="seedWith">seed data</param>
         /// <returns>this</returns>
-        IThenSubmitActionProvider AutoFill(string selector, object seedWith = null);
+        IThenSubmitAction AutoFill(string selector, object seedWith = null);
 
         /// <summary>
         /// Autofill elements using data from SimpleFixture
@@ -53,7 +53,7 @@ namespace SeleniumFixture.Impl
         /// <param name="selector">selector</param>
         /// <param name="seedWith">seed data</param>
         /// <returns>this</returns>
-        IThenSubmitActionProvider AutoFill(By selector, object seedWith = null);
+        IThenSubmitAction AutoFill(By selector, object seedWith = null);
 
         /// <summary>
         /// Autofill elements using data from SimpleFixture
@@ -61,7 +61,7 @@ namespace SeleniumFixture.Impl
         /// <param name="elements"></param>
         /// <param name="seedWith"></param>
         /// <returns></returns>
-        IThenSubmitActionProvider AutoFill(IEnumerable<IWebElement> elements, object seedWith = null);
+        IThenSubmitAction AutoFill(IEnumerable<IWebElement> elements, object seedWith = null);
 
         /// <summary>
         /// Auto fill elements as a specific type
@@ -71,7 +71,7 @@ namespace SeleniumFixture.Impl
         /// <param name="requestName">request name</param>
         /// <param name="constraints">constraints for generation</param>
         /// <returns>this</returns>
-        IThenSubmitActionProvider AutoFillAs<T>(string selector, string requestName = null, object constraints = null);
+        IThenSubmitAction AutoFillAs<T>(string selector, string requestName = null, object constraints = null);
 
         /// <summary>
         /// Auto fill elements as a specific type
@@ -81,7 +81,7 @@ namespace SeleniumFixture.Impl
         /// <param name="requestName">request name</param>
         /// <param name="constraints">constraints for generation</param>
         /// <returns>this</returns>
-        IThenSubmitActionProvider AutoFillAs<T>(By selector, string requestName = null, object constraints = null);
+        IThenSubmitAction AutoFillAs<T>(By selector, string requestName = null, object constraints = null);
 
         /// <summary>
         /// Auto fill elements as a specific type
@@ -91,7 +91,7 @@ namespace SeleniumFixture.Impl
         /// <param name="requestName">request name</param>
         /// <param name="constraints">constraints for generation</param>
         /// <returns>this</returns>
-        IThenSubmitActionProvider AutoFillAs<T>(IEnumerable<IWebElement> elements, string requestName = null, object constraints = null);
+        IThenSubmitAction AutoFillAs<T>(IEnumerable<IWebElement> elements, string requestName = null, object constraints = null);
 
         /// <summary>
         /// Check for the element specified in the selector
@@ -158,21 +158,21 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="selector">selector</param>
         /// <returns>fill action</returns>
-        IFillActionProvider Fill(string selector);
+        IFillAction Fill(string selector);
 
         /// <summary>
         /// Fill elements with values
         /// </summary>
         /// <param name="selector">selector</param>
         /// <returns>fill action</returns>
-        IFillActionProvider Fill(By selector);
+        IFillAction Fill(By selector);
 
         /// <summary>
         /// Fill elements with values
         /// </summary>
         /// <param name="elements">elements</param>
         /// <returns>fill action</returns>
-        IFillActionProvider Fill(IEnumerable<IWebElement> elements);
+        IFillAction Fill(IEnumerable<IWebElement> elements);
 
         /// <summary>
         /// Find a specified element by selector
@@ -200,7 +200,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Get values from a web element
         /// </summary>
-        IGetActionProvider Get { get; }
+        IGetAction Get { get; }
 
         /// <summary>
         /// Move the mouse to a give element or x,y
@@ -223,7 +223,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Navigate the fixture
         /// </summary>
-        INavigateActionProvider Navigate { get; }
+        INavigateAction Navigate { get; }
 
         /// <summary>
         /// Submit form.
@@ -242,7 +242,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Switch to
         /// </summary>
-        ISwitchToActionProvider SwitchTo { get; }
+        ISwitchToAction SwitchTo { get; }
 
         /// <summary>
         /// Fixture for this action provider

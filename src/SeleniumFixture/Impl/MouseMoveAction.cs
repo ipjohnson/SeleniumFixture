@@ -8,18 +8,18 @@ using OpenQA.Selenium.Interactions;
 
 namespace SeleniumFixture.Impl
 {
-    public interface IMouseMoveActionProvider
+    public interface IMouseMoveAction
     {
         IActionProvider MoveTheMouseTo(string selector, int? x = null, int? y = null);
 
         IActionProvider MoveTheMouseTo(By selector, int? x = null, int? y = null);
     }
 
-    public class MouseMoveActionProvider : IMouseMoveActionProvider
+    public class MouseMoveAction : IMouseMoveAction
     {
         private IActionProvider _actionProvider;
 
-        public MouseMoveActionProvider(IActionProvider actionProvider)
+        public MouseMoveAction(IActionProvider actionProvider)
         {
             _actionProvider = actionProvider;
         }

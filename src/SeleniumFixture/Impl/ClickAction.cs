@@ -7,7 +7,7 @@ using OpenQA.Selenium;
 
 namespace SeleniumFixture.Impl
 {
-    public interface IClickProvider
+    public interface IClickAction
     {
         IActionProvider Click(string selector, ClickMode clickMode = ClickMode.ClickAll);
 
@@ -17,11 +17,11 @@ namespace SeleniumFixture.Impl
     /// <summary>
     /// Click provider
     /// </summary>
-    public class ClickProvider : IClickProvider
+    public class ClickAction : IClickAction
     {
         private IActionProvider _actionProvider;
 
-        public ClickProvider(IActionProvider actionProvider)
+        public ClickAction(IActionProvider actionProvider)
         {
             _actionProvider = actionProvider;
         }

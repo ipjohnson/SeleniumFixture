@@ -8,19 +8,19 @@ using OpenQA.Selenium.Interactions;
 
 namespace SeleniumFixture.Impl
 {
-    public interface IDoubleClickProvider
+    public interface IDoubleClickAction
     {
         IActionProvider DoubleClick(string selector, ClickMode clickMode = ClickMode.ClickAll);
 
         IActionProvider DoubleClick(By selector, ClickMode clickMode = ClickMode.ClickAll);
     }
 
-    public class DoubleClickProvider : IDoubleClickProvider
+    public class DoubleClickAction : IDoubleClickAction
     {
         private IActionProvider _actionProvider;
         private Fixture _fixture;
 
-        public DoubleClickProvider(IActionProvider actionProvider)
+        public DoubleClickAction(IActionProvider actionProvider)
         {
             _actionProvider = actionProvider;
             _fixture = _actionProvider.UsingFixture;

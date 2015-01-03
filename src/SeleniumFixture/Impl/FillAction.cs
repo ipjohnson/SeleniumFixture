@@ -11,34 +11,34 @@ using OpenQA.Selenium.Support.UI;
 
 namespace SeleniumFixture.Impl
 {
-    public interface IFillActionProvider
+    public interface IFillAction
     {
         /// <summary>
         /// Data to fill input elements with.
         /// </summary>
         /// <param name="fillValues"></param>
         /// <returns></returns>
-        IThenSubmitActionProvider With(object fillValues);
+        IThenSubmitAction With(object fillValues);
     }
 
-    public class FillActionProvider : IFillActionProvider
+    public class FillAction : IFillAction
     {
         protected readonly bool _jQueryEnabled;
         protected readonly Fixture _fixture;
         protected readonly ReadOnlyCollection<IWebElement> _elements;
 
-        public FillActionProvider(ReadOnlyCollection<IWebElement> elements, Fixture fixture)
+        public FillAction(ReadOnlyCollection<IWebElement> elements, Fixture fixture)
         {
             _fixture = fixture;
             _elements = elements;
             _jQueryEnabled = elements.Count != 0 && AutoBy.IsJavaScriptEnabled(elements[0]);
         }
 
-        public virtual IThenSubmitActionProvider With(object fillValues)
+        public virtual IThenSubmitAction With(object fillValues)
         {
             FillElementsWithValues(fillValues);
 
-            return new ThenSubmitActionProvider(_fixture, _elements.FirstOrDefault());
+            return new ThenSubmitAction(_fixture, _elements.FirstOrDefault());
         }
 
         protected virtual void FillElementsWithValues(object fillValues)

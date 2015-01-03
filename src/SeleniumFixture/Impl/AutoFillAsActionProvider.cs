@@ -7,22 +7,23 @@ using OpenQA.Selenium;
 
 namespace SeleniumFixture.Impl
 {
-    public class AutoFillAsActionProvider<T>
+    public interface IAutoFillAsActionProvider
+    {
+        IAutoFillAsAction<T> CreateAction<T>(IEnumerable<IWebElement> elements);
+    }
+
+    public class AutoFillAsActionProvider : IAutoFillAsActionProvider
     {
         private readonly IActionProvider _actionProvider;
-        private readonly IEnumerable<IWebElement> _elements;
 
-        public AutoFillAsActionProvider(IActionProvider actionProvider, IEnumerable<IWebElement> elements)
+        public AutoFillAsActionProvider(IActionProvider actionProvider)
         {
             _actionProvider = actionProvider;
-            _elements = elements;
         }
 
-        public IThenSubmitActionProvider PerformFill(string requestName, object constraints)
+        public IAutoFillAsAction<T> CreateAction<T>(IEnumerable<IWebElement> elements)
         {
-            T seedValue = _actionProvider.UsingFixture.Data.Generate<T>(requestName, constraints);
-
-            return new AutoFillActionProvider(_actionProvider, _elements, seedValue).PerformFill();
+            return new AutoFillAsAction<T>(_actionProvider,elements);
         }
     }
 }

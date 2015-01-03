@@ -12,12 +12,12 @@ using SimpleFixture.Impl;
 
 namespace SeleniumFixture.Impl
 {
-    public interface IAutoFillActionProvider
+    public interface IAutoFillAction
     {
-        IThenSubmitActionProvider PerformFill();
+        IThenSubmitAction PerformFill();
     }
 
-    public class AutoFillActionProvider : IAutoFillActionProvider
+    public class AutoFillAction : IAutoFillAction
     {
         private readonly IActionProvider _actionProvider;
         private readonly IEnumerable<IWebElement> _elements;
@@ -25,7 +25,7 @@ namespace SeleniumFixture.Impl
         private readonly bool _isSimpleSeed;
         private readonly IConstraintHelper _constraintHelper;
 
-        public AutoFillActionProvider(IActionProvider actionProvider, IEnumerable<IWebElement> elements, object seedWith)
+        public AutoFillAction(IActionProvider actionProvider, IEnumerable<IWebElement> elements, object seedWith)
         {
             _actionProvider = actionProvider;
             _elements = elements;
@@ -34,11 +34,11 @@ namespace SeleniumFixture.Impl
             _constraintHelper = _actionProvider.UsingFixture.Data.Locate<IConstraintHelper>();
         }
 
-        public IThenSubmitActionProvider PerformFill()
+        public IThenSubmitAction PerformFill()
         {
             AutoFillElement();
 
-            return new ThenSubmitActionProvider(_actionProvider.UsingFixture, _elements.First());
+            return new ThenSubmitAction(_actionProvider.UsingFixture, _elements.First());
         }
         
         private void AutoFillElement()

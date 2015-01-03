@@ -35,7 +35,7 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public IActionProvider MoveTheMouseTo(string selector, int? x = null, int? y = null)
         {
-            return _fixture.Data.Locate<IMouseMoveActionProvider>().MoveTheMouseTo(selector, x, y);
+            return _fixture.Data.Locate<IMouseMoveAction>().MoveTheMouseTo(selector, x, y);
         }
 
         /// <summary>
@@ -47,15 +47,15 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public IActionProvider MoveTheMouseTo(By selector, int? x = null, int? y = null)
         {
-            return _fixture.Data.Locate<IMouseMoveActionProvider>().MoveTheMouseTo(selector, x, y);
+            return _fixture.Data.Locate<IMouseMoveAction>().MoveTheMouseTo(selector, x, y);
         }
 
         /// <summary>
         /// Navigate the fixture
         /// </summary>
-        public INavigateActionProvider Navigate
+        public INavigateAction Navigate
         {
-            get { return new NavigateActionProvider(this); }
+            get { return _fixture.Data.Locate<INavigateAction>(); }
         }
 
         /// <summary>
@@ -160,9 +160,9 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Get values from page
         /// </summary>
-        public IGetActionProvider Get
+        public IGetAction Get
         {
-            get { return new GetActionProvider(this); }
+            get { return _fixture.Data.Locate<IGetAction>(); }
         }
 
         public bool CheckForElement(string element)
@@ -187,75 +187,77 @@ namespace SeleniumFixture.Impl
 
         public IActionProvider Click(string selector, ClickMode clickMode = ClickMode.ClickAll)
         {
-            return _fixture.Data.Locate<IClickProvider>().Click(selector, clickMode);
+            return _fixture.Data.Locate<IClickAction>().Click(selector, clickMode);
         }
 
         public IActionProvider Click(By selector, ClickMode clickMode = ClickMode.ClickAll)
         {
-            return _fixture.Data.Locate<IClickProvider>().Click(selector, clickMode);
+            return _fixture.Data.Locate<IClickAction>().Click(selector, clickMode);
         }
 
         public IActionProvider DoubleClick(string selector, ClickMode clickMode = ClickMode.ClickAll)
         {
-            return _fixture.Data.Locate<IDoubleClickProvider>().DoubleClick(selector, clickMode);
+            return _fixture.Data.Locate<IDoubleClickAction>().DoubleClick(selector, clickMode);
         }
 
         public IActionProvider DoubleClick(By selector, ClickMode clickMode = ClickMode.ClickAll)
         {
-            return _fixture.Data.Locate<IDoubleClickProvider>().DoubleClick(selector, clickMode);
+            return _fixture.Data.Locate<IDoubleClickAction>().DoubleClick(selector, clickMode);
         }
 
-        public IThenSubmitActionProvider AutoFill(string selector, object seedWith = null)
+        public IThenSubmitAction AutoFill(string selector, object seedWith = null)
         {
             return AutoFill(FindElements(selector), seedWith);
         }
 
-        public IThenSubmitActionProvider AutoFill(By selector, object seedWith = null)
+        public IThenSubmitAction AutoFill(By selector, object seedWith = null)
         {
             return AutoFill(FindElements(selector), seedWith);
         }
 
-        public IThenSubmitActionProvider AutoFill(IEnumerable<IWebElement> elements, object seedWith = null)
+        public IThenSubmitAction AutoFill(IEnumerable<IWebElement> elements, object seedWith = null)
         {
-            return new AutoFillActionProvider(this, elements, seedWith).PerformFill();
+            return _fixture.Data.Locate<IAutoFillAction>(constraints: new { elements, seedWith }).PerformFill();
         }
 
-        public IThenSubmitActionProvider AutoFillAs<T>(string selector, string requestName = null, object constraints = null)
-        {
-            return AutoFillAs<T>(FindElements(selector), requestName, constraints);
-        }
-
-        public IThenSubmitActionProvider AutoFillAs<T>(By selector, string requestName = null, object constraints = null)
+        public IThenSubmitAction AutoFillAs<T>(string selector, string requestName = null, object constraints = null)
         {
             return AutoFillAs<T>(FindElements(selector), requestName, constraints);
         }
 
-        public IThenSubmitActionProvider AutoFillAs<T>(IEnumerable<IWebElement> elements, string requestName = null, object constraints = null)
+        public IThenSubmitAction AutoFillAs<T>(By selector, string requestName = null, object constraints = null)
         {
-            return new AutoFillAsActionProvider<T>(this, elements).PerformFill(requestName,constraints);
+            return AutoFillAs<T>(FindElements(selector), requestName, constraints);
         }
 
-        public IFillActionProvider Fill(string selector)
+        public IThenSubmitAction AutoFillAs<T>(IEnumerable<IWebElement> elements, string requestName = null, object constraints = null)
+        {
+            var autoFillProvider = _fixture.Data.Locate<IAutoFillAsActionProvider>();
+
+            return autoFillProvider.CreateAction<T>(elements).PerformFill(requestName, constraints);
+        }
+
+        public IFillAction Fill(string selector)
         {
             return Fill(FindElements(selector));
         }
 
-        public IFillActionProvider Fill(By selector)
+        public IFillAction Fill(By selector)
         {
             return Fill(FindElements(selector));
         }
 
-        public IFillActionProvider Fill(IEnumerable<IWebElement> elements)
+        public IFillAction Fill(IEnumerable<IWebElement> elements)
         {
             ReadOnlyCollection<IWebElement> readOnlyElements = elements as ReadOnlyCollection<IWebElement> ??
                                                                new ReadOnlyCollection<IWebElement>(new List<IWebElement>(elements));
 
-            return new FillActionProvider(readOnlyElements, _fixture);
+            return _fixture.Data.Locate<IFillAction>(constraints: new { elements = readOnlyElements });
         }
 
         public IWaitAction Wait
         {
-            get { return new WaitAction(this); }
+            get { return _fixture.Data.Locate<IWaitAction>(); }
         }
 
         public IYieldsAction Submit(string selector)
@@ -272,9 +274,9 @@ namespace SeleniumFixture.Impl
             return _fixture.Data.Locate<IYieldsAction>();
         }
 
-        public ISwitchToActionProvider SwitchTo
+        public ISwitchToAction SwitchTo
         {
-            get { return new SwitchActionProvider(this); }
+            get { return new SwitchAction(this); }
         }
 
         public Fixture UsingFixture

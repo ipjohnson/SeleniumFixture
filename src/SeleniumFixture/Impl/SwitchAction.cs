@@ -7,7 +7,7 @@ using OpenQA.Selenium;
 
 namespace SeleniumFixture.Impl
 {
-    public interface ISwitchToActionProvider
+    public interface ISwitchToAction
     {
         /// <summary>
         /// Switch to a window by name
@@ -52,7 +52,7 @@ namespace SeleniumFixture.Impl
     /// <summary>
     /// Switch action provider
     /// </summary>
-    public class SwitchActionProvider : ISwitchToActionProvider
+    public class SwitchAction : ISwitchToAction
     {
         private readonly IActionProvider _actionProvider;
 
@@ -60,7 +60,7 @@ namespace SeleniumFixture.Impl
         /// Default constructor
         /// </summary>
         /// <param name="actionProvider">action provider</param>
-        public SwitchActionProvider(IActionProvider actionProvider)
+        public SwitchAction(IActionProvider actionProvider)
         {
             _actionProvider = actionProvider;
         }

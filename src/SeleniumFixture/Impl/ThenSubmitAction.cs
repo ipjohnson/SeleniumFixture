@@ -10,7 +10,7 @@ namespace SeleniumFixture.Impl
     /// <summary>
     /// TheSubmit provider
     /// </summary>
-    public interface IThenSubmitActionProvider : IActionProvider
+    public interface IThenSubmitAction : IActionProvider
     {
         /// <summary>
         /// Submit the form you just filled
@@ -22,7 +22,7 @@ namespace SeleniumFixture.Impl
     /// <summary>
     /// Then submit provider
     /// </summary>
-    public class ThenSubmitActionProvider : FixtureActionProvider, IThenSubmitActionProvider
+    public class ThenSubmitAction : FixtureActionProvider, IThenSubmitAction
     {
         private readonly IWebElement _formElement;
 
@@ -31,7 +31,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="fixture"></param>
         /// <param name="formElement"></param>
-        public ThenSubmitActionProvider(Fixture fixture, IWebElement formElement) : base(fixture)
+        public ThenSubmitAction(Fixture fixture, IWebElement formElement) : base(fixture)
         {
             _formElement = formElement;
         }

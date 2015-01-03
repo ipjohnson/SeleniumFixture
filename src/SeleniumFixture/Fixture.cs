@@ -79,7 +79,7 @@ namespace SeleniumFixture
         /// <summary>
         /// Navigate the fixture
         /// </summary>
-        public INavigateActionProvider Navigate
+        public INavigateAction Navigate
         {
             get { return _actionProvider.Navigate; }
         }
@@ -139,7 +139,7 @@ namespace SeleniumFixture
         /// <summary>
         /// Get values from a web element
         /// </summary>
-        public IGetActionProvider Get
+        public IGetAction Get
         {
             get { return _actionProvider.Get; }
         }
@@ -234,7 +234,7 @@ namespace SeleniumFixture
         /// <param name="selector">selector</param>
         /// <param name="seedWith">seed data</param>
         /// <returns>this</returns>
-        public IThenSubmitActionProvider AutoFill(string selector, object seedWith = null)
+        public IThenSubmitAction AutoFill(string selector, object seedWith = null)
         {
             return _actionProvider.AutoFill(selector, seedWith);
         }
@@ -245,7 +245,7 @@ namespace SeleniumFixture
         /// <param name="selector">selector</param>
         /// <param name="seedWith">seed data</param>
         /// <returns>this</returns>
-        public IThenSubmitActionProvider AutoFill(By selector, object seedWith = null)
+        public IThenSubmitAction AutoFill(By selector, object seedWith = null)
         {
             return _actionProvider.AutoFill(selector, seedWith);
         }
@@ -256,7 +256,7 @@ namespace SeleniumFixture
         /// <param name="elements"></param>
         /// <param name="seedWith"></param>
         /// <returns></returns>
-        public IThenSubmitActionProvider AutoFill(IEnumerable<IWebElement> elements, object seedWith = null)
+        public IThenSubmitAction AutoFill(IEnumerable<IWebElement> elements, object seedWith = null)
         {
             return _actionProvider.AutoFill(elements, seedWith);
         }
@@ -269,7 +269,7 @@ namespace SeleniumFixture
         /// <param name="requestName">request name</param>
         /// <param name="constraints">constraints for generation</param>
         /// <returns>this</returns>
-        public IThenSubmitActionProvider AutoFillAs<T>(string selector, string requestName = null, object constraints = null)
+        public IThenSubmitAction AutoFillAs<T>(string selector, string requestName = null, object constraints = null)
         {
             return _actionProvider.AutoFillAs<T>(selector, requestName, constraints);
         }
@@ -282,7 +282,7 @@ namespace SeleniumFixture
         /// <param name="requestName">request name</param>
         /// <param name="constraints">constraints for generation</param>
         /// <returns>this</returns>
-        public IThenSubmitActionProvider AutoFillAs<T>(By selector, string requestName = null, object constraints = null)
+        public IThenSubmitAction AutoFillAs<T>(By selector, string requestName = null, object constraints = null)
         {
             return _actionProvider.AutoFillAs<T>(selector, requestName, constraints);
         }
@@ -295,7 +295,7 @@ namespace SeleniumFixture
         /// <param name="requestName">request name</param>
         /// <param name="constraints">constraints for generation</param>
         /// <returns>this</returns>
-        public IThenSubmitActionProvider AutoFillAs<T>(IEnumerable<IWebElement> elements, string requestName = null, object constraints = null)
+        public IThenSubmitAction AutoFillAs<T>(IEnumerable<IWebElement> elements, string requestName = null, object constraints = null)
         {
             return _actionProvider.AutoFillAs<T>(elements, requestName, constraints);
         }
@@ -305,7 +305,7 @@ namespace SeleniumFixture
         /// </summary>
         /// <param name="selector">selector</param>
         /// <returns>fill action</returns>
-        public IFillActionProvider Fill(string selector)
+        public IFillAction Fill(string selector)
         {
             return _actionProvider.Fill(selector);
         }
@@ -315,7 +315,7 @@ namespace SeleniumFixture
         /// </summary>
         /// <param name="selector">selector</param>
         /// <returns>fill action</returns>
-        public IFillActionProvider Fill(By selector)
+        public IFillAction Fill(By selector)
         {
             return _actionProvider.Fill(selector);
         }
@@ -325,7 +325,7 @@ namespace SeleniumFixture
         /// </summary>
         /// <param name="elements">elements</param>
         /// <returns>fill action</returns>
-        public IFillActionProvider Fill(IEnumerable<IWebElement> elements)
+        public IFillAction Fill(IEnumerable<IWebElement> elements)
         {
             return _actionProvider.Fill(elements);
         }
@@ -356,7 +356,7 @@ namespace SeleniumFixture
         /// <summary>
         /// Switch to
         /// </summary>
-        public ISwitchToActionProvider SwitchTo
+        public ISwitchToAction SwitchTo
         {
             get { return _actionProvider.SwitchTo; }
         }
@@ -444,11 +444,12 @@ namespace SeleniumFixture
                 Data.Behavior.Add(ValidateBehavior);
             }
 
-            Data.Export<AutoFillActionProvider>().As<IAutoFillActionProvider>();
-            Data.Export<ClickProvider>().As<IClickProvider>();
-            Data.Export<FillActionProvider>().As<IFillActionProvider>();
-            Data.Export<GetActionProvider>().As<IGetActionProvider>();
-            Data.Export<MouseMoveActionProvider>().As<IMouseMoveActionProvider>();
+            Data.Export<AutoFillAction>().As<IAutoFillAction>();
+            Data.Export<AutoFillAsActionProvider>().As<IAutoFillAsActionProvider>();
+            Data.Export<ClickAction>().As<IClickAction>();
+            Data.Export<FillAction>().As<IFillAction>();
+            Data.Export<GetAction>().As<IGetAction>();
+            Data.Export<MouseMoveAction>().As<IMouseMoveAction>();
             Data.Export<WaitAction>().As<IWaitAction>();
             Data.Export<YieldsAction>().As<IYieldsAction>();
         }
