@@ -205,6 +205,54 @@ namespace SeleniumFixture.Impl
             return _fixture.Data.Locate<IDoubleClickAction>().DoubleClick(selector, clickMode);
         }
 
+        public T ExecuteJavaScript<T>(string javascript, params object[] args)
+        {
+            IJavaScriptExecutor executor = _fixture.Driver as IJavaScriptExecutor;
+
+            if (executor == null)
+            {
+                throw new Exception("Javascript not supported by driver " + _fixture.Driver);
+            }
+
+            object returnValue = executor.ExecuteScript(javascript, args);
+
+            if (typeof(T) == typeof(IEnumerable<IWebElement>) ||
+                typeof(T) == typeof(ICollection<IWebElement>) ||
+                typeof(T) == typeof(IList<IWebElement>) ||
+                typeof(T) == typeof(List<IWebElement>))
+            {
+                var objects = (IEnumerable<object>)returnValue;
+
+                returnValue = objects.Cast<IWebElement>().ToList();
+            }
+            else if (typeof(T) == typeof(ReadOnlyCollection<IWebElement>) ||
+                     typeof(T) == typeof(IReadOnlyList<IWebElement>) ||
+                     typeof(T) == typeof(IReadOnlyCollection<IWebElement>))
+            {
+                var objects = (IEnumerable<object>)returnValue;
+
+                returnValue = new ReadOnlyCollection<IWebElement>(objects.Cast<IWebElement>().ToList());
+            }
+            else if (returnValue.GetType().IsInstanceOfType(typeof(T)))
+            {
+                returnValue = Convert.ChangeType(returnValue, typeof(T));
+            }
+
+            return (T)returnValue;
+        }
+
+        public void ExecuteJavaScript(string javascript, params object[] args)
+        {
+            IJavaScriptExecutor executor = _fixture.Driver as IJavaScriptExecutor;
+
+            if (executor == null)
+            {
+                throw new Exception("Javascript not supported by driver " + _fixture.Driver);
+            }
+
+            executor.ExecuteScript(javascript, args);
+        }
+
         public IThenSubmitAction AutoFill(string selector, object seedWith = null)
         {
             return AutoFill(FindElements(selector), seedWith);

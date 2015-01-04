@@ -14,6 +14,13 @@ namespace SeleniumFixture.Impl
     public interface IWaitAction
     {
         /// <summary>
+        /// Wait for no ajax calls to be active
+        /// </summary>
+        /// <param name="timeout">timeout in seconds</param>
+        /// <returns>fluent syntax object</returns>
+        IWaitAction ForAjax(double? timeout = null);
+
+        /// <summary>
         /// Wait for an element to be visible
         /// </summary>
         /// <param name="selector">element selector</param>
@@ -30,11 +37,20 @@ namespace SeleniumFixture.Impl
         IWaitAction ForElement(By selector, double? timeout = null);
 
         /// <summary>
-        /// Wait for no ajax calls to be active
+        /// Wait for a page title
         /// </summary>
-        /// <param name="timeout">timeout in seconds</param>
-        /// <returns>fluent syntax object</returns>
-        IWaitAction ForAjax(double? timeout = null);
+        /// <param name="pageTitle"></param>
+        /// <param name="timeout"></param>
+        /// <returns></returns>
+        IWaitAction ForPageTitle(string pageTitle, double? timeout = null);
+
+        /// <summary>
+        /// Wait for a page title by specified func
+        /// </summary>
+        /// <param name="pageTitleFunc"></param>
+        /// <param name="timeout"></param>
+        /// <returns></returns>
+        IWaitAction ForPageTitle(Func<string, bool> pageTitleFunc,double? timeout = null);
 
         /// <summary>
         /// Wait until the provided delegate is true
@@ -90,6 +106,17 @@ namespace SeleniumFixture.Impl
         }
 
         /// <summary>
+        /// Wait for a page title
+        /// </summary>
+        /// <param name="pageTitle"></param>
+        /// <param name="timeout"></param>
+        /// <returns></returns>
+        public IWaitAction ForPageTitle(string pageTitle, double? timeout = null)
+        {
+            return ForPageTitle(s => s.Equals(pageTitle));
+        }
+
+        /// <summary>
         /// Wait for no ajax calls to be active
         /// </summary>
         /// <param name="timeout">timeout in seconds</param>
@@ -103,6 +130,17 @@ namespace SeleniumFixture.Impl
 
                     return (bool)executor.ExecuteScript(_actionProvider.UsingFixture.Configuration.AjaxActiveTest);
                 },timeout);
+        }
+
+        /// <summary>
+        /// Wait for a page title by specified func
+        /// </summary>
+        /// <param name="pageTitleFunc"></param>
+        /// <param name="timeout"></param>
+        /// <returns></returns>
+        public IWaitAction ForPageTitle(Func<string, bool> pageTitleFunc, double? timeout = null)
+        {
+            return Until(i => pageTitleFunc(i.Get.PageTitle), timeout);
         }
 
         /// <summary>

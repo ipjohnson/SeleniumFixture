@@ -227,7 +227,29 @@ namespace SeleniumFixture
         {
             return _actionProvider.DoubleClick(selector, clickMode);
         }
-        
+
+        /// <summary>
+        /// Execute arbitrary javascript
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="javascript"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public T ExecuteJavaScript<T>(string javascript, params object[] args)
+        {
+            return _actionProvider.ExecuteJavaScript<T>(javascript, args);
+        }
+
+        /// <summary>
+        /// Execute arbitrary javascript
+        /// </summary>
+        /// <param name="javascript"></param>
+        /// <param name="args"></param>
+        public void ExecuteJavaScript(string javascript, params object[] args)
+        {
+            _actionProvider.ExecuteJavaScript(javascript, args);
+        }
+
         /// <summary>
         /// Autofill elements using data from SimpleFixture
         /// </summary>
@@ -514,7 +536,7 @@ namespace SeleniumFixture
                             }
                             catch (Exception)
                             {
-                                
+
                             }
 
                             if (newException != null)

@@ -154,6 +154,22 @@ namespace SeleniumFixture.Impl
         IActionProvider DoubleClick(By selector, ClickMode clickMode = ClickMode.ClickOne);
 
         /// <summary>
+        /// Execute arbitrary javascript
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="javascript"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        T ExecuteJavaScript<T>(string javascript, params object[] args);
+
+        /// <summary>
+        /// Execute arbitrary javascript
+        /// </summary>
+        /// <param name="javascript"></param>
+        /// <param name="args"></param>
+        void ExecuteJavaScript(string javascript, params object[] args);
+
+        /// <summary>
         /// Fill elements with values
         /// </summary>
         /// <param name="selector">selector</param>
