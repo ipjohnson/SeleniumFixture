@@ -18,8 +18,8 @@ namespace SeleniumFixture.Impl
 
     public class DoubleClickAction : IDoubleClickAction
     {
-        private IActionProvider _actionProvider;
-        private Fixture _fixture;
+        protected readonly IActionProvider _actionProvider;
+        protected readonly Fixture _fixture;
 
         public DoubleClickAction(IActionProvider actionProvider)
         {
@@ -27,7 +27,7 @@ namespace SeleniumFixture.Impl
             _fixture = _actionProvider.UsingFixture;
         }
 
-        public IActionProvider DoubleClick(string selector, ClickMode clickMode = ClickMode.ClickAll)
+        public virtual IActionProvider DoubleClick(string selector, ClickMode clickMode = ClickMode.ClickAll)
         {
             switch (clickMode)
             {
@@ -97,7 +97,7 @@ namespace SeleniumFixture.Impl
             return _actionProvider;
         }
 
-        public IActionProvider DoubleClick(By selector, ClickMode clickMode = ClickMode.ClickAll)
+        public virtual IActionProvider DoubleClick(By selector, ClickMode clickMode = ClickMode.ClickAll)
         {
             switch (clickMode)
             {

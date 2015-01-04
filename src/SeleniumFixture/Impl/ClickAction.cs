@@ -20,7 +20,7 @@ namespace SeleniumFixture.Impl
     /// </summary>
     public class ClickAction : IClickAction
     {
-        private IActionProvider _actionProvider;
+        protected readonly IActionProvider _actionProvider;
 
         public ClickAction(IActionProvider actionProvider)
         {
