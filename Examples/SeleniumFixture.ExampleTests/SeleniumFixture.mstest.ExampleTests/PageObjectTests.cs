@@ -13,7 +13,7 @@ namespace SeleniumFixture.mstest.ExampleTests
             using (var driver = new FirefoxDriver())
             {
                 var fixture = new Fixture(driver, "http://ipjohnson.github.io/SeleniumFixture/TestSite/");
-
+                
                 var homePage =
                     fixture.Navigate.To<HomePage>("Home.html");
 

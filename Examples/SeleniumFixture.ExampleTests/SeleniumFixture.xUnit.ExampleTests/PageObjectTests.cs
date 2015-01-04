@@ -11,7 +11,7 @@ namespace SeleniumFixture.xUnit.ExampleTests
     {
         [SeleniumTheory]
         [ChromeDriver]
-        [FireFoxDriver]
+        [FirefoxDriver]
         [InternetExplorerDriver]
         public void Fixture_DriveApp_ClicksAroundAndAutoFillsStuff(Fixture fixture)
         {

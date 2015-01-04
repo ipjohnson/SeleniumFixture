@@ -11,11 +11,11 @@ using OpenQA.Selenium.IE;
 namespace SeleniumFixture.xUnit.ExampleTests
 {
 
-    public class InternetExplorerOptionsAttribute : SeleniumFixture.xUnit.InternetExplorerOptionsAttribute
+    public class InternetExplorerOptionsAttribute : xUnit.InternetExplorerOptionsAttribute
     {
-        public override InternetExplorerOptions ProvideProfile()
+        public override InternetExplorerOptions ProvideOptions(MethodInfo methodInfo)
         {
-            return new InternetExplorerOptions{EnableNativeEvents = false};
+            return new InternetExplorerOptions { EnableNativeEvents = false };
         }
     }
 }

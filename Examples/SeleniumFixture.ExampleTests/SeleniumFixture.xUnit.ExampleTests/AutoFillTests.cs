@@ -16,7 +16,7 @@ namespace SeleniumFixture.xUnit.ExampleTests
         /// <param name="fixture">populated fixture</param>
         [SeleniumTheory]
         [ChromeDriver]
-        [FireFoxDriver]
+        [FirefoxDriver]
         [InternetExplorerDriver]
         public void Fixture_FillForm_PopulatesCorrectly(Fixture fixture)
         {

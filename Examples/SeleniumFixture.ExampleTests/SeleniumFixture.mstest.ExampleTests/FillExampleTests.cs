@@ -20,7 +20,7 @@ namespace SeleniumFixture.mstest.ExampleTests
                                {
                                    FirstName = "Sterling",
                                    LastName = "Archer",
-                                   Email = "sterling.archer@isis.gov",
+                                   Email = "sterling.archer@spy.gov",
                                    Password = "HelloWorld1!",
                                    Active = true,
                                    OptionsCheckbox1 = false,
@@ -40,17 +40,17 @@ namespace SeleniumFixture.mstest.ExampleTests
 
                 fixture.Get.Value.From("#Password").ShouldBeEquivalentTo(fillInfo.Password);
 
-                fixture.Get.DataAs<bool>().From("#Active").ShouldBeEquivalentTo(fillInfo.Active);
+                fixture.Get.ValueAs<bool>().From("#Active").ShouldBeEquivalentTo(fillInfo.Active);
 
-                fixture.Get.DataAs<bool>().From("#OptionsCheckbox1").ShouldBeEquivalentTo(fillInfo.OptionsCheckbox1);
+                fixture.Get.ValueAs<bool>().From("#OptionsCheckbox1").ShouldBeEquivalentTo(fillInfo.OptionsCheckbox1);
 
-                fixture.Get.DataAs<bool>().From("#OptionsCheckbox2").ShouldBeEquivalentTo(fillInfo.OptionsCheckbox2);
+                fixture.Get.ValueAs<bool>().From("#OptionsCheckbox2").ShouldBeEquivalentTo(fillInfo.OptionsCheckbox2);
 
-                fixture.Get.DataAs<bool>().From("#OptionsRadios1").ShouldBeEquivalentTo(true);
+                fixture.Get.ValueAs<bool>().From("#OptionsRadios1").ShouldBeEquivalentTo(true);
 
-                fixture.Get.DataAs<bool>().From("#OptionsRadios2").ShouldBeEquivalentTo(false);
+                fixture.Get.ValueAs<bool>().From("#OptionsRadios2").ShouldBeEquivalentTo(false);
 
-                fixture.Get.DataAs<string>().From("#AccountType").ShouldBeEquivalentTo(fillInfo.AccountType);
+                fixture.Get.ValueAs<string>().From("#AccountType").ShouldBeEquivalentTo(fillInfo.AccountType);
             }
         }
     }

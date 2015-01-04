@@ -20,7 +20,7 @@ namespace SeleniumFixture.mstest.ExampleTests
 
                 fixture.AutoFill("//form");
 
-                var newUser = fixture.Get.DataAs<NewUserModel>().From("//form");
+                var newUser = fixture.Get.ValueAs<NewUserModel>().From("//form");
 
                 newUser.FirstName.Should().Match(s => s.All(char.IsLetter));
 
@@ -33,7 +33,7 @@ namespace SeleniumFixture.mstest.ExampleTests
                 newUser.Gender.Should().BeOneOf("male", "female");
 
                 newUser.Password.Should()
-                    .MatchRegex(@"^(?=.*[!@#$%^&*()\-_=+`~\[\]{}?|])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,20}$");
+                    .MatchRegex(@"^(?=.*[.,;'""!@#$%^&*()\-_=+`~\[\]{}?|])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,20}$");
             }
         }
     }

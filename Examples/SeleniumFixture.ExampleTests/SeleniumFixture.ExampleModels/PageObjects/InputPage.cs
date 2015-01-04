@@ -13,7 +13,7 @@ namespace SeleniumFixture.ExampleModels.PageObjects
         {
             I.AutoFill("//form");
 
-            return I.Get.DataAs<NewUserModel>().From("//form");
+            return I.Get.ValueAs<NewUserModel>().From("//form");
         }
 
         public void Submit()

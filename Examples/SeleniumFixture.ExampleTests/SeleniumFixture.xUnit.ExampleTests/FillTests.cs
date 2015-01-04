@@ -10,10 +10,10 @@ namespace SeleniumFixture.xUnit.ExampleTests
 {
     public class FillTests
     {
-        [SeleniumTheory,
-        ChromeDriver,
-        FireFoxDriver,
-        InternetExplorerDriver]
+        [SeleniumTheory]
+        [ChromeDriver]
+        [FirefoxDriver]
+        [InternetExplorerDriver]
         public void Fixture_FillForm_PopulatesCorrectly(Fixture fixture)
         {
             fixture.Navigate.To("http://ipjohnson.github.io/SeleniumFixture/TestSite/InputForm.html");
@@ -22,7 +22,7 @@ namespace SeleniumFixture.xUnit.ExampleTests
             {
                 FirstName = "Sterling",
                 LastName = "Archer",
-                Email = "sterling.archer@isis.gov",
+                Email = "sterling.archer@spy.gov",
                 Password = "HelloWorld1!",
                 Active = true,
                 OptionsCheckbox1 = false,
@@ -42,17 +42,17 @@ namespace SeleniumFixture.xUnit.ExampleTests
 
             fixture.Get.Value.From("#Password").Should().Be(fillInfo.Password);
 
-            fixture.Get.DataAs<bool>().From("#Active").Should().Be(fillInfo.Active);
+            fixture.Get.ValueAs<bool>().From("#Active").Should().Be(fillInfo.Active);
 
-            fixture.Get.DataAs<bool>().From("#OptionsCheckbox1").Should().Be(fillInfo.OptionsCheckbox1);
+            fixture.Get.ValueAs<bool>().From("#OptionsCheckbox1").Should().Be(fillInfo.OptionsCheckbox1);
 
-            fixture.Get.DataAs<bool>().From("#OptionsCheckbox2").Should().Be(fillInfo.OptionsCheckbox2);
+            fixture.Get.ValueAs<bool>().From("#OptionsCheckbox2").Should().Be(fillInfo.OptionsCheckbox2);
 
-            fixture.Get.DataAs<bool>().From("#OptionsRadios1").Should().Be(true);
+            fixture.Get.ValueAs<bool>().From("#OptionsRadios1").Should().Be(true);
 
-            fixture.Get.DataAs<bool>().From("#OptionsRadios2").Should().Be(false);
+            fixture.Get.ValueAs<bool>().From("#OptionsRadios2").Should().Be(false);
 
-            fixture.Get.DataAs<string>().From("#AccountType").Should().Be(fillInfo.AccountType);
+            fixture.Get.ValueAs<string>().From("#AccountType").Should().Be(fillInfo.AccountType);
         }
     }
 }
