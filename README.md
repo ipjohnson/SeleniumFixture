@@ -54,7 +54,7 @@ fixture.AutoFill("//form");
 // AutoFill form but use Bob to will the FirstName field
 fixture.AutoFill("//form", seedWith: new { FirstName = "Bob"});
 
-// AutoFill all input & select elements in the div with id someDiv
+// Find an element with the id #someDiv and populate all child input and select elements
 fixture.AutoFill("#someDiv");
 ```
 
@@ -83,10 +83,20 @@ var fixture = new Fixture(driver, "http://ipjohnson.github.io/SeleniumFixture/Te
 var formPage = fixture.Navigate.To<FormPage>("InputForm.html");
 
 formPage.FillOutForm();
+
+public class FormPage
+{
+  public void FillOutForm()
+  {
+    I.Fill("//form").With(new { FirstName = "Sterling", LastName = "Archer" });
+  }
+
+  protected IActionProvider I { get; private set; }
+}
 ```
 
 ###IActionProvider Property
-PageObjects that have a property of type IActionProvider will be populated upon creation. Usually this propery is named I so your syntax looks like the example below
+The IActionProvider allows a page object to import the functionality of the Fixture into a local property. When PageObjects are constructed any IActionProvider property with a setter will be Populated with an instance of IActionProvider. Usually this property is named 
 
 ```C#
 I.Fill("//form").With(new { FirstName = "Sterling" });
@@ -122,7 +132,21 @@ I.Click("#submitButton").Yields<HomePage>();
 // and pass the value 5 into the constructor param someParam
 I.Click(By.LinkText("Some Text")
  .Yields<OtherPage>(constraints: new { someParam = 5 });
+ 
+public class OtherPage
+{
+  public OtherPage(int someParam)
+  {
+    Validate = () => I.Get.PageTitle.Should().EndWith(someParam.ToString());
+  }
+  
+  private Action Validate { get; set; }
+  
+  private IActionProvider { get; set; }
+}
 ```
+
+Note: Should() is part of [Fluent Assertions](https://github.com/dennisdoomen/fluentassertions).
 
 ###xUnit support
 [xUnit 2.0](https://github.com/xunit/xunit) is a very extensible testing framework that SeleniumFixture.xUnit provides support for out of the box. Currently there are a set of attributes that make setup and tear down of IWebDrivers and Fixture easier
