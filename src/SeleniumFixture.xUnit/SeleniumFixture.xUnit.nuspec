@@ -10,7 +10,7 @@
     <description>Provides xUnit attributes for SeleniumFixture</description>
     <releaseNotes>$releaseNotes$</releaseNotes>
     <copyright>Copyright ©  2015</copyright>
-    <tags>Selenium Test Fixture Data Generation PageObject</tags>
+    <tags>Selenium Test Fixture Data Generation PageObject xUnit</tags>
     <dependencies >
       <dependency id="SeleniumFixture" version="$SeleniumFixtureVersion$" />
     </dependencies>
