@@ -40,15 +40,14 @@
       <HintPath>..\packages\FluentAssertions.3.2.2\lib\net45\FluentAssertions.Core.dll</HintPath>
     </Reference>
     <Reference Include="SeleniumFixture, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SeleniumFixture.1.0.0-CI10067\lib\net45\SeleniumFixture.dll</HintPath>
+      <HintPath>..\packages\SeleniumFixture.1.0.0\lib\net45\SeleniumFixture.dll</HintPath>
     </Reference>
     <Reference Include="SeleniumFixture.xUnit, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SeleniumFixture.xUnit.1.0.0-CI10067\lib\net45\SeleniumFixture.xUnit.dll</HintPath>
+      <HintPath>..\packages\SeleniumFixture.xUnit.1.0.0-beta\lib\net45\SeleniumFixture.xUnit.dll</HintPath>
     </Reference>
     <Reference Include="SimpleFixture">
-      <HintPath>..\packages\SimpleFixture.1.1.1-CI10061\lib\portable-net45+win+wpa81+wp80\SimpleFixture.dll</HintPath>
+      <HintPath>..\packages\SimpleFixture.1.1.1\lib\portable-net45+win+wpa81+wp80\SimpleFixture.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
