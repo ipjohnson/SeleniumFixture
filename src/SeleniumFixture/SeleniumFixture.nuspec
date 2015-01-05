@@ -6,6 +6,8 @@
     <title>SeleniumFixture</title>
     <authors>Ian Johnson</authors>
     <owners>Ian Johnson</owners>
+    <licenseUrl>https://github.com/ipjohnson/SeleniumFixture/blob/master/License.md</licenseUrl>
+    <projectUrl>https://github.com/ipjohnson/SeleniumFixture</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Companion library for Selenium that helps implement the PageObject pattern.</description>
     <releaseNotes>$releaseNotes$</releaseNotes>
