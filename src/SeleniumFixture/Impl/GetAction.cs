@@ -199,6 +199,14 @@ namespace SeleniumFixture.Impl
         }
 
         /// <summary>
+        /// Alert text, will throw exception if there are no exceptions
+        /// </summary>
+        public string AlertText
+        {
+            get { return _actionProvider.UsingFixture.Driver.SwitchTo().Alert().Text; }
+        }
+
+        /// <summary>
         /// Get an attribute for a specified element
         /// </summary>
         /// <param name="attr">attribute name</param>
