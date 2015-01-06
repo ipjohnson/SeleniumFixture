@@ -37,6 +37,13 @@ namespace SeleniumFixture.Impl
         IYieldsAction Frame(IWebElement element);
 
         /// <summary>
+        /// Switch to element using by
+        /// </summary>
+        /// <param name="selector"></param>
+        /// <returns></returns>
+        IYieldsAction Frame(By selector);
+
+        /// <summary>
         /// Switch to default content
         /// </summary>
         /// <returns></returns>
@@ -107,6 +114,20 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public IYieldsAction Frame(IWebElement element)
         {
+            _actionProvider.UsingFixture.Driver.SwitchTo().Frame(element);
+
+            return new YieldsAction(_actionProvider.UsingFixture);
+        }
+
+        /// <summary>
+        /// Switch to element using by
+        /// </summary>
+        /// <param name="selector"></param>
+        /// <returns></returns>
+        public IYieldsAction Frame(By selector)
+        {
+            var element = _actionProvider.FindElement(selector);
+
             _actionProvider.UsingFixture.Driver.SwitchTo().Frame(element);
 
             return new YieldsAction(_actionProvider.UsingFixture);

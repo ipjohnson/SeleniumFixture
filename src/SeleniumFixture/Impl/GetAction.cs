@@ -18,6 +18,11 @@ namespace SeleniumFixture.Impl
     public interface IGetAction
     {
         /// <summary>
+        /// Alert text, will throw exception if there are no exceptions
+        /// </summary>
+        string AlertText { get; }
+
+        /// <summary>
         /// Get an attribute for a web element
         /// </summary>
         /// <param name="attr">attribute name</param>
