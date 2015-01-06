@@ -178,8 +178,6 @@ namespace SeleniumFixture.Impl
 
         private void AutoFillCheckBox(IWebElement element)
         {
-            element.
-
             string elementId = element.GetAttribute("id") ?? element.GetAttribute("name");
             bool? checkedValue = null;
 
