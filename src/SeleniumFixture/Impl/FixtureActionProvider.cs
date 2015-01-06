@@ -175,6 +175,16 @@ namespace SeleniumFixture.Impl
             return FindElements(element).Any();
         }
 
+        public IActionProvider Clear(string selector)
+        {
+            return _fixture.Data.Locate<IClearAction>().Clear(selector);
+        }
+
+        public IActionProvider Clear(By selector)
+        {
+            return _fixture.Data.Locate<IClearAction>().Clear(selector);
+        }
+
         public int Count(string selector)
         {
             return FindElements(selector).Count;
@@ -183,6 +193,11 @@ namespace SeleniumFixture.Impl
         public int Count(By selector)
         {
             return FindElements(selector).Count;
+        }
+
+        public IActionProvider DismissAlert()
+        {
+            return _fixture.Data.Locate<IAlertAction>().Dismiss();
         }
 
         public IActionProvider Click(string selector, ClickMode clickMode = ClickMode.ClickAll)
@@ -253,6 +268,11 @@ namespace SeleniumFixture.Impl
             executor.ExecuteScript(javascript, args);
         }
 
+        public IActionProvider AcceptAlert()
+        {
+            return _fixture.Data.Locate<IAlertAction>().Accept();
+        }
+
         public IThenSubmitAction AutoFill(string selector, object seedWith = null)
         {
             return AutoFill(FindElements(selector), seedWith);
@@ -306,6 +326,13 @@ namespace SeleniumFixture.Impl
         public IWaitAction Wait
         {
             get { return _fixture.Data.Locate<IWaitAction>(); }
+        }
+
+        public ISendToAction Send(object sendValue)
+        {
+            string sendValueString = sendValue.ToString();
+
+            return _fixture.Data.Locate<ISendToAction>(constraints: new { sendValue = sendValueString });
         }
 
         public IYieldsAction Submit(string selector)

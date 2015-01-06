@@ -28,13 +28,25 @@ namespace SeleniumFixture
 
         #region Constructor
 
+        /// <summary>
+        /// Fixture constructor takes driver and base address
+        /// </summary>
+        /// <param name="webDriver"></param>
+        /// <param name="baseAddress"></param>
         public Fixture(IWebDriver webDriver, string baseAddress = null)
             : this(webDriver, new SeleniumFixtureConfiguration { BaseAddress = baseAddress })
         {
         }
 
+        /// <summary>
+        /// Fixture constructor takes driver and configuration
+        /// </summary>
+        /// <param name="webDriver"></param>
+        /// <param name="configuration"></param>
         public Fixture(IWebDriver webDriver, SeleniumFixtureConfiguration configuration)
         {
+            var a = webDriver.SwitchTo().Alert();
+            
             Initialize(webDriver, configuration);
         }
 
@@ -165,6 +177,26 @@ namespace SeleniumFixture
         }
 
         /// <summary>
+        /// Clear elements specified
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <returns></returns>
+        public IActionProvider Clear(string selector)
+        {
+            return _actionProvider.Clear(selector);
+        }
+
+        /// <summary>
+        /// Clear elements specified
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <returns></returns>
+        public IActionProvider Clear(By selector)
+        {
+            return _actionProvider.Clear(selector);
+        }
+
+        /// <summary>
         /// Count the number of elements present
         /// </summary>
         /// <param name="selector">selector</param>
@@ -182,6 +214,15 @@ namespace SeleniumFixture
         public int Count(By selector)
         {
             return _actionProvider.Count(selector);
+        }
+
+        /// <summary>
+        /// SwitchTo Alert and dismiss
+        /// </summary>
+        /// <returns></returns>
+        public IActionProvider DismissAlert()
+        {
+            return _actionProvider.DismissAlert();
         }
 
         /// <summary>
@@ -248,6 +289,15 @@ namespace SeleniumFixture
         public void ExecuteJavaScript(string javascript, params object[] args)
         {
             _actionProvider.ExecuteJavaScript(javascript, args);
+        }
+
+        /// <summary>
+        /// SwitchTo alert and accept.
+        /// </summary>
+        /// <returns></returns>
+        public IActionProvider AcceptAlert()
+        {
+            return _actionProvider.AcceptAlert();
         }
 
         /// <summary>
@@ -361,6 +411,16 @@ namespace SeleniumFixture
         }
 
         /// <summary>
+        /// Send the value to a particular element or set of elements
+        /// </summary>
+        /// <param name="sendValue">value to send to elements</param>
+        /// <returns></returns>
+        public ISendToAction Send(object sendValue)
+        {
+            return _actionProvider.Send(sendValue);
+        }
+
+        /// <summary>
         /// Submit form.
         /// </summary>
         /// <param name="selector"></param>
@@ -370,6 +430,11 @@ namespace SeleniumFixture
             return _actionProvider.Submit(selector);
         }
 
+        /// <summary>
+        /// Submit form.
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <returns></returns>
         public IYieldsAction Submit(By selector)
         {
             return _actionProvider.Submit(selector);
@@ -474,6 +539,7 @@ namespace SeleniumFixture
             Data.Export<GetAction>().As<IGetAction>();
             Data.Export<MouseMoveAction>().As<IMouseMoveAction>();
             Data.Export<NavigateAction>().As<INavigateAction>();
+            Data.Export<SendToAction>().As<ISendToAction>();
             Data.Export<SwitchAction>().As<ISwitchToAction>();
             Data.Export<WaitAction>().As<IWaitAction>();
             Data.Export<YieldsAction>().As<IYieldsAction>();

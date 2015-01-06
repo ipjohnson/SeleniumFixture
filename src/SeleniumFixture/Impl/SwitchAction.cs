@@ -46,7 +46,7 @@ namespace SeleniumFixture.Impl
         /// Switch to alert
         /// </summary>
         /// <returns></returns>
-        IYieldsAction Alert();
+        IAlert Alert();
     }
 
     /// <summary>
@@ -127,11 +127,9 @@ namespace SeleniumFixture.Impl
         /// Switch to alert
         /// </summary>
         /// <returns></returns>
-        public IYieldsAction Alert()
+        public IAlert Alert()
         {
-            _actionProvider.UsingFixture.Driver.SwitchTo().Alert();
-
-            return new YieldsAction(_actionProvider.UsingFixture);
+            return _actionProvider.UsingFixture.Driver.SwitchTo().Alert();
         }
     }
 }

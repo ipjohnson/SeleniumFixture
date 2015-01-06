@@ -40,6 +40,12 @@ namespace SeleniumFixture.Impl
     public interface IActionProvider : ISearchContext
     {
         /// <summary>
+        /// SwitchTo alert and accept.
+        /// </summary>
+        /// <returns></returns>
+        IActionProvider AcceptAlert();
+
+        /// <summary>
         /// Autofill elements using data from SimpleFixture
         /// </summary>
         /// <param name="selector">selector</param>
@@ -106,7 +112,21 @@ namespace SeleniumFixture.Impl
         /// <param name="selector">selector to look for</param>
         /// <returns>true if element exists</returns>
         bool CheckForElement(By selector);
-        
+
+        /// <summary>
+        /// Clear elements specified
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <returns></returns>
+        IActionProvider Clear(string selector);
+
+        /// <summary>
+        /// Clear elements specified
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <returns></returns>
+        IActionProvider Clear(By selector);
+
         /// <summary>
         /// Click the elements returned by the selector
         /// </summary>
@@ -136,6 +156,12 @@ namespace SeleniumFixture.Impl
         /// <param name="selector">selector</param>
         /// <returns>count of elements</returns>
         int Count(By selector);
+
+        /// <summary>
+        /// SwitchTo Alert and dismiss
+        /// </summary>
+        /// <returns></returns>
+        IActionProvider DismissAlert();
 
         /// <summary>
         /// Double click the selected elements
@@ -240,6 +266,13 @@ namespace SeleniumFixture.Impl
         /// Navigate the fixture
         /// </summary>
         INavigateAction Navigate { get; }
+
+        /// <summary>
+        /// Send the value to a particular element or set of elements
+        /// </summary>
+        /// <param name="sendValue">value to send to elements</param>
+        /// <returns></returns>
+        ISendToAction Send(object sendValue);
 
         /// <summary>
         /// Submit form.

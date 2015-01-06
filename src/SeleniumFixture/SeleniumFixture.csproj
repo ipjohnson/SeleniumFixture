@@ -53,11 +53,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\AssertionFailedException.cs" />
+    <Compile Include="Impl\AlertAction.cs" />
     <Compile Include="Impl\AutoBy.cs" />
     <Compile Include="Impl\AutoFillAction.cs" />
     <Compile Include="Impl\AutoFillAsAction.cs" />
     <Compile Include="ElementContants.cs" />
     <Compile Include="Impl\AutoFillAsActionProvider.cs" />
+    <Compile Include="Impl\ClearAction.cs" />
     <Compile Include="Impl\ClickAction.cs" />
     <Compile Include="Impl\DoubleClickAction.cs" />
     <Compile Include="Impl\FixtureActionProvider.cs" />
@@ -70,6 +72,7 @@
     <Compile Include="Impl\MouseMoveAction.cs" />
     <Compile Include="Impl\NavigateAction.cs" />
     <Compile Include="Impl\PropertySetter.cs" />
+    <Compile Include="Impl\SendToAction.cs" />
     <Compile Include="Impl\SwitchAction.cs" />
     <Compile Include="Impl\ThenSubmitAction.cs" />
     <Compile Include="Impl\WaitAction.cs" />

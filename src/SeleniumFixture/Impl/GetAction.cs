@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
@@ -15,41 +17,6 @@ namespace SeleniumFixture.Impl
     /// </summary>
     public interface IGetAction
     {
-        /// <summary>
-        /// Title property for this page
-        /// </summary>
-        string PageTitle { get; }
-
-        /// <summary>
-        /// Url for page
-        /// </summary>
-        string PageUrl { get; }
-
-        /// <summary>
-        /// Page Source
-        /// </summary>
-        string PageSource { get; }
-
-        /// <summary>
-        /// Get the value for a web element 
-        /// </summary>
-        IFromAction<string> Value { get; }
-
-        /// <summary>
-        /// Get the text value for a web element
-        /// </summary>
-        IFromAction<string> Text { get; }
-
-        /// <summary>
-        /// Tag for an element
-        /// </summary>
-        IFromAction<string> Tag { get; }
-
-        /// <summary>
-        /// Class for an element
-        /// </summary>
-        IFromAction<string> Class { get; }
-
         /// <summary>
         /// Get an attribute for a web element
         /// </summary>
@@ -66,12 +33,57 @@ namespace SeleniumFixture.Impl
         IFromAction<T> Attribute<T>(string attr);
 
         /// <summary>
+        /// Class for an element
+        /// </summary>
+        IFromAction<string> Class { get; }
+
+        /// <summary>
         /// Get css value for provided
         /// </summary>
         /// <param name="propertyName">property name</param>
         /// <returns></returns>
         IFromAction<string> CssValue(string propertyName);
 
+        /// <summary>
+        /// Get location for element
+        /// </summary>
+        IFromAction<Point> Location { get; } 
+
+        /// <summary>
+        /// Page Source
+        /// </summary>
+        string PageSource { get; }
+
+        /// <summary>
+        /// Title property for this page
+        /// </summary>
+        string PageTitle { get; }
+
+        /// <summary>
+        /// Url for page
+        /// </summary>
+        string PageUrl { get; }
+
+        /// <summary>
+        /// Size property from a specific element
+        /// </summary>
+        IFromAction<Size> Size { get; }
+            
+        /// <summary>
+        /// Tag for an element
+        /// </summary>
+        IFromAction<string> Tag { get; }
+
+        /// <summary>
+        /// Get the text value for a web element
+        /// </summary>
+        IFromAction<string> Text { get; }
+        
+        /// <summary>
+        /// Get the value for a web element 
+        /// </summary>
+        IFromAction<string> Value { get; }
+        
         /// <summary>
         /// Convert values from specified elements into specified Type
         /// </summary>
@@ -131,6 +143,14 @@ namespace SeleniumFixture.Impl
         public string PageUrl
         {
             get { return _actionProvider.UsingFixture.Driver.Url; }
+        }
+
+        /// <summary>
+        /// Size property from a specific element
+        /// </summary>
+        public IFromAction<Size> Size
+        {
+            get { return new FromAction<Size>(_actionProvider,e => e.Size);}
         }
 
         /// <summary>
@@ -202,6 +222,17 @@ namespace SeleniumFixture.Impl
         public IFromAction<string> CssValue(string propertyName)
         {
             return new FromAction<string>(_actionProvider, e => e.GetCssValue(propertyName));
+        }
+
+        /// <summary>
+        /// Get location for element
+        /// </summary>
+        public IFromAction<Point> Location
+        {
+            get
+            {
+                return new FromAction<Point>(_actionProvider,e => e.Location);
+            }
         }
 
         /// <summary>
