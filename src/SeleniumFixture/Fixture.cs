@@ -45,8 +45,6 @@ namespace SeleniumFixture
         /// <param name="configuration"></param>
         public Fixture(IWebDriver webDriver, SeleniumFixtureConfiguration configuration)
         {
-            var a = webDriver.SwitchTo().Alert();
-            
             Initialize(webDriver, configuration);
         }
 
