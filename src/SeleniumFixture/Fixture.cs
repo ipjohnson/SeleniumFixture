@@ -531,6 +531,7 @@ namespace SeleniumFixture
 
             Data.Export<AutoFillAction>().As<IAutoFillAction>();
             Data.Export<AutoFillAsActionProvider>().As<IAutoFillAsActionProvider>();
+            Data.Export<ClearAction>().As<IClearAction>();
             Data.Export<ClickAction>().As<IClickAction>();
             Data.Export<DoubleClickAction>().As<IDoubleClickAction>();
             Data.Export<FillAction>().As<IFillAction>();
