@@ -199,7 +199,7 @@ namespace SeleniumFixture.Impl
         }
 
         /// <summary>
-        /// Alert text, will throw exception if there are no exceptions
+        /// Alert text, will throw exception if there are no alerts
         /// </summary>
         public string AlertText
         {
