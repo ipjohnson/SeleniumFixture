@@ -125,6 +125,24 @@ namespace SeleniumFixture
         }
 
         /// <summary>
+        /// Focus an element
+        /// </summary>
+        /// <param name="selector"></param>
+        public void Focus(string selector)
+        {
+            _actionProvider.Focus(selector);
+        }
+
+        /// <summary>
+        /// Focus an element
+        /// </summary>
+        /// <param name="selector"></param>
+        public void Focus(By selector)
+        {
+            _actionProvider.Focus(selector);
+        }
+
+        /// <summary>
         /// Find all elements meeting the specified selector
         /// </summary>
         /// <param name="selector">selector to use to find elements</param>

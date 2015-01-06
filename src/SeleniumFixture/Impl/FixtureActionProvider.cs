@@ -132,6 +132,28 @@ namespace SeleniumFixture.Impl
         }
 
         /// <summary>
+        /// Focus an element
+        /// </summary>
+        /// <param name="selector"></param>
+        public void Focus(string selector)
+        {
+            var element = FindElement(selector);
+
+            ExecuteJavaScript("arguments[0].focus();", element);
+        }
+
+        /// <summary>
+        /// Focus an element
+        /// </summary>
+        /// <param name="selector"></param>
+        public void Focus(By selector)
+        {
+            var element = FindElement(selector);
+
+            ExecuteJavaScript("arguments[0].focus();", element);
+        }
+
+        /// <summary>
         /// Finds all <see cref="T:OpenQA.Selenium.IWebElement">IWebElements</see> within the current context 
         ///             using the given mechanism.
         /// </summary>

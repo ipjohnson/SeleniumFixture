@@ -231,6 +231,18 @@ namespace SeleniumFixture.Impl
         ReadOnlyCollection<IWebElement> FindElements(string selector);
 
         /// <summary>
+        /// Focus an element
+        /// </summary>
+        /// <param name="selector"></param>
+        void Focus(string selector);
+
+        /// <summary>
+        /// Focus an element
+        /// </summary>
+        /// <param name="selector"></param>
+        void Focus(By selector);
+
+        /// <summary>
         /// Generate a random T
         /// </summary>
         /// <typeparam name="T">data type to generate</typeparam>
