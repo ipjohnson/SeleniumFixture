@@ -96,18 +96,23 @@ namespace SeleniumFixture.xUnit.Impl
 
                     var test = new XunitTest(TestCase, theoryDisplayName);
 
-                    runSummary.Aggregate(
-                        await
-                            new XunitTestRunner(test,
-                                MessageBus,
-                                TestClass,
-                                ConstructorArguments,
-                                methodToRun,
-                                convertedDataRow,
-                                SkipReason,
-                                BeforeAfterAttributes,
-                                Aggregator,
-                                CancellationTokenSource).RunAsync());
+                    var testSummary = await new XunitTestRunner(test,
+                                                                MessageBus,
+                                                                TestClass,
+                                                                ConstructorArguments,
+                                                                methodToRun,
+                                                                convertedDataRow,
+                                                                SkipReason,
+                                                                BeforeAfterAttributes,
+                                                                Aggregator,
+                                                                CancellationTokenSource).RunAsync();
+
+                    runSummary.Aggregate(testSummary);
+
+                    if (runSummary.Failed > 0)
+                    {
+                        TakeScreenShot(dataRow, DisplayName);
+                    }
 
                     DisposeOfData(dataRow);
 
@@ -116,6 +121,16 @@ namespace SeleniumFixture.xUnit.Impl
             }
 
             return foundTest;
+        }
+
+        private void TakeScreenShot(IEnumerable<object> dataRow, string displayName)
+        {
+            Fixture fixture = (Fixture)dataRow.FirstOrDefault(o => o is Fixture);
+
+            if (fixture != null)
+            {
+                fixture.TakeScreenshot(displayName);
+            }
         }
 
         private string CreateTheoryDisplayName(IMethodInfo method, string displayName, object[] convertedDataRow, ITypeInfo[] resolvedTypes)

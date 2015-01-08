@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
@@ -374,6 +375,11 @@ namespace SeleniumFixture.Impl
         public ISwitchToAction SwitchTo
         {
             get { return new SwitchAction(this); }
+        }
+
+        public IActionProvider TakeScreenshot(string screenshotName = null, bool throwsIfNotSupported = false, ImageFormat format= null)
+        {
+            return _fixture.Data.Locate<ITakeScreenshotAction>().TakeScreenshot(screenshotName, throwsIfNotSupported, format);
         }
 
         public Fixture UsingFixture

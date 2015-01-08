@@ -74,6 +74,7 @@
     <Compile Include="Impl\PropertySetter.cs" />
     <Compile Include="Impl\SendToAction.cs" />
     <Compile Include="Impl\SwitchAction.cs" />
+    <Compile Include="Impl\TakeScreenshotAction.cs" />
     <Compile Include="Impl\ThenSubmitAction.cs" />
     <Compile Include="Impl\WaitAction.cs" />
     <Compile Include="Impl\YieldsAction.cs" />

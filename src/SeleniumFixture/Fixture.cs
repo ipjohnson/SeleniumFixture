@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -465,6 +466,18 @@ namespace SeleniumFixture
         }
 
         /// <summary>
+        /// Take a screen shot of the driver
+        /// </summary>
+        /// <param name="screenshotName">take screenshot, if null then ClassName_MethodName is used</param>
+        /// <param name="throwsIfNotSupported">throw exception if screen shot is not supported by the current driver</param>
+        /// <param name="format">format of image</param>
+        /// <returns></returns>
+        public IActionProvider TakeScreenshot(string screenshotName = null, bool throwsIfNotSupported = false, ImageFormat format = null)
+        {
+            return _actionProvider.TakeScreenshot(screenshotName, throwsIfNotSupported, format);
+        }
+
+        /// <summary>
         /// Fixture for this action provider
         /// </summary>
         public Fixture UsingFixture
@@ -558,6 +571,7 @@ namespace SeleniumFixture
             Data.Export<NavigateAction>().As<INavigateAction>();
             Data.Export<SendToAction>().As<ISendToAction>();
             Data.Export<SwitchAction>().As<ISwitchToAction>();
+            Data.Export<TakeScreenshotAction>().As<ITakeScreenshotAction>();
             Data.Export<WaitAction>().As<IWaitAction>();
             Data.Export<YieldsAction>().As<IYieldsAction>();
         }

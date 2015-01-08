@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -304,6 +305,16 @@ namespace SeleniumFixture.Impl
         /// Switch to
         /// </summary>
         ISwitchToAction SwitchTo { get; }
+
+        /// <summary>
+        /// Take a screen shot using the current driver.
+        /// Note: some drivers do not support taking screen shots
+        /// </summary>
+        /// <param name="screenshotName">take screenshot, if null then ClassName_MethodName is used</param>
+        /// <param name="throwsIfNotSupported">throw exception if screen shot is not supported by the current driver</param>
+        /// <param name="format">Image format, png by default</param>
+        /// <returns></returns>
+        IActionProvider TakeScreenshot(string screenshotName = null, bool throwsIfNotSupported = false, ImageFormat format = null);
 
         /// <summary>
         /// Fixture for this action provider
