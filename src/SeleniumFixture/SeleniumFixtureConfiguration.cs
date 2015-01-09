@@ -45,14 +45,25 @@ namespace SeleniumFixture
             
             DefaultTimeout = 10;
             DefaultWaitInterval = 0.1;
-            FixtureImplicitWait = 0.3;
+            FixtureImplicitWait = 0.1;
 
-            AjaxActiveTest = "return (window.jQuery || { active : 0 }).active == 0;";
+            AjaxActiveTest = "return (document.readyState === \"complete\") && ((window.jQuery || { active : 0 }).active == 0);";
 
+            AlwaysWaitForAjax = true;
             ExecuteValidate = true;
             WrapValidationExceptions = true;
             ValidateMember = "Validate";
         }
+
+        /// <summary>
+        /// String to test if ajax is still active
+        /// </summary>
+        public string AjaxActiveTest { get; set; }
+
+        /// <summary>
+        /// Always wait for ajax after click, double click, navigate and submit
+        /// </summary>
+        public bool AlwaysWaitForAjax { get; set; }
 
         /// <summary>
         /// Base address for navigation
@@ -68,6 +79,11 @@ namespace SeleniumFixture
         /// Time to wait in between testing for wait condition
         /// </summary>
         public double DefaultWaitInterval { get; set; }
+        
+        /// <summary>
+        /// Execute validate on page objects
+        /// </summary>
+        public bool ExecuteValidate { get; set; }
 
         /// <summary>
         /// Fixture will wait a small amount of time after every time Click, DoubleClick and Navigate is called
@@ -78,16 +94,6 @@ namespace SeleniumFixture
         /// Element selector algorithm
         /// </summary>
         public SelectorAlgorithm Selector { get; set; }
-
-        /// <summary>
-        /// String to test if ajax is still active
-        /// </summary>
-        public string AjaxActiveTest { get; set; }
-
-        /// <summary>
-        /// Execute validate on page objects
-        /// </summary>
-        public bool ExecuteValidate { get; set; }
 
         /// <summary>
         /// Name of member to execute on validation

@@ -111,10 +111,10 @@ namespace SeleniumFixture.xUnit.Impl
 
                     if (runSummary.Failed > 0)
                     {
-                        TakeScreenShot(dataRow, theoryDisplayName);
+                        TakeScreenShot(convertedDataRow, theoryDisplayName);
                     }
 
-                    DisposeOfData(dataRow);
+                    DisposeOfData(convertedDataRow);
 
                     foundTest = true;
                 }

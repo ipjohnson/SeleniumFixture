@@ -45,11 +45,18 @@ namespace SeleniumFixture.Impl
         {
             _formElement.Submit();
 
-            var waitTime = (int)(_fixture.Configuration.FixtureImplicitWait * 1000);
+            var configuration = _fixture.Configuration;
+
+            var waitTime = (int)(configuration.FixtureImplicitWait * 1000);
 
             if (waitTime >= 0)
             {
                 Thread.Sleep(waitTime);
+            }
+
+            if (configuration.AlwaysWaitForAjax)
+            {
+                _fixture.Wait.ForAjax();
             }
 
             return new YieldsAction(_fixture);

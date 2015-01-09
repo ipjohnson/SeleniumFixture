@@ -87,14 +87,16 @@ namespace SeleniumFixture.Impl
                     break;
             }
 
-            var waitTime = (int)(_fixture.Configuration.FixtureImplicitWait * 1000);
+            var configuration = _fixture.Configuration;
+
+            var waitTime = (int)(configuration.FixtureImplicitWait * 1000);
 
             if (waitTime >= 0)
             {
                 Thread.Sleep(waitTime);
             }
 
-            return _actionProvider;
+            return configuration.AlwaysWaitForAjax ? _fixture.Wait.ForAjax().Then : _actionProvider;
         }
 
         public virtual IActionProvider DoubleClick(By selector, ClickMode clickMode = ClickMode.ClickAll)
@@ -157,14 +159,16 @@ namespace SeleniumFixture.Impl
                     break;
             }
 
-            var waitTime = (int)(_fixture.Configuration.FixtureImplicitWait * 1000);
+            var configuration = _fixture.Configuration;
+
+            var waitTime = (int)(configuration.FixtureImplicitWait * 1000);
 
             if (waitTime >= 0)
             {
                 Thread.Sleep(waitTime);
             }
 
-            return _actionProvider;
+            return configuration.AlwaysWaitForAjax ? _fixture.Wait.ForAjax().Then : _actionProvider;
         }
     }
 }

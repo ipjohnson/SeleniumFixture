@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
+using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Internal;
@@ -362,12 +363,40 @@ namespace SeleniumFixture.Impl
         {
             FindElement(selector).Submit();
 
+            var configuration = UsingFixture.Configuration;
+
+            var waitTime = (int)(configuration.FixtureImplicitWait * 1000);
+
+            if (waitTime >= 0)
+            {
+                Thread.Sleep(waitTime);
+            }
+
+            if (configuration.AlwaysWaitForAjax)
+            {
+                Wait.ForAjax();
+            }
+
             return _fixture.Data.Locate<IYieldsAction>();
         }
 
         public IYieldsAction Submit(By selector)
         {
             FindElement(selector).Submit();
+
+            var configuration = UsingFixture.Configuration;
+
+            var waitTime = (int)(configuration.FixtureImplicitWait * 1000);
+
+            if (waitTime >= 0)
+            {
+                Thread.Sleep(waitTime);
+            }
+
+            if (configuration.AlwaysWaitForAjax)
+            {
+                Wait.ForAjax();
+            }
 
             return _fixture.Data.Locate<IYieldsAction>();
         }

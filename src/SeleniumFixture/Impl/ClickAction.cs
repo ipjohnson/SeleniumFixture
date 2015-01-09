@@ -59,15 +59,16 @@ namespace SeleniumFixture.Impl
                     firstList[0].Click();
                     break;
             }
+            var configuration = _actionProvider.UsingFixture.Configuration;
 
-            var waitTime = (int)(_actionProvider.UsingFixture.Configuration.FixtureImplicitWait * 1000);
+            var waitTime = (int)(configuration.FixtureImplicitWait * 1000);
 
             if (waitTime >= 0)
             {
                 Thread.Sleep(waitTime);
             }
 
-            return _actionProvider;
+            return configuration.AlwaysWaitForAjax ? _actionProvider.Wait.ForAjax().Then : _actionProvider;
         }
 
         public virtual IActionProvider Click(By selector, ClickMode clickMode = ClickMode.ClickAll)
@@ -100,14 +101,16 @@ namespace SeleniumFixture.Impl
                     break;
             }
 
-            var waitTime = (int)(_actionProvider.UsingFixture.Configuration.FixtureImplicitWait * 1000);
+            var configuration = _actionProvider.UsingFixture.Configuration;
+
+            var waitTime = (int)(configuration.FixtureImplicitWait * 1000);
 
             if (waitTime >= 0)
             {
                 Thread.Sleep(waitTime);
             }
-
-            return _actionProvider;
+            
+            return configuration.AlwaysWaitForAjax ? _actionProvider.Wait.ForAjax().Then : _actionProvider;
         }
     }
 }

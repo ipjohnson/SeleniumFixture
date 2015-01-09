@@ -99,11 +99,18 @@ namespace SeleniumFixture.Impl
 
             _actionProvider.UsingFixture.Driver.Navigate().GoToUrl(url);
 
-            var waitTime = (int)(_actionProvider.UsingFixture.Configuration.FixtureImplicitWait * 1000);
+            var configuration = _actionProvider.UsingFixture.Configuration;
+
+            var waitTime = (int)(configuration.FixtureImplicitWait * 1000);
 
             if (waitTime >= 0)
             {
                 Thread.Sleep(waitTime);
+            }
+
+            if (configuration.AlwaysWaitForAjax)
+            {
+                _actionProvider.Wait.ForAjax();
             }
 
             return _actionProvider;
@@ -131,6 +138,20 @@ namespace SeleniumFixture.Impl
         {
             _actionProvider.UsingFixture.Driver.Navigate().GoToUrl(uri);
 
+            var configuration = _actionProvider.UsingFixture.Configuration;
+
+            var waitTime = (int)(configuration.FixtureImplicitWait * 1000);
+
+            if (waitTime >= 0)
+            {
+                Thread.Sleep(waitTime);
+            }
+
+            if (configuration.AlwaysWaitForAjax)
+            {
+                _actionProvider.Wait.ForAjax();
+            }
+
             return _actionProvider;
         }
 
@@ -154,12 +175,19 @@ namespace SeleniumFixture.Impl
         public IActionProvider Back()
         {
             _actionProvider.UsingFixture.Driver.Navigate().Back();
-            
-            var waitTime = (int)(_actionProvider.UsingFixture.Configuration.FixtureImplicitWait * 1000);
+
+            var configuration = _actionProvider.UsingFixture.Configuration;
+
+            var waitTime = (int)(configuration.FixtureImplicitWait * 1000);
 
             if (waitTime >= 0)
             {
                 Thread.Sleep(waitTime);
+            }
+
+            if (configuration.AlwaysWaitForAjax)
+            {
+                _actionProvider.Wait.ForAjax();
             }
 
             return _actionProvider;
@@ -185,11 +213,18 @@ namespace SeleniumFixture.Impl
         {
             _actionProvider.UsingFixture.Driver.Navigate().Forward();
 
-            var waitTime = (int)(_actionProvider.UsingFixture.Configuration.FixtureImplicitWait * 1000);
+            var configuration = _actionProvider.UsingFixture.Configuration;
+
+            var waitTime = (int)(configuration.FixtureImplicitWait * 1000);
 
             if (waitTime >= 0)
             {
                 Thread.Sleep(waitTime);
+            }
+
+            if (configuration.AlwaysWaitForAjax)
+            {
+                _actionProvider.Wait.ForAjax();
             }
 
             return _actionProvider;
