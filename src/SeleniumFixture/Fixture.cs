@@ -46,6 +46,11 @@ namespace SeleniumFixture
         /// <param name="configuration"></param>
         public Fixture(IWebDriver webDriver, SeleniumFixtureConfiguration configuration)
         {
+            if (configuration == null)
+            {
+                throw new ArgumentNullException("configuration");
+            }
+
             Initialize(webDriver, configuration);
         }
 
@@ -522,6 +527,11 @@ namespace SeleniumFixture
             dataConfiguration.Export<IPropertySetter>(g => new Impl.PropertySetter());
 
             SetupDependencyInjection(webDriver, configuration, dataConfiguration);
+
+            if (!(webDriver is IJavaScriptExecutor))
+            {
+                configuration.AlwaysWaitForAjax = false;
+            }
         }
 
         private void SetupDependencyInjection(IWebDriver webDriver,
