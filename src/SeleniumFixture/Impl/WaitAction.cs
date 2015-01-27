@@ -8,11 +8,19 @@ using OpenQA.Selenium;
 
 namespace SeleniumFixture.Impl
 {
+
     /// <summary>
     /// Provides wait fluent syntax
     /// </summary>
     public interface IWaitAction
     {
+        /// <summary>
+        /// Wait for X number of seconds.
+        /// </summary>
+        /// <param name="seconds">wait time in seconds</param>
+        /// <returns>fluent syntax object</returns>
+        IWaitAction For(double seconds);
+
         /// <summary>
         /// Wait for no ajax calls to be active
         /// </summary>
@@ -117,6 +125,18 @@ namespace SeleniumFixture.Impl
         }
 
         /// <summary>
+        /// Wait for X number of seconds.
+        /// </summary>
+        /// <param name="seconds"></param>
+        /// <returns></returns>
+        public IWaitAction For(double seconds)
+        {
+            Thread.Sleep((int)(seconds * 1000));
+
+            return this;
+        }
+
+        /// <summary>
         /// Wait for no ajax calls to be active
         /// </summary>
         /// <param name="timeout">timeout in seconds</param>
@@ -129,7 +149,8 @@ namespace SeleniumFixture.Impl
                     IJavaScriptExecutor executor = (IJavaScriptExecutor)_actionProvider.UsingFixture.Driver;
 
                     return (bool)executor.ExecuteScript(_actionProvider.UsingFixture.Configuration.AjaxActiveTest);
-                },timeout);
+                }, timeout)
+                .For(0.1);
         }
 
         /// <summary>
@@ -159,13 +180,15 @@ namespace SeleniumFixture.Impl
             DateTime expire = DateTime.Now.AddSeconds(timeout.Value);
             bool untilResult = false;
 
+            int defaultWaitIntercal = (int)(_actionProvider.UsingFixture.Configuration.DefaultWaitInterval * 1000);
+
             while (!untilResult)
             {
-                Thread.Sleep((int)(_actionProvider.UsingFixture.Configuration.DefaultWaitInterval * 1000));
+                Thread.Sleep(defaultWaitIntercal);
 
                 untilResult = testFunc(_actionProvider);
 
-                if (!untilResult && DateTime.Now > expire)
+                if (DateTime.Now > expire)
                 {
                     break;
                 }
