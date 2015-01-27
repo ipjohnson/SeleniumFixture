@@ -14,8 +14,8 @@ namespace SeleniumFixture.Impl
     /// </summary>
     public class AutoBy : By
     {
-        private readonly string _selector;
-        private readonly string _jQueryTest;
+        protected readonly string _selector;
+        protected readonly string _jQueryTest;
 
         /// <summary>
         /// Default constructor

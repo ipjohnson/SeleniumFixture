@@ -123,7 +123,7 @@ namespace SeleniumFixture.Impl
     /// </summary>
     public class GetAction : IGetAction
     {
-        private readonly IActionProvider _actionProvider;
+        protected readonly IActionProvider _actionProvider;
 
         /// <summary>
         /// Default constructor
@@ -137,7 +137,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Title on the page
         /// </summary>
-        public string PageTitle
+        public virtual string PageTitle
         {
             get { return _actionProvider.UsingFixture.Driver.Title; }
         }
@@ -145,7 +145,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Url for the page
         /// </summary>
-        public string PageUrl
+        public virtual string PageUrl
         {
             get { return _actionProvider.UsingFixture.Driver.Url; }
         }
@@ -153,7 +153,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Size property from a specific element
         /// </summary>
-        public IFromAction<Size> Size
+        public virtual IFromAction<Size> Size
         {
             get { return new FromAction<Size>(_actionProvider,e => e.Size);}
         }
@@ -161,7 +161,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Source for the page
         /// </summary>
-        public string PageSource
+        public virtual string PageSource
         {
             get { return _actionProvider.UsingFixture.Driver.PageSource; }
         }
@@ -169,7 +169,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Get the value for a specified element
         /// </summary>
-        public IFromAction<string> Value
+        public virtual IFromAction<string> Value
         {
             get { return new FromAction<string>(_actionProvider, e => e.GetAttribute(ElementContants.ValueAttribute)); }
         }
@@ -177,7 +177,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Get the text for the specified element
         /// </summary>
-        public IFromAction<string> Text
+        public virtual IFromAction<string> Text
         {
             get { return new FromAction<string>(_actionProvider, e => e.Text); }
         }
@@ -185,7 +185,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Get the element Tag for the specified element
         /// </summary>
-        public IFromAction<string> Tag
+        public virtual IFromAction<string> Tag
         {
             get { return new FromAction<string>(_actionProvider, e => e.TagName); }
         }
@@ -193,7 +193,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Get the css class for a specified element
         /// </summary>
-        public IFromAction<string> Class
+        public virtual IFromAction<string> Class
         {
             get { return new FromAction<string>(_actionProvider, e => e.GetAttribute("class")); }
         }
@@ -201,7 +201,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Alert text, will throw exception if there are no alerts
         /// </summary>
-        public string AlertText
+        public virtual string AlertText
         {
             get { return _actionProvider.UsingFixture.Driver.SwitchTo().Alert().Text; }
         }
@@ -211,7 +211,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="attr">attribute name</param>
         /// <returns></returns>
-        public IFromAction<string> Attribute(string attr)
+        public virtual IFromAction<string> Attribute(string attr)
         {
             return new FromAction<string>(_actionProvider, e => e.GetAttribute(attr));
         }
@@ -222,7 +222,7 @@ namespace SeleniumFixture.Impl
         /// <typeparam name="T">attribute type</typeparam>
         /// <param name="attr">attribute name</param>
         /// <returns></returns>
-        public IFromAction<T> Attribute<T>(string attr)
+        public virtual IFromAction<T> Attribute<T>(string attr)
         {
             return new FromAction<T>(_actionProvider, e => (T)Convert.ChangeType(e.GetAttribute(attr), typeof(T)));
         }
@@ -232,7 +232,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        public IFromAction<string> CssValue(string propertyName)
+        public virtual IFromAction<string> CssValue(string propertyName)
         {
             return new FromAction<string>(_actionProvider, e => e.GetCssValue(propertyName));
         }
@@ -240,7 +240,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Get location for element
         /// </summary>
-        public IFromAction<Point> Location
+        public virtual IFromAction<Point> Location
         {
             get
             {
@@ -253,12 +253,12 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public IFromAction<T> ValueAs<T>()
+        public virtual IFromAction<T> ValueAs<T>()
         {
             return new MultipleElementFromAction<T>(_actionProvider, MatchFormValuesToData<T>);
         }
 
-        private FormData GetFormData(IEnumerable<IWebElement> elements, FormData formData)
+        protected virtual FormData GetFormData(IEnumerable<IWebElement> elements, FormData formData)
         {
             foreach (IWebElement webElement in elements)
             {
@@ -299,7 +299,7 @@ namespace SeleniumFixture.Impl
             return formData;
         }
 
-        private T MatchFormValuesToData<T>(IEnumerable<IWebElement> elements)
+        protected virtual T MatchFormValuesToData<T>(IEnumerable<IWebElement> elements)
         {
             var compareType = typeof(T);
             var nullableType = Nullable.GetUnderlyingType(typeof(T));
@@ -336,12 +336,12 @@ namespace SeleniumFixture.Impl
             return ReturnElementsAsComplex<T>(elements);
         }
 
-        private List<string> ReturnAsListOfStrings(IEnumerable<IWebElement> elements)
+        protected virtual List<string> ReturnAsListOfStrings(IEnumerable<IWebElement> elements)
         {
             return new List<string>(ReturnElementsListOfStrings(elements));
         }
 
-        private T ReturnElementsAsSimpleType<T>(IEnumerable<IWebElement> elements)
+        protected virtual T ReturnElementsAsSimpleType<T>(IEnumerable<IWebElement> elements)
         {
             if (typeof(T) == typeof(string))
             {
@@ -385,7 +385,7 @@ namespace SeleniumFixture.Impl
             return (T)Convert.ChangeType(returnString, typeof(T));
         }
 
-        private IEnumerable<string> ReturnElementsListOfStrings(IEnumerable<IWebElement> elements)
+        protected virtual IEnumerable<string> ReturnElementsListOfStrings(IEnumerable<IWebElement> elements)
         {
             foreach (IWebElement webElement in elements)
             {
@@ -396,7 +396,7 @@ namespace SeleniumFixture.Impl
             }
         }
 
-        private IEnumerable<string> ReturnElementAsString(IWebElement element)
+        protected virtual IEnumerable<string> ReturnElementAsString(IWebElement element)
         {
             if (element.TagName == "select")
             {
@@ -435,7 +435,7 @@ namespace SeleniumFixture.Impl
             }
         }
 
-        private T ReturnElementsAsComplex<T>(IEnumerable<IWebElement> elements)
+        protected virtual T ReturnElementsAsComplex<T>(IEnumerable<IWebElement> elements)
         {
             T returnValue = _actionProvider.UsingFixture.Data.Locate<T>();
             List<IWebElement> localElements = new List<IWebElement>(elements);
@@ -466,7 +466,7 @@ namespace SeleniumFixture.Impl
             return returnValue;
         }
 
-        private bool FillPropertyUsingElement(PropertyInfo propertyInfo, IWebElement webElement, object fillObject)
+        protected virtual bool FillPropertyUsingElement(PropertyInfo propertyInfo, IWebElement webElement, object fillObject)
         {
             bool returnValue = false;
 
@@ -489,7 +489,7 @@ namespace SeleniumFixture.Impl
             return returnValue;
         }
 
-        private bool FillPropertyFromSelect(PropertyInfo propertyInfo, IWebElement webElement, object fillObject)
+        protected virtual bool FillPropertyFromSelect(PropertyInfo propertyInfo, IWebElement webElement, object fillObject)
         {
             SelectElement selectElement = new SelectElement(webElement);
 
@@ -523,7 +523,7 @@ namespace SeleniumFixture.Impl
             return false;
         }
 
-        private bool FillPropertyFromInput(PropertyInfo propertyInfo, IWebElement webElement, object fillObject)
+        protected virtual bool FillPropertyFromInput(PropertyInfo propertyInfo, IWebElement webElement, object fillObject)
         {
             bool returnValue = false;
             object setValue = null;
@@ -574,7 +574,7 @@ namespace SeleniumFixture.Impl
             return returnValue;
         }
 
-        private static ReadOnlyCollection<IWebElement> FindMatchingElements(IEnumerable<IWebElement> localElements, string propertyName)
+        protected virtual ReadOnlyCollection<IWebElement> FindMatchingElements(IEnumerable<IWebElement> localElements, string propertyName)
         {
             List<IWebElement> returnValue = new List<IWebElement>();
 
@@ -648,8 +648,8 @@ namespace SeleniumFixture.Impl
     /// <typeparam name="T"></typeparam>
     public class FromAction<T> : IFromAction<T>
     {
-        private readonly IActionProvider _actionProvider;
-        private readonly Func<IWebElement, T> _getFunc;
+        protected readonly IActionProvider _actionProvider;
+        protected readonly Func<IWebElement, T> _getFunc;
 
         /// <summary>
         /// Default constructor
@@ -667,7 +667,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="selector">element selector</param>
         /// <returns>return type of T</returns>
-        public T From(string selector)
+        public virtual T From(string selector)
         {
             var element = _actionProvider.FindElement(selector);
 
@@ -679,7 +679,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="selector">element selector</param>
         /// <returns>return type of T</returns>
-        public T From(By selector)
+        public virtual T From(By selector)
         {
             var element = _actionProvider.FindElement(selector);
 
@@ -693,8 +693,8 @@ namespace SeleniumFixture.Impl
     /// <typeparam name="T"></typeparam>
     public class MultipleElementFromAction<T> : IFromAction<T>
     {
-        private readonly IActionProvider _actionProvider;
-        private readonly Func<IEnumerable<IWebElement>, T> _getFunc;
+        protected readonly IActionProvider _actionProvider;
+        protected readonly Func<IEnumerable<IWebElement>, T> _getFunc;
 
         /// <summary>
         /// Default constructor
@@ -712,7 +712,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="selector">element selector</param>
         /// <returns>return type of T</returns>
-        public T From(string selector)
+        public virtual T From(string selector)
         {
             var element = _actionProvider.FindElements(selector);
 
@@ -724,7 +724,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="selector">element selector</param>
         /// <returns>return type of T</returns>
-        public T From(By selector)
+        public virtual T From(By selector)
         {
             var element = _actionProvider.FindElements(selector);
 

@@ -33,7 +33,7 @@ namespace SeleniumFixture.Impl
     /// </summary>
     public class YieldsAction : IYieldsAction
     {
-        private readonly IActionProvider _actionProvider;
+        protected readonly IActionProvider _actionProvider;
 
         /// <summary>
         /// Default constructor
@@ -51,7 +51,7 @@ namespace SeleniumFixture.Impl
         /// <param name="requestName">request name</param>
         /// <param name="constraints">constraints for the locate</param>
         /// <returns>new T</returns>
-        public T Yields<T>(string requestName = null, object constraints = null)
+        public virtual T Yields<T>(string requestName = null, object constraints = null)
         {
             return (T)Yields(typeof(T), requestName, constraints);
         }
@@ -59,11 +59,11 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Yields a Page Object using SimpleFixture
         /// </summary>
-        /// <param name=ElementContants.TypeAttribute>Type of object to Generate</param>
+        /// <param name="type">Type of object to Generate</param>
         /// <param name="requestName">request name</param>
         /// <param name="constraints">constraints for the locate</param>
         /// <returns>new instance</returns>
-        public object Yields(Type type, string requestName = null, object constraints = null)
+        public virtual object Yields(Type type, string requestName = null, object constraints = null)
         {
             var request = new DataRequest(null, _actionProvider.UsingFixture.Data, type, requestName, false, constraints, null);
 

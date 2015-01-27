@@ -25,7 +25,7 @@ namespace SeleniumFixture.Impl
     /// </summary>
     public class ThenSubmitAction : FixtureActionProvider, IThenSubmitAction
     {
-        private readonly IWebElement _formElement;
+        protected readonly IWebElement _formElement;
 
         /// <summary>
         /// Default constructor
@@ -41,7 +41,7 @@ namespace SeleniumFixture.Impl
         /// Submit the form you just filled
         /// </summary>
         /// <returns>this</returns>
-        public IYieldsAction ThenSubmit()
+        public virtual IYieldsAction ThenSubmit()
         {
             _formElement.Submit();
 

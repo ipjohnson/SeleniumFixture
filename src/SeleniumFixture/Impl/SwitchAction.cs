@@ -61,7 +61,7 @@ namespace SeleniumFixture.Impl
     /// </summary>
     public class SwitchAction : ISwitchToAction
     {
-        private readonly IActionProvider _actionProvider;
+        protected readonly IActionProvider _actionProvider;
 
         /// <summary>
         /// Default constructor
@@ -77,7 +77,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="windowName">window name</param>
         /// <returns></returns>
-        public IYieldsAction Window(string windowName)
+        public virtual IYieldsAction Window(string windowName)
         {
             _actionProvider.UsingFixture.Driver.SwitchTo().Window(windowName);
 
@@ -88,7 +88,7 @@ namespace SeleniumFixture.Impl
         /// Switch to parent frame
         /// </summary>
         /// <returns></returns>
-        public IYieldsAction ParentFrame()
+        public virtual IYieldsAction ParentFrame()
         {
             _actionProvider.UsingFixture.Driver.SwitchTo().ParentFrame();
 
@@ -100,7 +100,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="frameName"></param>
         /// <returns></returns>
-        public IYieldsAction Frame(string frameName)
+        public virtual IYieldsAction Frame(string frameName)
         {
             _actionProvider.UsingFixture.Driver.SwitchTo().Frame(frameName);
 
@@ -112,7 +112,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="element"></param>
         /// <returns></returns>
-        public IYieldsAction Frame(IWebElement element)
+        public virtual IYieldsAction Frame(IWebElement element)
         {
             _actionProvider.UsingFixture.Driver.SwitchTo().Frame(element);
 
@@ -124,7 +124,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="selector"></param>
         /// <returns></returns>
-        public IYieldsAction Frame(By selector)
+        public virtual IYieldsAction Frame(By selector)
         {
             var element = _actionProvider.FindElement(selector);
 
@@ -137,7 +137,7 @@ namespace SeleniumFixture.Impl
         /// Switch to default content
         /// </summary>
         /// <returns></returns>
-        public IYieldsAction DefaultContent()
+        public virtual IYieldsAction DefaultContent()
         {
             _actionProvider.UsingFixture.Driver.SwitchTo().DefaultContent();
 
@@ -148,7 +148,7 @@ namespace SeleniumFixture.Impl
         /// Switch to alert
         /// </summary>
         /// <returns></returns>
-        public IAlert Alert()
+        public virtual IAlert Alert()
         {
             return _actionProvider.UsingFixture.Driver.SwitchTo().Alert();
         }

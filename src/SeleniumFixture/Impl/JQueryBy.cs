@@ -60,7 +60,7 @@ namespace SeleniumFixture.Impl
             throw new Exception("Can't perform JQueryBy in this context: " + context.GetType().FullName);
         }
 
-        private ReadOnlyCollection<IWebElement> FindElementsOnElement(IWrapsDriver wrapsDriver)
+        protected virtual ReadOnlyCollection<IWebElement> FindElementsOnElement(IWrapsDriver wrapsDriver)
         {
             IJavaScriptExecutor executor = wrapsDriver.WrappedDriver as IJavaScriptExecutor;
 
@@ -79,7 +79,7 @@ namespace SeleniumFixture.Impl
             return new ReadOnlyCollection<IWebElement>(objects.Cast<IWebElement>().ToList());
         }
 
-        private ReadOnlyCollection<IWebElement> FindElementsOnDriver(IJavaScriptExecutor executor)
+        protected virtual ReadOnlyCollection<IWebElement> FindElementsOnDriver(IJavaScriptExecutor executor)
         {
             IEnumerable<object> matchedItems =
                 (IEnumerable<object>)executor.ExecuteScript("return jQuery.find('" + _selector + "')");

@@ -14,8 +14,8 @@ namespace SeleniumFixture.Impl
 
     public class AutoFillAsAction<T> : IAutoFillAsAction<T>
     {
-        private readonly IActionProvider _actionProvider;
-        private readonly IEnumerable<IWebElement> _elements;
+        protected readonly IActionProvider _actionProvider;
+        protected readonly IEnumerable<IWebElement> _elements;
 
         public AutoFillAsAction(IActionProvider actionProvider, IEnumerable<IWebElement> elements)
         {
@@ -23,7 +23,7 @@ namespace SeleniumFixture.Impl
             _elements = elements;
         }
 
-        public IThenSubmitAction PerformFill(string requestName, object constraints)
+        public virtual IThenSubmitAction PerformFill(string requestName, object constraints)
         {
             T seedValue = _actionProvider.UsingFixture.Data.Generate<T>(requestName, constraints);
 

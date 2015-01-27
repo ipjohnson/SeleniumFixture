@@ -79,7 +79,7 @@ namespace SeleniumFixture.Impl
     /// </summary>
     public class WaitAction : IWaitAction
     {
-        private readonly IActionProvider _actionProvider;
+        protected readonly IActionProvider _actionProvider;
 
         /// <summary>
         /// Default constructor
@@ -97,7 +97,7 @@ namespace SeleniumFixture.Impl
         /// <param name="selector">element selector</param>
         /// <param name="timeout">timeout in seconds</param>
         /// <returns>fluent syntax object</returns>
-        public IWaitAction ForElement(string selector, double? timeout = null)
+        public virtual IWaitAction ForElement(string selector, double? timeout = null)
         {
             return Until(i => i.CheckForElement(selector), timeout);
         }
@@ -108,7 +108,7 @@ namespace SeleniumFixture.Impl
         /// <param name="selector">element selector</param>
         /// <param name="timeout">timeout in seconds</param>
         /// <returns>fluent syntax object</returns>
-        public IWaitAction ForElement(By selector, double? timeout = null)
+        public virtual IWaitAction ForElement(By selector, double? timeout = null)
         {
             return Until(i => i.CheckForElement(selector), timeout);
         }
@@ -119,7 +119,7 @@ namespace SeleniumFixture.Impl
         /// <param name="pageTitle"></param>
         /// <param name="timeout"></param>
         /// <returns></returns>
-        public IWaitAction ForPageTitle(string pageTitle, double? timeout = null)
+        public virtual IWaitAction ForPageTitle(string pageTitle, double? timeout = null)
         {
             return ForPageTitle(s => s.Equals(pageTitle));
         }
@@ -129,7 +129,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="seconds"></param>
         /// <returns></returns>
-        public IWaitAction For(double seconds)
+        public virtual IWaitAction For(double seconds)
         {
             Thread.Sleep((int)(seconds * 1000));
 
@@ -141,7 +141,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="timeout">timeout in seconds</param>
         /// <returns>fluent syntax object</returns>
-        public IWaitAction ForAjax(double? timeout = null)
+        public virtual IWaitAction ForAjax(double? timeout = null)
         {
             return Until(
                 i =>
@@ -159,7 +159,7 @@ namespace SeleniumFixture.Impl
         /// <param name="pageTitleFunc"></param>
         /// <param name="timeout"></param>
         /// <returns></returns>
-        public IWaitAction ForPageTitle(Func<string, bool> pageTitleFunc, double? timeout = null)
+        public virtual IWaitAction ForPageTitle(Func<string, bool> pageTitleFunc, double? timeout = null)
         {
             return Until(i => pageTitleFunc(i.Get.PageTitle), timeout);
         }
@@ -170,7 +170,7 @@ namespace SeleniumFixture.Impl
         /// <param name="testFunc">func to test</param>
         /// <param name="timeout">timeout in seconds</param>
         /// <returns>fluent syntax object</returns>
-        public IWaitAction Until(Func<IActionProvider, bool> testFunc, double? timeout = null)
+        public virtual IWaitAction Until(Func<IActionProvider, bool> testFunc, double? timeout = null)
         {
             if (!timeout.HasValue)
             {
@@ -205,6 +205,6 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Provides a way back to action syntax
         /// </summary>
-        public IActionProvider Then { get; private set; }
+        public virtual IActionProvider Then { get; private set; }
     }
 }

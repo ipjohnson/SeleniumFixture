@@ -29,7 +29,7 @@ namespace SeleniumFixture.Impl
     /// </summary>
     public class AlertAction : IAlertAction
     {
-        private IActionProvider _actionProvider;
+        protected readonly IActionProvider _actionProvider;
 
         public AlertAction(IActionProvider actionProvider)
         {
@@ -40,7 +40,7 @@ namespace SeleniumFixture.Impl
         /// Accept alert
         /// </summary>
         /// <returns>action provider</returns>
-        public IActionProvider Accept()
+        public virtual IActionProvider Accept()
         {
             _actionProvider.UsingFixture.Driver.SwitchTo().Alert().Accept();
 
@@ -51,7 +51,7 @@ namespace SeleniumFixture.Impl
         /// Dismiss alert
         /// </summary>
         /// <returns>action provider</returns>
-        public IActionProvider Dismiss()
+        public virtual IActionProvider Dismiss()
         {
             _actionProvider.UsingFixture.Driver.SwitchTo().Alert().Dismiss();
 

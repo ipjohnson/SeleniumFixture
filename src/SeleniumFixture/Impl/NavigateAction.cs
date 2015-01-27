@@ -74,7 +74,7 @@ namespace SeleniumFixture.Impl
     /// </summary>
     public class NavigateAction : INavigateAction
     {
-        private readonly IActionProvider _actionProvider;
+        protected readonly IActionProvider _actionProvider;
 
         /// <summary>
         /// Default constructor
@@ -90,7 +90,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="url">url, if null navigate to base address</param>
         /// <returns>action provider</returns>
-        public IActionProvider To(string url = null)
+        public virtual IActionProvider To(string url = null)
         {
             if (url == null || !url.StartsWith("http", StringComparison.CurrentCultureIgnoreCase))
             {
@@ -122,7 +122,7 @@ namespace SeleniumFixture.Impl
         /// <typeparam name="T">page object type</typeparam>
         /// <param name="url">url to navigate to</param>
         /// <returns>page object</returns>
-        public T To<T>(string url = null)
+        public virtual T To<T>(string url = null)
         {
             To(url);
 
@@ -134,7 +134,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="uri">uri to navigate to</param>
         /// <returns></returns>
-        public IActionProvider To(Uri uri)
+        public virtual IActionProvider To(Uri uri)
         {
             _actionProvider.UsingFixture.Driver.Navigate().GoToUrl(uri);
 
@@ -161,7 +161,7 @@ namespace SeleniumFixture.Impl
         /// <typeparam name="T">page object type</typeparam>
         /// <param name="uri">uri</param>
         /// <returns>page object</returns>
-        public T To<T>(Uri uri)
+        public virtual T To<T>(Uri uri)
         {
             To(uri);
 
@@ -172,7 +172,7 @@ namespace SeleniumFixture.Impl
         /// Navigate the browser back
         /// </summary>
         /// <returns></returns>
-        public IActionProvider Back()
+        public virtual IActionProvider Back()
         {
             _actionProvider.UsingFixture.Driver.Navigate().Back();
 
@@ -198,7 +198,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <typeparam name="T">page object type</typeparam>
         /// <returns>page object</returns>
-        public T Back<T>()
+        public virtual T Back<T>()
         {
             Back();
 
@@ -209,7 +209,7 @@ namespace SeleniumFixture.Impl
         /// Navigate the browser forward
         /// </summary>
         /// <returns></returns>
-        public IActionProvider Forward()
+        public virtual IActionProvider Forward()
         {
             _actionProvider.UsingFixture.Driver.Navigate().Forward();
 
@@ -235,7 +235,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <typeparam name="T">page object type</typeparam>
         /// <returns></returns>
-        public T Forward<T>()
+        public virtual T Forward<T>()
         {
             Forward();
 

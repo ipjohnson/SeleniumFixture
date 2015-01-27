@@ -38,8 +38,8 @@ namespace SeleniumFixture.Impl
     /// </summary>
     public class SendToAction : ISendToAction
     {
-        private readonly string _sendValue;
-        private readonly IActionProvider _actionProvider;
+        protected readonly string _sendValue;
+        protected readonly IActionProvider _actionProvider;
 
         /// <summary>
         /// Default constructor
@@ -56,7 +56,7 @@ namespace SeleniumFixture.Impl
         /// Send value to alert
         /// </summary>
         /// <returns></returns>
-        public IActionProvider ToAlert()
+        public virtual IActionProvider ToAlert()
         {
             _actionProvider.UsingFixture.Driver.SwitchTo().Alert().SendKeys(_sendValue);
 
@@ -68,7 +68,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="selector">element selector</param>
         /// <returns>action provider</returns>
-        public IActionProvider To(string selector)
+        public virtual IActionProvider To(string selector)
         {
             _actionProvider.FindElements(selector).Apply(e => e.SendKeys(_sendValue));
 
@@ -80,7 +80,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="selector">by selector</param>
         /// <returns>action provider</returns>
-        public IActionProvider To(By selector)
+        public virtual IActionProvider To(By selector)
         {
             _actionProvider.FindElements(selector).Apply(e => e.SendKeys(_sendValue));
 

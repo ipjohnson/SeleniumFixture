@@ -29,7 +29,7 @@ namespace SeleniumFixture.Impl
     /// </summary>
     public class TakeScreenshotAction : ITakeScreenshotAction
     {
-        private readonly IActionProvider _actionProvider;
+        protected readonly IActionProvider _actionProvider;
 
         /// <summary>
         /// Default constructor
@@ -47,7 +47,7 @@ namespace SeleniumFixture.Impl
         /// <param name="throwsIfNotSupported">throws if driver does not support taking a screenshot</param>
         /// <param name="format"></param>
         /// <returns></returns>
-        public IActionProvider TakeScreenshot(string screenshotName, bool throwsIfNotSupported, ImageFormat format)
+        public virtual IActionProvider TakeScreenshot(string screenshotName, bool throwsIfNotSupported, ImageFormat format)
         {
             format = format ?? ImageFormat.Png;
 
@@ -76,7 +76,7 @@ namespace SeleniumFixture.Impl
             return _actionProvider;
         }
 
-        private string GetScreenshotName(ImageFormat format)
+        protected virtual string GetScreenshotName(ImageFormat format)
         {
             StackTrace stackTrace = new StackTrace();
 

@@ -19,11 +19,11 @@ namespace SeleniumFixture.Impl
 
     public class AutoFillAction : IAutoFillAction
     {
-        private readonly IActionProvider _actionProvider;
-        private readonly IEnumerable<IWebElement> _elements;
-        private readonly object _seedWith;
-        private readonly bool _isSimpleSeed;
-        private readonly IConstraintHelper _constraintHelper;
+        protected readonly IActionProvider _actionProvider;
+        protected readonly IEnumerable<IWebElement> _elements;
+        protected readonly object _seedWith;
+        protected readonly bool _isSimpleSeed;
+        protected readonly IConstraintHelper _constraintHelper;
 
         public AutoFillAction(IActionProvider actionProvider, IEnumerable<IWebElement> elements, object seedWith)
         {
@@ -34,14 +34,14 @@ namespace SeleniumFixture.Impl
             _constraintHelper = _actionProvider.UsingFixture.Data.Locate<IConstraintHelper>();
         }
 
-        public IThenSubmitAction PerformFill()
+        public virtual IThenSubmitAction PerformFill()
         {
             AutoFillElement();
 
             return new ThenSubmitAction(_actionProvider.UsingFixture, _elements.First());
         }
-        
-        private void AutoFillElement()
+
+        protected virtual void AutoFillElement()
         {
             Dictionary<string, List<IWebElement>> radioButtons = new Dictionary<string, List<IWebElement>>();
 
@@ -62,7 +62,7 @@ namespace SeleniumFixture.Impl
             }
         }
 
-        private bool ProcessFormElement(IWebElement findElement, Dictionary<string, List<IWebElement>> radioButtons)
+        protected virtual bool ProcessFormElement(IWebElement findElement, Dictionary<string, List<IWebElement>> radioButtons)
         {
             bool returnValue = false;
 
@@ -90,7 +90,7 @@ namespace SeleniumFixture.Impl
             return returnValue;
         }
 
-        private void AutoFillRadioButtonGroup(string key, List<IWebElement> values)
+        protected virtual void AutoFillRadioButtonGroup(string key, List<IWebElement> values)
         {
             string stringConstraintValue = null;
 
@@ -128,7 +128,7 @@ namespace SeleniumFixture.Impl
             }
         }
 
-        private void AutoFillInputElement(IWebElement element, Dictionary<string, List<IWebElement>> radioButtons)
+        protected virtual void AutoFillInputElement(IWebElement element, Dictionary<string, List<IWebElement>> radioButtons)
         {
             var type = element.GetAttribute(ElementContants.TypeAttribute);
 
@@ -176,7 +176,7 @@ namespace SeleniumFixture.Impl
             element.SendKeys(GetStringFromValue(setValue));
         }
 
-        private void AutoFillCheckBox(IWebElement element)
+        protected virtual void AutoFillCheckBox(IWebElement element)
         {
             string elementId = element.GetAttribute("id") ?? element.GetAttribute("name");
             bool? checkedValue = null;
@@ -209,7 +209,7 @@ namespace SeleniumFixture.Impl
             }
         }
 
-        private static void AddRadioButtonToGroup(IWebElement element, Dictionary<string, List<IWebElement>> radioButtons)
+        protected virtual void AddRadioButtonToGroup(IWebElement element, Dictionary<string, List<IWebElement>> radioButtons)
         {
             var name = element.GetAttribute("name");
 
@@ -228,7 +228,7 @@ namespace SeleniumFixture.Impl
             }
         }
 
-        private string GetStringFromValue(object stringObject)
+        protected virtual string GetStringFromValue(object stringObject)
         {
             if (stringObject is string)
             {
@@ -247,7 +247,7 @@ namespace SeleniumFixture.Impl
             return stringObject.ToString();
         }
 
-        private void AutoFillSelectElement(IWebElement element)
+        protected virtual void AutoFillSelectElement(IWebElement element)
         {
             SelectElement selectElement = new SelectElement(element);
             bool setValue = false;
@@ -301,7 +301,7 @@ namespace SeleniumFixture.Impl
             }
         }
 
-        private bool IsSeedSimple()
+        protected virtual bool IsSeedSimple()
         {
             if (_seedWith == null)
                 return false;

@@ -35,7 +35,7 @@ namespace SeleniumFixture.Impl
         /// <param name="x">x offset</param>
         /// <param name="y">y offset</param>
         /// <returns></returns>
-        public IActionProvider MoveTheMouseTo(string selector, int? x = null, int? y = null)
+        public virtual IActionProvider MoveTheMouseTo(string selector, int? x = null, int? y = null)
         {
             return _fixture.Data.Locate<IMouseMoveAction>().MoveTheMouseTo(selector, x, y);
         }
@@ -47,7 +47,7 @@ namespace SeleniumFixture.Impl
         /// <param name="x">x offset</param>
         /// <param name="y">y offset</param>
         /// <returns></returns>
-        public IActionProvider MoveTheMouseTo(By selector, int? x = null, int? y = null)
+        public virtual IActionProvider MoveTheMouseTo(By selector, int? x = null, int? y = null)
         {
             return _fixture.Data.Locate<IMouseMoveAction>().MoveTheMouseTo(selector, x, y);
         }
@@ -55,7 +55,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Navigate the fixture
         /// </summary>
-        public INavigateAction Navigate
+        public virtual INavigateAction Navigate
         {
             get { return _fixture.Data.Locate<INavigateAction>(); }
         }
@@ -65,7 +65,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="selector">selector to use to locate element</param>
         /// <returns>element or throws an exception</returns>
-        public IWebElement FindElement(string selector)
+        public virtual IWebElement FindElement(string selector)
         {
             if (selector == null)
             {
@@ -97,7 +97,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="selector">by selector</param>
         /// <returns>elements</returns>
-        public IWebElement FindElement(By selector)
+        public virtual IWebElement FindElement(By selector)
         {
             return _fixture.Driver.FindElement(selector);
         }
@@ -107,7 +107,7 @@ namespace SeleniumFixture.Impl
         /// </summary>
         /// <param name="selector">selector to use to find elements</param>
         /// <returns>elements</returns>
-        public ReadOnlyCollection<IWebElement> FindElements(string selector)
+        public virtual ReadOnlyCollection<IWebElement> FindElements(string selector)
         {
             if (selector == null)
             {
@@ -137,7 +137,7 @@ namespace SeleniumFixture.Impl
         /// Focus an element
         /// </summary>
         /// <param name="selector"></param>
-        public void Focus(string selector)
+        public virtual void Focus(string selector)
         {
             var element = FindElement(selector);
 
@@ -148,7 +148,7 @@ namespace SeleniumFixture.Impl
         /// Focus an element
         /// </summary>
         /// <param name="selector"></param>
-        public void Focus(By selector)
+        public virtual void Focus(By selector)
         {
             var element = FindElement(selector);
 
@@ -164,7 +164,7 @@ namespace SeleniumFixture.Impl
         /// A <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1"/> of all <see cref="T:OpenQA.Selenium.IWebElement">WebElements</see>
         ///             matching the current criteria, or an empty list if nothing matches.
         /// </returns>
-        public ReadOnlyCollection<IWebElement> FindElements(By element)
+        public virtual ReadOnlyCollection<IWebElement> FindElements(By element)
         {
             return _fixture.Driver.FindElements(element);
         }
@@ -176,7 +176,7 @@ namespace SeleniumFixture.Impl
         /// <param name="constraints"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T Generate<T>(string requestName = null, object constraints = null)
+        public virtual T Generate<T>(string requestName = null, object constraints = null)
         {
             return _fixture.Data.Generate<T>(requestName, constraints);
         }
@@ -184,67 +184,145 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Get values from page
         /// </summary>
-        public IGetAction Get
+        public virtual IGetAction Get
         {
             get { return _fixture.Data.Locate<IGetAction>(); }
         }
 
-        public bool CheckForElement(string element)
+        /// <summary>
+        /// Checks for element.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <returns></returns>
+        public virtual bool CheckForElement(string element)
         {
             return FindElements(element).Any();
         }
 
-        public bool CheckForElement(By element)
+        /// <summary>
+        /// Checks for element.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <returns></returns>
+        public virtual bool CheckForElement(By element)
         {
             return FindElements(element).Any();
         }
 
-        public IActionProvider Clear(string selector)
+        /// <summary>
+        /// Clear elements specified
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <returns></returns>
+        public virtual IActionProvider Clear(string selector)
         {
             return _fixture.Data.Locate<IClearAction>().Clear(selector);
         }
 
-        public IActionProvider Clear(By selector)
+        /// <summary>
+        /// Clear elements specified
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <returns></returns>
+        public virtual IActionProvider Clear(By selector)
         {
             return _fixture.Data.Locate<IClearAction>().Clear(selector);
         }
 
-        public int Count(string selector)
+        /// <summary>
+        /// Count the number of elements present
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <returns>
+        /// count of elements
+        /// </returns>
+        public virtual int Count(string selector)
         {
             return FindElements(selector).Count;
         }
 
-        public int Count(By selector)
+        /// <summary>
+        /// Count the number of elements present
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <returns>
+        /// count of elements
+        /// </returns>
+        public virtual int Count(By selector)
         {
             return FindElements(selector).Count;
         }
 
-        public IActionProvider DismissAlert()
+        /// <summary>
+        /// SwitchTo Alert and dismiss
+        /// </summary>
+        /// <returns></returns>
+        public virtual IActionProvider DismissAlert()
         {
             return _fixture.Data.Locate<IAlertAction>().Dismiss();
         }
 
-        public IActionProvider Click(string selector, ClickMode clickMode = ClickMode.ClickAll)
+        /// <summary>
+        /// Click the elements returned by the selector
+        /// </summary>
+        /// <param name="selector">selector to use when find elements to click</param>
+        /// <param name="clickMode">click mode, by default</param>
+        /// <returns>
+        /// this
+        /// </returns>
+        public virtual IActionProvider Click(string selector, ClickMode clickMode = ClickMode.ClickAll)
         {
             return _fixture.Data.Locate<IClickAction>().Click(selector, clickMode);
         }
 
-        public IActionProvider Click(By selector, ClickMode clickMode = ClickMode.ClickAll)
+        /// <summary>
+        /// Click the elements returned by the selector
+        /// </summary>
+        /// <param name="selector">selector to use when find elements to click</param>
+        /// <param name="clickMode">click mode, by default</param>
+        /// <returns>
+        /// this
+        /// </returns>
+        public virtual IActionProvider Click(By selector, ClickMode clickMode = ClickMode.ClickAll)
         {
             return _fixture.Data.Locate<IClickAction>().Click(selector, clickMode);
         }
 
-        public IActionProvider DoubleClick(string selector, ClickMode clickMode = ClickMode.ClickAll)
+        /// <summary>
+        /// Double click the selected elements
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <param name="clickMode">click mode</param>
+        /// <returns>
+        /// this
+        /// </returns>
+        public virtual IActionProvider DoubleClick(string selector, ClickMode clickMode = ClickMode.ClickAll)
         {
             return _fixture.Data.Locate<IDoubleClickAction>().DoubleClick(selector, clickMode);
         }
 
-        public IActionProvider DoubleClick(By selector, ClickMode clickMode = ClickMode.ClickAll)
+        /// <summary>
+        /// Double click the selected elements
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <param name="clickMode">click mode</param>
+        /// <returns>
+        /// this
+        /// </returns>
+        public virtual IActionProvider DoubleClick(By selector, ClickMode clickMode = ClickMode.ClickAll)
         {
             return _fixture.Data.Locate<IDoubleClickAction>().DoubleClick(selector, clickMode);
         }
 
-        public T ExecuteJavaScript<T>(string javascript, params object[] args)
+        /// <summary>
+        /// Execute arbitrary javascript
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="javascript"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Javascript not supported by driver  + _fixture.Driver</exception>
+        public virtual T ExecuteJavaScript<T>(string javascript, params object[] args)
         {
             IJavaScriptExecutor executor = _fixture.Driver as IJavaScriptExecutor;
 
@@ -280,7 +358,13 @@ namespace SeleniumFixture.Impl
             return (T)returnValue;
         }
 
-        public void ExecuteJavaScript(string javascript, params object[] args)
+        /// <summary>
+        /// Execute arbitrary javascript
+        /// </summary>
+        /// <param name="javascript"></param>
+        /// <param name="args"></param>
+        /// <exception cref="System.Exception">Javascript not supported by driver  + _fixture.Driver</exception>
+        public virtual void ExecuteJavaScript(string javascript, params object[] args)
         {
             IJavaScriptExecutor executor = _fixture.Driver as IJavaScriptExecutor;
 
@@ -292,54 +376,131 @@ namespace SeleniumFixture.Impl
             executor.ExecuteScript(javascript, args);
         }
 
-        public IActionProvider AcceptAlert()
+        /// <summary>
+        /// SwitchTo alert and accept.
+        /// </summary>
+        /// <returns></returns>
+        public virtual IActionProvider AcceptAlert()
         {
             return _fixture.Data.Locate<IAlertAction>().Accept();
         }
 
-        public IThenSubmitAction AutoFill(string selector, object seedWith = null)
+        /// <summary>
+        /// Autofill elements using data from SimpleFixture
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <param name="seedWith">seed data</param>
+        /// <returns>
+        /// this
+        /// </returns>
+        public virtual IThenSubmitAction AutoFill(string selector, object seedWith = null)
         {
             return AutoFill(FindElements(selector), seedWith);
         }
 
-        public IThenSubmitAction AutoFill(By selector, object seedWith = null)
+        /// <summary>
+        /// Autofill elements using data from SimpleFixture
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <param name="seedWith">seed data</param>
+        /// <returns>
+        /// this
+        /// </returns>
+        public virtual IThenSubmitAction AutoFill(By selector, object seedWith = null)
         {
             return AutoFill(FindElements(selector), seedWith);
         }
 
-        public IThenSubmitAction AutoFill(IEnumerable<IWebElement> elements, object seedWith = null)
+        /// <summary>
+        /// Autofill elements using data from SimpleFixture
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <param name="seedWith"></param>
+        /// <returns></returns>
+        public virtual IThenSubmitAction AutoFill(IEnumerable<IWebElement> elements, object seedWith = null)
         {
             return _fixture.Data.Locate<IAutoFillAction>(constraints: new { elements, seedWith }).PerformFill();
         }
 
-        public IThenSubmitAction AutoFillAs<T>(string selector, string requestName = null, object constraints = null)
+        /// <summary>
+        /// Auto fill elements as a specific type
+        /// </summary>
+        /// <typeparam name="T">Type of data to generate</typeparam>
+        /// <param name="selector">selector for elements</param>
+        /// <param name="requestName">request name</param>
+        /// <param name="constraints">constraints for generation</param>
+        /// <returns>
+        /// this
+        /// </returns>
+        public virtual IThenSubmitAction AutoFillAs<T>(string selector, string requestName = null, object constraints = null)
         {
             return AutoFillAs<T>(FindElements(selector), requestName, constraints);
         }
 
-        public IThenSubmitAction AutoFillAs<T>(By selector, string requestName = null, object constraints = null)
+        /// <summary>
+        /// Auto fill elements as a specific type
+        /// </summary>
+        /// <typeparam name="T">Type of data to generate</typeparam>
+        /// <param name="selector">selector for elements</param>
+        /// <param name="requestName">request name</param>
+        /// <param name="constraints">constraints for generation</param>
+        /// <returns>
+        /// this
+        /// </returns>
+        public virtual IThenSubmitAction AutoFillAs<T>(By selector, string requestName = null, object constraints = null)
         {
             return AutoFillAs<T>(FindElements(selector), requestName, constraints);
         }
 
-        public IThenSubmitAction AutoFillAs<T>(IEnumerable<IWebElement> elements, string requestName = null, object constraints = null)
+        /// <summary>
+        /// Auto fill elements as a specific type
+        /// </summary>
+        /// <typeparam name="T">Type of data to generate</typeparam>
+        /// <param name="elements">elements</param>
+        /// <param name="requestName">request name</param>
+        /// <param name="constraints">constraints for generation</param>
+        /// <returns>
+        /// this
+        /// </returns>
+        public virtual IThenSubmitAction AutoFillAs<T>(IEnumerable<IWebElement> elements, string requestName = null, object constraints = null)
         {
             var autoFillProvider = _fixture.Data.Locate<IAutoFillAsActionProvider>();
 
             return autoFillProvider.CreateAction<T>(elements).PerformFill(requestName, constraints);
         }
 
-        public IFillAction Fill(string selector)
+        /// <summary>
+        /// Fill elements with values
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <returns>
+        /// fill action
+        /// </returns>
+        public virtual IFillAction Fill(string selector)
         {
             return Fill(FindElements(selector));
         }
 
-        public IFillAction Fill(By selector)
+        /// <summary>
+        /// Fill elements with values
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <returns>
+        /// fill action
+        /// </returns>
+        public virtual IFillAction Fill(By selector)
         {
             return Fill(FindElements(selector));
         }
 
-        public IFillAction Fill(IEnumerable<IWebElement> elements)
+        /// <summary>
+        /// Fill elements with values
+        /// </summary>
+        /// <param name="elements">elements</param>
+        /// <returns>
+        /// fill action
+        /// </returns>
+        public virtual IFillAction Fill(IEnumerable<IWebElement> elements)
         {
             ReadOnlyCollection<IWebElement> readOnlyElements = elements as ReadOnlyCollection<IWebElement> ??
                                                                new ReadOnlyCollection<IWebElement>(new List<IWebElement>(elements));
@@ -347,19 +508,32 @@ namespace SeleniumFixture.Impl
             return _fixture.Data.Locate<IFillAction>(constraints: new { elements = readOnlyElements });
         }
 
-        public IWaitAction Wait
+        /// <summary>
+        /// Wait for something to happen
+        /// </summary>
+        public virtual IWaitAction Wait
         {
             get { return _fixture.Data.Locate<IWaitAction>(); }
         }
 
-        public ISendToAction Send(object sendValue)
+        /// <summary>
+        /// Send the value to a particular element or set of elements
+        /// </summary>
+        /// <param name="sendValue">value to send to elements</param>
+        /// <returns></returns>
+        public virtual ISendToAction Send(object sendValue)
         {
             string sendValueString = sendValue.ToString();
 
             return _fixture.Data.Locate<ISendToAction>(constraints: new { sendValue = sendValueString });
         }
 
-        public IYieldsAction Submit(string selector)
+        /// <summary>
+        /// Submit form.
+        /// </summary>
+        /// <param name="selector"></param>
+        /// <returns></returns>
+        public virtual IYieldsAction Submit(string selector)
         {
             FindElement(selector).Submit();
 
@@ -380,7 +554,12 @@ namespace SeleniumFixture.Impl
             return _fixture.Data.Locate<IYieldsAction>();
         }
 
-        public IYieldsAction Submit(By selector)
+        /// <summary>
+        /// Submit form.
+        /// </summary>
+        /// <param name="selector">selector</param>
+        /// <returns></returns>
+        public virtual IYieldsAction Submit(By selector)
         {
             FindElement(selector).Submit();
 
@@ -401,27 +580,59 @@ namespace SeleniumFixture.Impl
             return _fixture.Data.Locate<IYieldsAction>();
         }
 
-        public ISwitchToAction SwitchTo
+        /// <summary>
+        /// Switch to
+        /// </summary>
+        public virtual ISwitchToAction SwitchTo
         {
             get { return new SwitchAction(this); }
         }
 
-        public IActionProvider TakeScreenshot(string screenshotName = null, bool throwsIfNotSupported = false, ImageFormat format= null)
+        /// <summary>
+        /// Take a screen shot using the current driver.
+        /// Note: some drivers do not support taking screen shots
+        /// </summary>
+        /// <param name="screenshotName">take screenshot, if null then ClassName_MethodName is used</param>
+        /// <param name="throwsIfNotSupported">throw exception if screen shot is not supported by the current driver</param>
+        /// <param name="format">Image format, png by default</param>
+        /// <returns></returns>
+        public virtual IActionProvider TakeScreenshot(string screenshotName = null, bool throwsIfNotSupported = false, ImageFormat format = null)
         {
             return _fixture.Data.Locate<ITakeScreenshotAction>().TakeScreenshot(screenshotName, throwsIfNotSupported, format);
         }
 
-        public Fixture UsingFixture
+        /// <summary>
+        /// Fixture for this action provider
+        /// </summary>
+        public virtual Fixture UsingFixture
         {
             get { return _fixture; }
         }
 
-        public T Yields<T>(string requestName = null, object constraints = null)
+        /// <summary>
+        /// Yields a Page Object using SimpleFixture
+        /// </summary>
+        /// <typeparam name="T">Type of object to Generate</typeparam>
+        /// <param name="requestName">request name</param>
+        /// <param name="constraints">constraints for the locate</param>
+        /// <returns>
+        /// new T
+        /// </returns>
+        public virtual T Yields<T>(string requestName = null, object constraints = null)
         {
             return _fixture.Data.Locate<IYieldsAction>().Yields<T>(requestName, constraints);
         }
 
-        public object Yields(Type type, string requestName = null, object constraints = null)
+        /// <summary>
+        /// Yields a Page Object using SimpleFixture
+        /// </summary>
+        /// <param name="type">Type of object to Generate</param>
+        /// <param name="requestName">request name</param>
+        /// <param name="constraints">constraints for the locate</param>
+        /// <returns>
+        /// new instance
+        /// </returns>
+        public virtual object Yields(Type type, string requestName = null, object constraints = null)
         {
             return _fixture.Data.Locate<IYieldsAction>().Yields(type, requestName, constraints);
         }
