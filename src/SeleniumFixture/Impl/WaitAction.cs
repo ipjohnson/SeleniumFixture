@@ -45,19 +45,35 @@ namespace SeleniumFixture.Impl
         IWaitAction ForElement(By selector, double? timeout = null);
 
         /// <summary>
+        /// Wait for page source to contain a specific string
+        /// </summary>
+        /// <param name="stringToCheckFor">string to check for in page source</param>
+        /// <param name="timeout">timeout in seconds</param>
+        /// <returns>fluent syntax object</returns>
+        IWaitAction ForPageSourceToContain(string stringToCheckFor, double? timeout = null);
+
+        /// <summary>
+        /// Wait for page source to pass a specific test
+        /// </summary>
+        /// <param name="stringToCheckForFunc">function to test for</param>
+        /// <param name="timeout">timeout in seconds</param>
+        /// <returns>fluent syntax object</returns>
+        IWaitAction ForPageSourceToPass(Func<string,bool> stringToCheckForFunc, double? timeout = null);
+
+        /// <summary>
         /// Wait for a page title
         /// </summary>
-        /// <param name="pageTitle"></param>
-        /// <param name="timeout"></param>
-        /// <returns></returns>
+        /// <param name="pageTitle">page title</param>
+        /// <param name="timeout">timeout in seconds</param>
+        /// <returns>fluent syntax object</returns>
         IWaitAction ForPageTitle(string pageTitle, double? timeout = null);
 
         /// <summary>
         /// Wait for a page title by specified func
         /// </summary>
-        /// <param name="pageTitleFunc"></param>
-        /// <param name="timeout"></param>
-        /// <returns></returns>
+        /// <param name="pageTitleFunc">function to test against the page title</param>
+        /// <param name="timeout">timeout in seconds</param>
+        /// <returns>fluent syntax object</returns>
         IWaitAction ForPageTitle(Func<string, bool> pageTitleFunc,double? timeout = null);
 
         /// <summary>
@@ -111,6 +127,28 @@ namespace SeleniumFixture.Impl
         public virtual IWaitAction ForElement(By selector, double? timeout = null)
         {
             return Until(i => i.CheckForElement(selector), timeout);
+        }
+
+        /// <summary>
+        /// Wait for page source to contain a specific string
+        /// </summary>
+        /// <param name="stringToCheckFor">string to check for in page source</param>
+        /// <param name="timeout">timeout in seconds</param>
+        /// <returns>fluent syntax object</returns>
+        public IWaitAction ForPageSourceToContain(string stringToCheckFor, double? timeout = null)
+        {
+            return Until(i => i.Get.PageSource.Contains(stringToCheckFor), timeout);
+        }
+
+        /// <summary>
+        /// Wait for page source to contain a specific string
+        /// </summary>
+        /// <param name="stringToCheckForFunc">function to test for</param>
+        /// <param name="timeout">timeout in seconds</param>
+        /// <returns>fluent syntax object</returns>
+        public IWaitAction ForPageSourceToPass(Func<string, bool> stringToCheckForFunc, double? timeout = null)
+        {
+            return Until(i => stringToCheckForFunc(i.Get.PageSource), timeout);
         }
 
         /// <summary>
