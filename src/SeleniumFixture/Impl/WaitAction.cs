@@ -55,10 +55,10 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Wait for page source to pass a specific test
         /// </summary>
-        /// <param name="stringToCheckForFunc">function to test for</param>
+        /// <param name="matchFunc">function to test for</param>
         /// <param name="timeout">timeout in seconds</param>
         /// <returns>fluent syntax object</returns>
-        IWaitAction ForPageSourceToPass(Func<string,bool> stringToCheckForFunc, double? timeout = null);
+        IWaitAction ForPageSource(Func<string,bool> matchFunc, double? timeout = null);
 
         /// <summary>
         /// Wait for a page title
@@ -108,6 +108,36 @@ namespace SeleniumFixture.Impl
         }
 
         /// <summary>
+        /// Wait for X number of seconds.
+        /// </summary>
+        /// <param name="seconds"></param>
+        /// <returns></returns>
+        public virtual IWaitAction For(double seconds)
+        {
+            Thread.Sleep((int)(seconds * 1000));
+
+            return this;
+        }
+
+        /// <summary>
+        /// Wait for no ajax calls to be active
+        /// </summary>
+        /// <param name="timeout">timeout in seconds</param>
+        /// <returns>fluent syntax object</returns>
+        public virtual IWaitAction ForAjax(double? timeout = null)
+        {
+            return Until(
+                i =>
+                {
+                    // static cast because I want an exception to be thrown when the driver doesn't support executing javascript
+                    IJavaScriptExecutor executor = (IJavaScriptExecutor)_actionProvider.UsingFixture.Driver;
+
+                    return (bool)executor.ExecuteScript(_actionProvider.UsingFixture.Configuration.AjaxActiveTest);
+                }, timeout)
+                .For(0.1);
+        }
+
+        /// <summary>
         /// Wait for an element to be present
         /// </summary>
         /// <param name="selector">element selector</param>
@@ -143,12 +173,12 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Wait for page source to contain a specific string
         /// </summary>
-        /// <param name="stringToCheckForFunc">function to test for</param>
+        /// <param name="matchFunc">function to test the page source</param>
         /// <param name="timeout">timeout in seconds</param>
         /// <returns>fluent syntax object</returns>
-        public IWaitAction ForPageSourceToPass(Func<string, bool> stringToCheckForFunc, double? timeout = null)
+        public IWaitAction ForPageSource(Func<string, bool> matchFunc, double? timeout = null)
         {
-            return Until(i => stringToCheckForFunc(i.Get.PageSource), timeout);
+            return Until(i => matchFunc(i.Get.PageSource), timeout);
         }
 
         /// <summary>
@@ -160,35 +190,6 @@ namespace SeleniumFixture.Impl
         public virtual IWaitAction ForPageTitle(string pageTitle, double? timeout = null)
         {
             return ForPageTitle(s => s.Equals(pageTitle));
-        }
-
-        /// <summary>
-        /// Wait for X number of seconds.
-        /// </summary>
-        /// <param name="seconds"></param>
-        /// <returns></returns>
-        public virtual IWaitAction For(double seconds)
-        {
-            Thread.Sleep((int)(seconds * 1000));
-
-            return this;
-        }
-
-        /// <summary>
-        /// Wait for no ajax calls to be active
-        /// </summary>
-        /// <param name="timeout">timeout in seconds</param>
-        /// <returns>fluent syntax object</returns>
-        public virtual IWaitAction ForAjax(double? timeout = null)
-        {
-            return Until(
-                i =>
-                {
-                    IJavaScriptExecutor executor = (IJavaScriptExecutor)_actionProvider.UsingFixture.Driver;
-
-                    return (bool)executor.ExecuteScript(_actionProvider.UsingFixture.Configuration.AjaxActiveTest);
-                }, timeout)
-                .For(0.1);
         }
 
         /// <summary>
