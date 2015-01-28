@@ -22,8 +22,8 @@ fixture.Click("#someButton");
 // click input button of type submit
 fixture.Click("input[type='submit']");
 
-// DoubleClick all buttons that have the css class 'some-css-class'
-fixture.DoubleClick("button.some-css-class", ClickMode.Any);
+// DoubleClick any button that has the html class 'some-class'
+fixture.DoubleClick("button.some-class", ClickMode.Any);
 ```
 
 ###Fill
