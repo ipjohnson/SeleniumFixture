@@ -51,7 +51,7 @@ Sometimes its useful to populate a form with random data. The AutoFill method ca
 // AutoFill form element
 fixture.AutoFill("//form");
 
-// AutoFill form but use Bob to will the FirstName field
+// AutoFill form but use Bob to fill the FirstName field
 fixture.AutoFill("//form", seedWith: new { FirstName = "Bob"});
 
 // Find an element with the id #someDiv and populate all child input and select elements
@@ -96,7 +96,7 @@ public class FormPage
 ```
 
 ###IActionProvider Property
-The IActionProvider allows a page object to import the functionality of the Fixture into a local property. When PageObjects are constructed any IActionProvider property with a setter will be Populated with an instance of IActionProvider. Usually this property is named 
+The IActionProvider allows a page object to import the functionality of the Fixture into a local property. When PageObjects are constructed any IActionProvider property with a setter will be Populated with an instance of IActionProvider. Usually this property is named I
 
 ```C#
 I.Fill("//form").With(new { FirstName = "Sterling" });
