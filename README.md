@@ -42,6 +42,9 @@ fixture.Fill("//form")
                 Gender = "Male"
               })
        .ThenSubmit();
+       
+// fill all elements with the html class some-class with the value 1111       
+fixture.Fill(".some-class").With(1111);
 ```
 
 ###AutoFill
