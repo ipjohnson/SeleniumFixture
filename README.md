@@ -128,10 +128,9 @@ Yields is how you can create new PageObject instances. It takes the type of page
 // click the submit button and yield a new HomePage object 
 I.Click("#submitButton").Yields<HomePage>();
 
-// click the link Some Text then yield new OtherPage object
-// and pass the value 5 into the constructor param someParam
-I.Click(By.LinkText("Some Text")
- .Yields<OtherPage>(constraints: new { someParam = 5 });
+// click the link Some Text then yield a new OtherPage object
+// and pass the value 5 into the constructor parameter someParam
+I.Click(By.LinkText("Some Text")).Yields<OtherPage>(constraints: new { someParam = 5 });
  
 public class OtherPage
 {
