@@ -22,8 +22,8 @@ fixture.Click("#someButton");
 // click input button of type submit
 fixture.Click("input[type='submit']");
 
-// DoubleClick all buttons that have the css class 'some-css-class'
-fixture.DoubleClick("button.some-css-class", ClickMode.Any);
+// DoubleClick any button that has the html class 'some-class'
+fixture.DoubleClick("button.some-class", ClickMode.Any);
 ```
 
 ###Fill
@@ -42,6 +42,9 @@ fixture.Fill("//form")
                 Gender = "Male"
               })
        .ThenSubmit();
+       
+// fill all elements with the html class some-class with the value 1111       
+fixture.Fill(".some-class").With(1111);
 ```
 
 ###AutoFill
@@ -51,7 +54,7 @@ Sometimes its useful to populate a form with random data. The AutoFill method ca
 // AutoFill form element
 fixture.AutoFill("//form");
 
-// AutoFill form but use Bob to will the FirstName field
+// AutoFill form but use Bob to fill the FirstName field
 fixture.AutoFill("//form", seedWith: new { FirstName = "Bob"});
 
 // Find an element with the id #someDiv and populate all child input and select elements
@@ -96,7 +99,7 @@ public class FormPage
 ```
 
 ###IActionProvider Property
-The IActionProvider allows a page object to import the functionality of the Fixture into a local property. When PageObjects are constructed any IActionProvider property with a setter will be Populated with an instance of IActionProvider. Usually this property is named 
+The IActionProvider allows a page object to import the functionality of the Fixture into a local property. When PageObjects are constructed any IActionProvider property with a setter will be Populated with an instance of IActionProvider. Usually this property is named I
 
 ```C#
 I.Fill("//form").With(new { FirstName = "Sterling" });
@@ -128,10 +131,9 @@ Yields is how you can create new PageObject instances. It takes the type of page
 // click the submit button and yield a new HomePage object 
 I.Click("#submitButton").Yields<HomePage>();
 
-// click the link Some Text then yield new OtherPage object
-// and pass the value 5 into the constructor param someParam
-I.Click(By.LinkText("Some Text")
- .Yields<OtherPage>(constraints: new { someParam = 5 });
+// click the link Some Text then yield a new OtherPage object
+// and pass the value 5 into the constructor parameter someParam
+I.Click(By.LinkText("Some Text")).Yields<OtherPage>(constraints: new { someParam = 5 });
  
 public class OtherPage
 {
