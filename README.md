@@ -144,7 +144,7 @@ public class OtherPage
   
   private Action Validate { get; set; }
   
-  private IActionProvider { get; set; }
+  private IActionProvider I { get; set; }
 }
 ```
 
