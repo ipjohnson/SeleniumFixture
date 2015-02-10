@@ -19,8 +19,8 @@ Provides short hand for clicking and double clicking elements
 // click button with id someButton
 fixture.Click("#someButton");
 
-// click input button of type submit
-fixture.Click("input[type='submit']");
+// click button of type submit
+fixture.Click("button[type='submit']");
 
 // DoubleClick any button that has the html class 'some-class'
 fixture.DoubleClick("button.some-class", ClickMode.Any);
