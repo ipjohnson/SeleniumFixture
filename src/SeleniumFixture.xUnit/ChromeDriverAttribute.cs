@@ -1,13 +1,12 @@
-﻿using System;
+﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using SeleniumFixture.xUnit.Impl;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using SeleniumFixture.xUnit.Impl;
-using Xunit.Sdk;
 
 namespace SeleniumFixture.xUnit
 {
@@ -15,16 +14,24 @@ namespace SeleniumFixture.xUnit
     {
         protected override IWebDriver CreateWebDriver(MethodInfo testMethod)
         {
+            IWebDriver driver = null;
+
             var chromeDriverProvider = ReflectionHelper.GetAttribute<ChromeDriverProviderAttribute>(testMethod);
 
             if (chromeDriverProvider != null)
             {
-                return chromeDriverProvider.ProvideDriver(testMethod);
+                driver = chromeDriverProvider.ProvideDriver(testMethod);
+            }
+            else
+            {
+                var optionsProvider = ReflectionHelper.GetAttribute<ChromeOptionsAttribute>(testMethod);
+
+                driver = new ChromeDriver(optionsProvider != null ? optionsProvider.ProvideOptions(testMethod) : new ChromeOptions());
             }
 
-            var optionsProvider = ReflectionHelper.GetAttribute<ChromeOptionsAttribute>(testMethod);
+            InitializeDriver(testMethod, driver);
 
-            return new ChromeDriver(optionsProvider != null ? optionsProvider.ProvideOptions(testMethod) : new ChromeOptions());
+            return driver;
         }
     }
 }

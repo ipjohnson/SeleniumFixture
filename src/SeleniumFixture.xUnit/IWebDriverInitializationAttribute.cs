@@ -1,4 +1,4 @@
-﻿using OpenQA.Selenium.Chrome;
+﻿using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace SeleniumFixture.xUnit
 {
-    public abstract class ChromeOptionsAttribute : Attribute
+    public interface IWebDriverInitializationAttribute
     {
-        public abstract ChromeOptions ProvideOptions(MethodInfo testMethod);
+        IWebDriverInitializer ProvideInitializer(MethodInfo testMethod, IWebDriver driver);
     }
 }

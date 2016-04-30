@@ -34,6 +34,9 @@ namespace SeleniumFixture
     /// </summary>
     public class SeleniumFixtureConfiguration 
     {
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         public SeleniumFixtureConfiguration()
         {
             Initialize();

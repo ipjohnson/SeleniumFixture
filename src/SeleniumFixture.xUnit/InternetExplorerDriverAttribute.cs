@@ -16,18 +16,26 @@ namespace SeleniumFixture.xUnit
     {
         protected override IWebDriver CreateWebDriver(MethodInfo testMethod)
         {
+            IWebDriver driver = null;
+
             var chromeDriverProvider = ReflectionHelper.GetAttribute<InternetExplorerDriverProviderAttribute>(testMethod);
 
             if (chromeDriverProvider != null)
             {
-                return chromeDriverProvider.ProvideDriver(testMethod);
+                driver = chromeDriverProvider.ProvideDriver(testMethod);
+            }
+            else
+            {
+                var optionsProvider = ReflectionHelper.GetAttribute<InternetExplorerOptionsAttribute>(testMethod);
+
+                driver = new InternetExplorerDriver(optionsProvider != null ?
+                                                  optionsProvider.ProvideOptions(testMethod) :
+                                                  new InternetExplorerOptions());
             }
 
-            var optionsProvider = ReflectionHelper.GetAttribute<InternetExplorerOptionsAttribute>(testMethod);
+            InitializeDriver(testMethod, driver);
 
-            return new InternetExplorerDriver(optionsProvider != null ? 
-                                              optionsProvider.ProvideOptions(testMethod) : 
-                                              new InternetExplorerOptions());
+            return driver;
         }
     }
 }

@@ -19,19 +19,27 @@ namespace SeleniumFixture.xUnit
     {
         protected override IWebDriver CreateWebDriver(MethodInfo testMethod)
         {
+            IWebDriver driver = null;
+
             var firefoxDriverProvider = ReflectionHelper.GetAttribute<FirefoxDriverProviderAttribute>(testMethod);
 
             if (firefoxDriverProvider != null)
             {
-                return firefoxDriverProvider.ProvideDriver(testMethod);
+                driver = firefoxDriverProvider.ProvideDriver(testMethod);
+            }
+            else
+            {
+                var provider = ReflectionHelper.GetAttribute<FirefoxProfileAttribute>(testMethod);
+
+
+                driver = new FirefoxDriver(provider != null ?
+                                         provider.CreateProfile(testMethod) :
+                                         new FirefoxProfile());
             }
 
-            var provider = ReflectionHelper.GetAttribute<FirefoxProfileAttribute>(testMethod);
+            InitializeDriver(testMethod, driver);
 
-
-            return new FirefoxDriver(provider != null ? 
-                                     provider.CreateProfile(testMethod) : 
-                                     new FirefoxProfile());
+            return driver;
         }
     }
 }
