@@ -3,3 +3,8 @@
 ################################################################################
 
 /src/packages
+/src/SeleniumFixture/obj/Debug
+/src/SeleniumFixture/bin/Debug
+/src/SeleniumFixture.xUnit/obj/Debug
+/src/SeleniumFixture.xUnit/bin/Debug
+*.suo
