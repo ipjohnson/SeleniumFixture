@@ -28,38 +28,18 @@ namespace SeleniumFixture.xUnit
 
     }
 
-    public class RemoteDriverAttribute : DataAttribute
+    public class RemoteDriverAttribute : WebDriverAttribute
     {
         public RemoteDriverAttribute(RemoteWebDriverCapability capability)
         {
             Capability = capability;
-        }
+        }       
 
-        public override IEnumerable<object[]> GetData(MethodInfo testMethod)
+        public override IEnumerable<IWebDriver> GetDrivers(MethodInfo testMethod)
         {
-            var parameters = testMethod.GetParameters().ToArray();
-
-            if (parameters.Length != 1)
-            {
-                throw new Exception("Method must take IWebDriver or Fixture");
-            }
-
-            if (parameters[0].ParameterType != typeof(IWebDriver) &&
-                parameters[0].ParameterType != typeof(Fixture))
-            {
-                throw new Exception("Method must take IWebDriver or Fixture");
-            }
-
-            foreach (RemoteWebDriverCapability value in Enum.GetValues(typeof(RemoteWebDriverCapability)))
-            {
-                if ((Capability & value) == value)
-                {
-                    yield return new object[] { CreateParameter(parameters[0].ParameterType, testMethod, value) };
-                }
-            }
+            yield return CreateWebDriver(testMethod, Capability, Hub);
         }
-
-
+        
         /// <summary>
         /// Url for grid
         /// </summary>
@@ -70,17 +50,7 @@ namespace SeleniumFixture.xUnit
         /// </summary>
         public RemoteWebDriverCapability Capability { get; private set; }
 
-        protected virtual object[] CreateParameter(Type parameterType, MethodInfo testMethod, RemoteWebDriverCapability capability)
-        {
-            if (parameterType == typeof(IWebDriver))
-            {
-                return new object[] { CreateWebDriver(testMethod, capability) };
-            }
-
-            return new object[] { CreateFixture(testMethod, capability) };
-        }
-
-        protected virtual IWebDriver CreateWebDriver(MethodInfo testMethod, RemoteWebDriverCapability capability)
+        public static IWebDriver CreateWebDriver(MethodInfo testMethod, RemoteWebDriverCapability capability, string hub)
         {
             DesiredCapabilities capabilities = null;
 
@@ -114,9 +84,7 @@ namespace SeleniumFixture.xUnit
                     capabilities = DesiredCapabilities.Safari();
                     break;
             }
-
-            string hub = Hub;
-
+            
             if (string.IsNullOrEmpty(hub))
             {
                 var attr = ReflectionHelper.GetAttribute<RemoteWebDriverHubAddressAttribute>(testMethod);
@@ -130,7 +98,7 @@ namespace SeleniumFixture.xUnit
             return CreateWebDriverInstance(testMethod, hub, capabilities);
         }
 
-        protected virtual IWebDriver CreateWebDriverInstance(MethodInfo testMethod, string hub, DesiredCapabilities capabilities)
+        public static IWebDriver CreateWebDriverInstance(MethodInfo testMethod, string hub, DesiredCapabilities capabilities)
         {
             var driver = string.IsNullOrEmpty(hub) ? new RemoteWebDriver(capabilities) : new RemoteWebDriver(new Uri(hub), capabilities);
 
@@ -139,74 +107,9 @@ namespace SeleniumFixture.xUnit
             return driver;
         }
 
-        /// <summary>
-        /// Creates a new fixture
-        /// </summary>
-        /// <param name="testMethod"></param>
-        /// <returns></returns>
-        protected virtual Fixture CreateFixture(MethodInfo testMethod, RemoteWebDriverCapability capability)
+        public override void ReturnDriver(MethodInfo testMethod, IWebDriver driver)
         {
-            var fixture = CreateFixtureInstance(testMethod, CreateWebDriver(testMethod, capability));
-
-            var initializer = ProvideFixtureInitializer(testMethod, fixture);
-
-            if (initializer != null)
-            {
-                initializer.Initialize(fixture);
-            }
-
-            return fixture;
-        }
-
-        /// <summary>
-        /// Instantiates the fixture instance
-        /// </summary>
-        /// <param name="testMethod"></param>
-        /// <param name="webDriver"></param>
-        /// <returns></returns>
-        protected virtual Fixture CreateFixtureInstance(MethodInfo testMethod, IWebDriver webDriver)
-        {
-            return FixtureCreationAttribute.GetNewFixture(webDriver, testMethod);
-        }
-
-        /// <summary>
-        /// Provides a fixture initializer
-        /// </summary>
-        /// <param name="testMethod"></param>
-        /// <param name="fixture"></param>
-        /// <returns></returns>
-        protected virtual IFixtureInitializer ProvideFixtureInitializer(MethodInfo testMethod, Fixture fixture)
-        {
-            var initializeAttribute = ReflectionHelper.GetAttribute<IFixtureInitializationAttribute>(testMethod);
-
-            if (initializeAttribute != null)
-            {
-                return initializeAttribute.ProvideInitializer(testMethod, fixture);
-            }
-
-            return null;
-        }
-        
-        protected virtual void InitializeDriver(MethodInfo testMethod, IWebDriver driver)
-        {
-            var initializer = ProvideWebDriverInitializer(testMethod, driver);
-
-            if (initializer != null)
-            {
-                initializer.Initialize(driver);
-            }
-        }
-
-        protected virtual IWebDriverInitializer ProvideWebDriverInitializer(MethodInfo testMethod, IWebDriver driver)
-        {
-            var initializeAttribute = ReflectionHelper.GetAttribute<IWebDriverInitializationAttribute>(testMethod);
-
-            if (initializeAttribute != null)
-            {
-                return initializeAttribute.ProvideInitializer(testMethod, driver);
-            }
-
-            return null;
+            driver.Dispose();
         }
     }
 }

@@ -17,9 +17,19 @@ namespace SeleniumFixture.xUnit
 {
     public class FirefoxDriverAttribute : WebDriverAttribute
     {
-        protected override IWebDriver CreateWebDriver(MethodInfo testMethod)
+        public override IEnumerable<IWebDriver> GetDrivers(MethodInfo testMethod)
         {
-            IWebDriver driver = null;
+            yield return GetOrCreateWebDriver(() => CreateWebDriver(testMethod));
+        }
+
+        public override void ReturnDriver(MethodInfo testMethod, IWebDriver driver)
+        {
+            ReturnDriver(testMethod, driver as FirefoxDriver);
+        }
+
+        public static FirefoxDriver CreateWebDriver(MethodInfo testMethod)
+        {
+            FirefoxDriver driver = null;
 
             var firefoxDriverProvider = ReflectionHelper.GetAttribute<FirefoxDriverProviderAttribute>(testMethod);
 

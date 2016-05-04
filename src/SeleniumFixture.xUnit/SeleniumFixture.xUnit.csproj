@@ -73,12 +73,15 @@
     <Compile Include="ChromeDriverAttribute.cs" />
     <Compile Include="ChromeDriverProviderAttribute.cs" />
     <Compile Include="ChromeOptionsAttribute.cs" />
+    <Compile Include="EdgeDriverAttribute.cs" />
+    <Compile Include="EdgeDriverProviderAttribute.cs" />
+    <Compile Include="EdgeOptionsAttribute.cs" />
     <Compile Include="FirefoxDriverAttribute.cs" />
     <Compile Include="FirefoxDriverProviderAttribute.cs" />
     <Compile Include="FirefoxProfileAttribute.cs" />
     <Compile Include="FixtureCreationAttribute.cs" />
+    <Compile Include="IFixtureFinalizerAttribute.cs" />
     <Compile Include="IFixtureInitializationAttribute.cs" />
-    <Compile Include="IFixtureInitializer.cs" />
     <Compile Include="Impl\ExceptionExtensions.cs" />
     <Compile Include="Impl\ReflectionHelper.cs" />
     <Compile Include="Impl\SeleniumTheoryDiscoverer.cs" />
@@ -89,8 +92,8 @@
     <Compile Include="InternetExplorerDriverAttribute.cs" />
     <Compile Include="InternetExplorerDriverProviderAttribute.cs" />
     <Compile Include="InternetExplorerOptionsAttribute.cs" />
+    <Compile Include="IWebDriverFinalizerAttribute.cs" />
     <Compile Include="IWebDriverInitializationAttribute.cs" />
-    <Compile Include="IWebDriverInitializer.cs" />
     <Compile Include="RemoteWebDriverHubAddressAttribute.cs" />
     <Compile Include="WebDriverAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -110,6 +113,12 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /Y "$(TargetPath)" "$(ProjectDir)..\..\Output\bin\$(PlatformName)\"
+xcopy /Y "$(TargetDir)$(TargetName).xml" "$(ProjectDir)..\..\Output\bin\$(PlatformName)\"
+xcopy /Y "$(TargetDir)$(TargetName).pdb" "$(ProjectDir)..\..\Output\bin\$(PlatformName)\"
+</PostBuildEvent>
+  </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>

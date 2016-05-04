@@ -1,4 +1,4 @@
-﻿using OpenQA.Selenium;
+﻿using OpenQA.Selenium.Edge;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace SeleniumFixture.xUnit
 {
-    public interface IWebDriverInitializationAttribute
+    public abstract class EdgeDriverProviderAttribute : Attribute
     {
-        void Initialize(MethodInfo method, IWebDriver driver);
+        public abstract EdgeDriver ProvideDriver(MethodInfo testMethod);
     }
 }

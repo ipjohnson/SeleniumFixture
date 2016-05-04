@@ -14,9 +14,20 @@ namespace SeleniumFixture.xUnit
 {
     public class InternetExplorerDriverAttribute : WebDriverAttribute
     {
-        protected override IWebDriver CreateWebDriver(MethodInfo testMethod)
+
+        public override IEnumerable<IWebDriver> GetDrivers(MethodInfo testMethod)
         {
-            IWebDriver driver = null;
+            yield return GetOrCreateWebDriver(() => CreateWebDriver(testMethod));
+        }
+        
+        public override void ReturnDriver(MethodInfo testMethod, IWebDriver driver)
+        {
+            ReturnDriver(testMethod, driver as InternetExplorerDriver);
+        }
+
+        public static InternetExplorerDriver CreateWebDriver(MethodInfo testMethod)
+        {
+            InternetExplorerDriver driver = null;
 
             var chromeDriverProvider = ReflectionHelper.GetAttribute<InternetExplorerDriverProviderAttribute>(testMethod);
 
@@ -30,12 +41,13 @@ namespace SeleniumFixture.xUnit
 
                 driver = new InternetExplorerDriver(optionsProvider != null ?
                                                   optionsProvider.ProvideOptions(testMethod) :
-                                                  new InternetExplorerOptions());
+                                                  new InternetExplorerOptions {  IgnoreZoomLevel = true });
             }
 
             InitializeDriver(testMethod, driver);
 
             return driver;
         }
+
     }
 }

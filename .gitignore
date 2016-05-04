@@ -8,3 +8,13 @@
 /src/SeleniumFixture.xUnit/obj/Debug
 /src/SeleniumFixture.xUnit/bin/Debug
 *.suo
+*.dll
+*.pdb
+/Output/bin/AnyCPU
+/Examples/SeleniumFixture.ExampleTests/packages
+/Examples/SeleniumFixture.ExampleTests/SeleniumFixture.ExampleModels/obj/Debug
+/Examples/SeleniumFixture.ExampleTests/SeleniumFixture.ExampleModels/bin/Debug
+/Examples/SeleniumFixture.ExampleTests/SeleniumFixture.mstest.ExampleTests/obj/Debug
+/Examples/SeleniumFixture.ExampleTests/SeleniumFixture.mstest.ExampleTests/bin/Debug
+/Examples/SeleniumFixture.ExampleTests/SeleniumFixture.xUnit.ExampleTests/obj/Debug
+/Examples/SeleniumFixture.ExampleTests/SeleniumFixture.xUnit.ExampleTests/bin/Debug

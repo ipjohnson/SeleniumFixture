@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using SeleniumFixture.xUnit.Impl;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,102 +11,119 @@ using Xunit.Sdk;
 
 namespace SeleniumFixture.xUnit
 {
-    public abstract class WebDriverAttribute : DataAttribute
+    public abstract class WebDriverAttribute : Attribute
     {
-        public override IEnumerable<object[]> GetData(MethodInfo testMethod)
+        private class InternalStorageHelper<T> where T : IWebDriver
         {
-            var parameters = testMethod.GetParameters().ToArray();
+            private static InternalStorageHelper<T> _instance;
+            private static object _lockObject = new object();
+            private List<T> _allInstances = new List<T>();
+            private Stack<T> _freeInstances = new Stack<T>();
 
-            if (parameters.Length != 1)
+            ~InternalStorageHelper()
             {
-                throw new Exception("Method must take IWebDriver or Fixture");
+                _freeInstances.Clear();
+                
+                foreach(var instances in _allInstances)
+                {
+                    instances.Dispose();
+                }
             }
 
-            if (parameters[0].ParameterType == typeof(IWebDriver))
+            public T GetOrAdd(Func<T> create)
             {
-                yield return new object[] { CreateWebDriver(testMethod) };
+                T tInstance;
+                lock(_freeInstances)
+                {
+                    if(_freeInstances.Count > 0)
+                    {
+                        tInstance = _freeInstances.Pop();
+                    }
+                    else
+                    {
+                        tInstance = create();
+
+                        _allInstances.Add(tInstance);
+                    }
+                }
+
+                return tInstance;
             }
-            else if (parameters[0].ParameterType == typeof(Fixture))
+
+            public void ReturnInstance(T instance)
             {
-                yield return new object[] { CreateFixture(testMethod) };
+                lock(_freeInstances)
+                {
+                    _freeInstances.Push(instance);
+                }
             }
-            else
+
+            public static InternalStorageHelper<T> Instance
             {
-                throw new Exception("Method must take IWebDriver or Fixture");
+                get
+                {
+                    if(_instance == null)
+                    {
+                        lock(_lockObject)
+                        {
+                            if (_instance == null)
+                            {
+                                _instance = new InternalStorageHelper<T>();
+                            }
+                        }
+                    }
+
+                    return _instance;
+                }
             }
         }
 
-        /// <summary>
-        /// Creates a new fixture
-        /// </summary>
-        /// <param name="testMethod"></param>
-        /// <returns></returns>
-        protected virtual Fixture CreateFixture(MethodInfo testMethod)
+        protected T GetOrCreateWebDriver<T>(Func<T> createMethod) where T : IWebDriver
         {
-            var fixture = CreateFixtureInstance(testMethod, CreateWebDriver(testMethod));
-            
-            var initializer = ProvideFixtureInitializer(testMethod, fixture);
-
-            if (initializer != null)
+            if(Shared)
             {
-                initializer.Initialize(fixture);
-            }            
-
-            return fixture;
-        }
-
-        /// <summary>
-        /// Instantiates the fixture instance
-        /// </summary>
-        /// <param name="testMethod"></param>
-        /// <param name="webDriver"></param>
-        /// <returns></returns>
-        protected virtual Fixture CreateFixtureInstance(MethodInfo testMethod, IWebDriver webDriver )
-        {
-            return FixtureCreationAttribute.GetNewFixture(webDriver, testMethod);
-        }
-
-        /// <summary>
-        /// Provides a fixture initializer
-        /// </summary>
-        /// <param name="testMethod"></param>
-        /// <param name="fixture"></param>
-        /// <returns></returns>
-        protected virtual IFixtureInitializer ProvideFixtureInitializer(MethodInfo testMethod, Fixture fixture)
-        {
-            var initializeAttribute = ReflectionHelper.GetAttribute<IFixtureInitializationAttribute>(testMethod);
-
-            if (initializeAttribute != null)
-            {
-                return initializeAttribute.ProvideInitializer(testMethod, fixture);                
+                return InternalStorageHelper<T>.Instance.GetOrAdd(createMethod);
             }
 
-            return null;
+            return createMethod();
         }
 
-        protected abstract IWebDriver CreateWebDriver(MethodInfo testMethod);
+        public bool Shared { get; set; }
 
-        protected virtual void InitializeDriver(MethodInfo testMethod, IWebDriver driver)
+        public abstract IEnumerable<IWebDriver> GetDrivers(MethodInfo testMethod);
+
+        public abstract void ReturnDriver(MethodInfo testMethod, IWebDriver driver);
+
+        protected virtual void ReturnDriver<T>(MethodInfo testMethod, T driver) where T : IWebDriver
         {
-            var initializer = ProvideWebDriverInitializer(testMethod, driver);
+            var finalizerAttribute = ReflectionHelper.GetAttribute<IWebDriverFinalizerAttribute>(testMethod);
 
-            if(initializer != null)
+            if(finalizerAttribute != null)
             {
-                initializer.Initialize(driver);
+                finalizerAttribute.Finalize(testMethod, driver);               
+            }
+
+            if(driver != null)
+            {
+                if (Shared)
+                {
+                    InternalStorageHelper<T>.Instance.ReturnInstance(driver);
+                }
+                else
+                {
+                    driver.Dispose();
+                }
             }
         }
-
-        protected virtual IWebDriverInitializer ProvideWebDriverInitializer(MethodInfo testMethod, IWebDriver driver)
+                
+        public static void InitializeDriver(MethodInfo testMethod, IWebDriver driver)
         {
             var initializeAttribute = ReflectionHelper.GetAttribute<IWebDriverInitializationAttribute>(testMethod);
 
             if (initializeAttribute != null)
             {
-                return initializeAttribute.ProvideInitializer(testMethod, driver);
+                initializeAttribute.Initialize(testMethod, driver);
             }
-
-            return null;
         }
-
     }
 }

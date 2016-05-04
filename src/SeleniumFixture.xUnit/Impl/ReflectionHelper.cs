@@ -17,5 +17,24 @@ namespace SeleniumFixture.xUnit.Impl
 
             return returnAttribute as T;
         }
+
+        public static IEnumerable<T> GetAttributes<T>(MethodInfo methodInfo) where T : class
+        {
+            List<T> returnList = new List<T>();
+
+            returnList.AddRange(methodInfo.GetCustomAttributes().Where(a => a is T).Select(a => a as T));
+
+            if(returnList.Count == 0)
+            {
+                returnList.AddRange(methodInfo.DeclaringType.GetCustomAttributes().Where(a => a is T).Select(a => a as T));
+            }
+
+            if(returnList.Count == 0)
+            {
+                returnList.AddRange(methodInfo.DeclaringType.Assembly.GetCustomAttributes().Where(a => a is T).Select(a => a as T));
+            }
+
+            return returnList;
+        }
     }
 }

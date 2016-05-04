@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SeleniumFixture.xUnit
 {
-    public interface IFixtureInitializer
+    public interface IFixtureFinalizerAttribute
     {
-        void Initialize(Fixture fixture);
+        void IFixtureFinalizerAttribute(MethodInfo method, Fixture fixture);
     }
 }

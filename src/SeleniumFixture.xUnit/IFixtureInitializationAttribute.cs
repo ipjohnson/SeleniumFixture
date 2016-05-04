@@ -17,6 +17,6 @@ namespace SeleniumFixture.xUnit
         /// </summary>
         /// <param name="fixture">fixture</param>
         /// <returns></returns>
-        IFixtureInitializer ProvideInitializer(MethodInfo testMethod, Fixture fixture);
+        object Initialize(MethodInfo testMethod, Fixture fixture);
     }
 }
