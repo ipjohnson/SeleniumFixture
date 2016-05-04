@@ -163,7 +163,7 @@ Note: Should() is part of [Fluent Assertions](https://github.com/dennisdoomen/fl
         /// <param name="fixture">populated fixture</param>
         [SeleniumTheory]
         [ChromeDriver]
-        [FireFoxDriver]
+        [FirefoxDriver]
         public void Fixture_FillForm_PopulatesCorrectly(Fixture fixture)
         {
             fixture.Navigate.To("http://ipjohnson.github.io/SeleniumFixture/TestSite/InputForm.html");
@@ -182,7 +182,7 @@ Note: Should() is part of [Fluent Assertions](https://github.com/dennisdoomen/fl
         /// <param name="inputPage">Page object returned from InitializeToInputForm</param>
         [SeleniumTheory]
         [ChromeDriver]
-        [FireFoxDriver]
+        [FirefoxDriver]
         [InitializeToInputForm]
         public void Fixture_Initialize_ToInputForm(InputPage inputPage)
         {
@@ -201,7 +201,7 @@ Note: Should() is part of [Fluent Assertions](https://github.com/dennisdoomen/fl
         /// <param name="intValue">5 value</param>
         [SeleniumTheory]
         [ChromeDriver]
-        [FireFoxDriver]
+        [FirefoxDriver]
         [InlineData("Hello",5)]
         [InitializeToInputForm]
         public void Fixture_InlineData_CorrectDataPopulated(InputPage inputPage, string helloString, int intValue)
