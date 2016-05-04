@@ -151,7 +151,7 @@ public class OtherPage
 Note: Should() is part of [Fluent Assertions](https://github.com/dennisdoomen/fluentassertions).
 
 ###xUnit support
-[xUnit 2.0](https://github.com/xunit/xunit) is a very extensible testing framework that SeleniumFixture.xUnit provides support for out of the box. Currently there are a set of attributes that make setup and tear down of IWebDrivers and Fixture easier
+[xUnit 2.0](https://github.com/xunit/xunit) is a very extensible testing framework that SeleniumFixture.xUnit provides support for out of the box. Currently there are a set of attributes that make setup and tear down of IWebDrivers and Fixture easier. You can customize initialization and finalization of WebDriver & Fixtures. It also supports creation of PageObjects as well as xUnit DataAttributes
 
 ```C#
     public class AutoFillTests
@@ -164,7 +164,6 @@ Note: Should() is part of [Fluent Assertions](https://github.com/dennisdoomen/fl
         [SeleniumTheory]
         [ChromeDriver]
         [FireFoxDriver]
-        [InternetExplorerDriver]
         public void Fixture_FillForm_PopulatesCorrectly(Fixture fixture)
         {
             fixture.Navigate.To("http://ipjohnson.github.io/SeleniumFixture/TestSite/InputForm.html");
@@ -174,6 +173,48 @@ Note: Should() is part of [Fluent Assertions](https://github.com/dennisdoomen/fl
             fixture.Get.Value.From("#FirstName").All(char.IsLetter).Should().BeTrue();
 
             fixture.Get.Value.From("#LastName").All(char.IsLetter).Should().BeTrue();
+        }
+        
+        /// <summary>
+        /// Test case that uses attribute to navigate to the input form
+        /// then autofills the page then tests that the first and last names are all letters
+        /// </summary>
+        /// <param name="inputPage">Page object returned from InitializeToInputForm</param>
+        [SeleniumTheory]
+        [ChromeDriver]
+        [FireFoxDriver]
+        [InitializeToInputForm]
+        public void Fixture_Initialize_ToInputForm(InputPage inputPage)
+        {
+            inputPage.AutoFill();
+
+            inputPage.Get.Value.From("#FirstName").All(char.IsLetter).Should().BeTrue();
+
+            inputPage.Get.Value.From("#LastName").All(char.IsLetter).Should().BeTrue();
+        }
+        
+        /// <summary>
+        /// Test that page object is created correctly and that InlineData is correctly populated into variables
+        /// </summary>
+        /// <param name="inputPage">page object from initialization attribute</param>
+        /// <param name="helloString">Hello string</param>
+        /// <param name="intValue">5 value</param>
+        [SeleniumTheory]
+        [ChromeDriver]
+        [FireFoxDriver]
+        [InlineData("Hello",5)]
+        [InitializeToInputForm]
+        public void Fixture_InlineData_CorrectDataPopulated(InputPage inputPage, string helloString, int intValue)
+        {
+            helloString.Should().Be("Hello");
+
+            intValue.Should().Be(5);
+
+            inputPage.AutoFill();
+
+            inputPage.Get.Value.From("#FirstName").All(char.IsLetter).Should().BeTrue();
+
+            inputPage.Get.Value.From("#LastName").All(char.IsLetter).Should().BeTrue();
         }
     }
 ```
