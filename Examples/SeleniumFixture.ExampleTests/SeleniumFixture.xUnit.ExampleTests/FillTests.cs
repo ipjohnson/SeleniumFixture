@@ -13,7 +13,6 @@ namespace SeleniumFixture.xUnit.ExampleTests
         [SeleniumTheory]
         [ChromeDriver]
         [FirefoxDriver]
-        [InternetExplorerDriver]
         public void Fixture_FillForm_PopulatesCorrectly(Fixture fixture)
         {
             fixture.Navigate.To("http://ipjohnson.github.io/SeleniumFixture/TestSite/InputForm.html");

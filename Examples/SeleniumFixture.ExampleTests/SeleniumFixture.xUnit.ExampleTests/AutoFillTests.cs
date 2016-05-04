@@ -15,9 +15,6 @@ namespace SeleniumFixture.xUnit.ExampleTests
         /// </summary>
         /// <param name="fixture">populated fixture</param>
         [SeleniumTheory]
-        [ChromeDriver]
-        [FirefoxDriver]
-        [InternetExplorerDriver]
         public void Fixture_FillForm_PopulatesCorrectly(Fixture fixture)
         {
             fixture.Navigate.To("http://ipjohnson.github.io/SeleniumFixture/TestSite/InputForm.html");

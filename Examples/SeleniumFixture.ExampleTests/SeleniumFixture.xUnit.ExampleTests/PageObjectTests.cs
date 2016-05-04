@@ -4,15 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SeleniumFixture.ExampleModels.PageObjects;
+using Xunit;
 
 namespace SeleniumFixture.xUnit.ExampleTests
 {
     public class PageObjectTests
     {
         [SeleniumTheory]
-        [ChromeDriver]
-        [FirefoxDriver]
-        [InternetExplorerDriver]
         public void Fixture_DriveApp_ClicksAroundAndAutoFillsStuff(Fixture fixture)
         {
             var homePage = fixture.Navigate.To<HomePage>("Home.html");

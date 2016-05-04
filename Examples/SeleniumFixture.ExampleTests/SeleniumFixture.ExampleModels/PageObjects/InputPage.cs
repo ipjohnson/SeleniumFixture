@@ -1,17 +1,28 @@
-﻿using SeleniumFixture.ExampleModels.Models;
+﻿using OpenQA.Selenium;
+using SeleniumFixture.ExampleModels.Models;
+using SeleniumFixture.Impl;
+using System;
 
 namespace SeleniumFixture.ExampleModels.PageObjects
 {
     public class InputPage : BasePage
     {
+        public InputPage()
+        {
+            Validate = () => I.CheckForElement(By.Id("LastName"));
+        }
+
+        protected Action Validate { get; private set; }
+    
+
         public void FillForm(object formData)
         {
             I.Fill("//form").With(formData);
         }
 
-        public NewUserModel AutoFill()
+        public NewUserModel AutoFill(object seedWith = null)
         {
-            I.AutoFill("//form");
+            I.AutoFill("//form", seedWith);
 
             return I.Get.ValueAs<NewUserModel>().From("//form");
         }
@@ -20,5 +31,7 @@ namespace SeleniumFixture.ExampleModels.PageObjects
         {
             I.Submit("//form");
         }
+
+        public IGetAction Get {  get { return I.Get; } }
     }
 }
