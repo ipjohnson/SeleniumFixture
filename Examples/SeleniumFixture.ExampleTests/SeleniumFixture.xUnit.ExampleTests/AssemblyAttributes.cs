@@ -1,3 +1,3 @@
 ﻿using SeleniumFixture.xUnit;
 
-[assembly: ChromeDriver, FirefoxDriver]
+[assembly: ChromeDriver(Shared = true), FirefoxDriver(Shared = true)]

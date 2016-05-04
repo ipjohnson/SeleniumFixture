@@ -9,7 +9,7 @@ namespace SeleniumFixture.mstest.ExampleTests
     [TestClass]
     public class AutoFillTests
     {
-        [TestMethod]
+        //[TestMethod]
         public void Fixture_FillForm_PopulatesCorrectly()
         {
             using (var driver = new FirefoxDriver())

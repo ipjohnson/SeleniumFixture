@@ -87,6 +87,7 @@
   <ItemGroup>
     <Compile Include="AssemblyAttributes.cs" />
     <Compile Include="AutoFillTests.cs" />
+    <Compile Include="DataAttributeTets.cs" />
     <Compile Include="FillTests.cs" />
     <Compile Include="InitializeTests.cs" />
     <Compile Include="InitializeToHomePageAttribute.cs" />
