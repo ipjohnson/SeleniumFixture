@@ -78,14 +78,30 @@ namespace SeleniumFixture.xUnit
             }
         }
 
-        protected T GetOrCreateWebDriver<T>(Func<T> createMethod) where T : IWebDriver
+        protected virtual T GetOrCreateWebDriver<T>(Func<T> createMethod) where T : IWebDriver
         {
             if(Shared)
             {
-                return InternalStorageHelper<T>.Instance.GetOrAdd(createMethod);
+                var sharedInstance = GetSharedInstance(createMethod);
+
+                ResetWebDriver(sharedInstance);
+
+                return sharedInstance;
             }
 
             return createMethod();
+        }
+
+        protected virtual void ResetWebDriver<T>(T driver) where T : IWebDriver
+        {
+            driver.Manage().Cookies.DeleteAllCookies();
+            driver.Manage().Window.Maximize();
+            driver.Navigate().GoToUrl("about:blank");
+        }
+
+        protected T GetSharedInstance<T>(Func<T> createMethod) where T : IWebDriver
+        {
+            return InternalStorageHelper<T>.Instance.GetOrAdd(createMethod);
         }
 
         public bool Shared { get; set; }
