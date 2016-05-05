@@ -78,13 +78,13 @@ namespace SeleniumFixture.xUnit
             }
         }
 
-        protected virtual T GetOrCreateWebDriver<T>(Func<T> createMethod) where T : IWebDriver
+        protected virtual T GetOrCreateWebDriver<T>(MethodInfo method, Func<T> createMethod) where T : IWebDriver
         {
             if(Shared)
             {
                 var sharedInstance = GetSharedInstance(createMethod);
 
-                ResetWebDriver(sharedInstance);
+                ResetWebDriver(method, sharedInstance);
 
                 return sharedInstance;
             }
@@ -92,11 +92,20 @@ namespace SeleniumFixture.xUnit
             return createMethod();
         }
 
-        protected virtual void ResetWebDriver<T>(T driver) where T : IWebDriver
+        protected virtual void ResetWebDriver<T>(MethodInfo method, T driver) where T : IWebDriver
         {
-            driver.Manage().Cookies.DeleteAllCookies();
-            driver.Manage().Window.Maximize();
-            driver.Navigate().GoToUrl("about:blank");
+            var resetAttribute = ReflectionHelper.GetAttribute<IWebDriverResetAttribute>(method);
+
+            if (resetAttribute != null)
+            {
+                resetAttribute.ResetWebDriver(method, driver);
+            }
+            else
+            {
+                driver.Manage().Cookies.DeleteAllCookies();
+                driver.Manage().Window.Maximize();
+                driver.Navigate().GoToUrl("about:blank");
+            }
         }
 
         protected T GetSharedInstance<T>(Func<T> createMethod) where T : IWebDriver

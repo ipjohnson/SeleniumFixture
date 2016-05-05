@@ -14,7 +14,7 @@ namespace SeleniumFixture.xUnit
     {
         public override IEnumerable<IWebDriver> GetDrivers(MethodInfo testMethod)
         {
-            yield return GetOrCreateWebDriver(() => CreateWebDriver(testMethod));
+            yield return GetOrCreateWebDriver(testMethod, () => CreateWebDriver(testMethod));
         }
 
         public override void ReturnDriver(MethodInfo testMethod, IWebDriver driver)

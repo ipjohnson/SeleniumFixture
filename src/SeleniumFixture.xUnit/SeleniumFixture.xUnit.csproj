@@ -94,6 +94,7 @@
     <Compile Include="InternetExplorerOptionsAttribute.cs" />
     <Compile Include="IWebDriverFinalizerAttribute.cs" />
     <Compile Include="IWebDriverInitializationAttribute.cs" />
+    <Compile Include="IWebDriverResetAttribute.cs" />
     <Compile Include="RemoteWebDriverHubAddressAttribute.cs" />
     <Compile Include="WebDriverAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
