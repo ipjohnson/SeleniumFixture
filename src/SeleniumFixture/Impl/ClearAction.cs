@@ -23,6 +23,13 @@ namespace SeleniumFixture.Impl
         /// <param name="selector">selector</param>
         /// <returns>action provider</returns>
         IActionProvider Clear(By selector);
+
+        /// <summary>
+        /// Clear all elements provided
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <returns></returns>
+        IActionProvider Clear(IEnumerable<IWebElement> elements);
     }
 
     /// <summary>
@@ -39,6 +46,18 @@ namespace SeleniumFixture.Impl
         public ClearAction(IActionProvider actionProvider)
         {
             _actionProvider = actionProvider;
+        }
+
+        /// <summary>
+        /// Clear the elements provided
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <returns></returns>
+        public IActionProvider Clear(IEnumerable<IWebElement> elements)
+        {
+            elements.Apply(e => e.Clear());
+
+            return _actionProvider;
         }
 
         /// <summary>

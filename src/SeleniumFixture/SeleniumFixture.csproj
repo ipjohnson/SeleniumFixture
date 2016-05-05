@@ -83,7 +83,6 @@
     <Compile Include="ImportAttribute.cs" />
     <Compile Include="Impl\ImportSeleniumTypePropertySelector.cs" />
     <Compile Include="LanguageExtensions.cs" />
-    <Compile Include="MicrosoftEdgeAttribute.cs" />
     <Compile Include="PageObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SeleniumFixtureConfiguration.cs" />

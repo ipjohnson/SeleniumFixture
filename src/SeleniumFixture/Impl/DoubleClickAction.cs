@@ -14,6 +14,8 @@ namespace SeleniumFixture.Impl
         IActionProvider DoubleClick(string selector, ClickMode clickMode = ClickMode.ClickAll);
 
         IActionProvider DoubleClick(By selector, ClickMode clickMode = ClickMode.ClickAll);
+
+        IActionProvider DoubleClick(IEnumerable<IWebElement> elements, ClickMode clickMode = ClickMode.ClickAll);
     }
 
     public class DoubleClickAction : IDoubleClickAction
@@ -25,6 +27,67 @@ namespace SeleniumFixture.Impl
         {
             _actionProvider = actionProvider;
             _fixture = _actionProvider.UsingFixture;
+        }
+
+        public IActionProvider DoubleClick(IEnumerable<IWebElement> elements, ClickMode clickMode = ClickMode.ClickAll)
+        {
+            bool found = false;
+            Actions action = null;
+
+            switch (clickMode)
+            {
+                case ClickMode.ClickAll:
+                    elements.Apply(allElement =>
+                    {
+                        action = new Actions(_fixture.Driver);
+                        action.DoubleClick(allElement);
+                        action.Perform();
+                        found = true;
+                    });
+
+                    if(!found)
+                    {
+                        throw new Exception("Must provide elements to click");
+                    }
+                    break;
+                case ClickMode.ClickAny:
+                    elements.Apply(anyElement =>
+                    {
+                        action = new Actions(_fixture.Driver);
+                        action.DoubleClick(anyElement);
+                        action.Perform();
+                        found = true;
+                    });
+                    break;
+                case ClickMode.ClickFirst:
+                    var firstElement = elements.First();
+
+                    action = new Actions(_fixture.Driver);
+                    action.DoubleClick(firstElement);
+                    action.Perform();
+                    break;
+                case ClickMode.ClickOne:
+                    var oneElement = elements.FirstOrDefault();
+                    if(oneElement != null)
+
+                    {
+                        action = new Actions(_fixture.Driver);
+                        action.DoubleClick(oneElement);
+                        action.Perform();
+                    }
+                    break;
+            }
+
+            var configuration = _fixture.Configuration;
+
+            var waitTime = (int)(configuration.FixtureImplicitWait * 1000);
+
+            if (waitTime >= 0)
+            {
+                Thread.Sleep(waitTime);
+            }
+
+            return configuration.AlwaysWaitForAjax ? _fixture.Wait.ForAjax().Then : _actionProvider;
         }
 
         public virtual IActionProvider DoubleClick(string selector, ClickMode clickMode = ClickMode.ClickAll)
@@ -49,8 +112,6 @@ namespace SeleniumFixture.Impl
                             action.DoubleClick(element);
                             action.Perform();
                         });
-
-
                     }
                     break;
                 case ClickMode.ClickAll:

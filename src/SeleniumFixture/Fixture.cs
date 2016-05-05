@@ -513,6 +513,99 @@ namespace SeleniumFixture
         {
             return _actionProvider.Yields(type, requestName, constraints);
         }
+
+        /// <summary>
+        /// Autofill provided elements with data
+        /// </summary>
+        /// <param name="elements">elements</param>
+        /// <returns></returns>
+        public IThenSubmitAction AutoFill(params IWebElement[] elements)
+        {
+            return _actionProvider.AutoFill(elements);
+        }
+
+        /// <summary>
+        /// AutoFill the provided elements as a specific type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="elements"></param>
+        /// <returns></returns>
+        public IThenSubmitAction AutoFillAs<T>(params IWebElement[] elements)
+        {
+            return _actionProvider.AutoFillAs<T>(elements);
+        }
+
+        /// <summary>
+        /// Clear the specified elements
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <returns></returns>
+        public IActionProvider Clear(IEnumerable<IWebElement> elements)
+        {
+            return _actionProvider.Clear(elements);
+        }
+
+        /// <summary>
+        /// Clear the specified elements
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <returns></returns>
+        public IActionProvider Clear(params IWebElement[] elements)
+        {
+            return _actionProvider.Clear(elements);
+        }
+
+        /// <summary>
+        /// Click the specified elements
+        /// </summary>
+        /// <param name="elements">elements</param>
+        /// <param name="clickMode">click mode</param>
+        /// <returns></returns>
+        public IActionProvider Click(IEnumerable<IWebDriver> elements, ClickMode clickMode = ClickMode.ClickOne)
+        {
+            return _actionProvider.Click(elements);
+        }
+
+        /// <summary>
+        /// Click all of the specified elements
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <returns></returns>
+        public IActionProvider Click(params IWebElement[] elements)
+        {
+            return _actionProvider.Click(elements);
+        }
+
+        /// <summary>
+        /// Double click the elements provided
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <param name="clickMode"></param>
+        /// <returns></returns>
+        public IActionProvider DoubleClick(IEnumerable<IWebElement> elements, ClickMode clickMode = ClickMode.ClickOne)
+        {
+            return _actionProvider.DoubleClick(elements);
+        }
+
+        /// <summary>
+        /// Double click all of the elements provided
+        /// </summary>
+        /// <param name="elements">elements</param>
+        /// <returns></returns>
+        public IActionProvider DoubleClick(params IWebElement[] elements)
+        {
+            return _actionProvider.DoubleClick(elements);
+        }
+
+        /// <summary>
+        /// Fill the specified elements with data
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <returns></returns>
+        public IFillAction Fill(params IWebElement[] elements)
+        {
+            return _actionProvider.Fill(elements);
+        }
         #endregion
 
         #region Private Members
@@ -521,7 +614,7 @@ namespace SeleniumFixture
         {
             Configuration = configuration;
 
-            var dataConfiguration = new DefaultFixtureConfiguration();
+            var dataConfiguration = configuration.DataConfiguration;
 
             dataConfiguration.Export<ITypePropertySelector>(g => new SeleniumTypePropertySelector(g.Locate<IConstraintHelper>()));
             dataConfiguration.Export<IPropertySetter>(g => new Impl.PropertySetter());
@@ -677,6 +770,7 @@ namespace SeleniumFixture
 
             return o;
         }
+
         #endregion
 
     }

@@ -56,6 +56,7 @@ namespace SeleniumFixture
             ExecuteValidate = true;
             WrapValidationExceptions = true;
             ValidateMember = "Validate";
+            DataConfiguration = new DefaultFixtureConfiguration();
         }
 
         /// <summary>
@@ -107,5 +108,10 @@ namespace SeleniumFixture
         /// Wrap validation exception with extra information
         /// </summary>
         public bool WrapValidationExceptions { get; set; }
+
+        /// <summary>
+        /// Data configuration for SimpleFixture
+        /// </summary>
+        public DefaultFixtureConfiguration DataConfiguration { get; set; }
     }
 }

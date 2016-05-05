@@ -71,6 +71,13 @@ namespace SeleniumFixture.Impl
         IThenSubmitAction AutoFill(IEnumerable<IWebElement> elements, object seedWith = null);
 
         /// <summary>
+        /// Autofill elements using data from SimpleFixture
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <returns></returns>
+        IThenSubmitAction AutoFill(params IWebElement[] elements);
+
+        /// <summary>
         /// Auto fill elements as a specific type
         /// </summary>
         /// <typeparam name="T">Type of data to generate</typeparam>
@@ -101,6 +108,14 @@ namespace SeleniumFixture.Impl
         IThenSubmitAction AutoFillAs<T>(IEnumerable<IWebElement> elements, string requestName = null, object constraints = null);
 
         /// <summary>
+        /// Auto fill elements as a specific type
+        /// </summary>
+        /// <typeparam name="T">Type of data to generate</typeparam>
+        /// <param name="elements">elements</param>
+        /// <returns></returns>
+        IThenSubmitAction AutoFillAs<T>(params IWebElement[] elements);
+
+        /// <summary>
         /// Check for the element specified in the selector
         /// </summary>
         /// <param name="selector">selector to look for</param>
@@ -129,6 +144,20 @@ namespace SeleniumFixture.Impl
         IActionProvider Clear(By selector);
 
         /// <summary>
+        /// Clear all elements provided
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <returns></returns>
+        IActionProvider Clear(IEnumerable<IWebElement> elements);
+
+        /// <summary>
+        /// Clear all elemnts provided 
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <returns></returns>
+        IActionProvider Clear(params IWebElement[] elements);
+
+        /// <summary>
         /// Click the elements returned by the selector
         /// </summary>
         /// <param name="selector">selector to use when find elements to click</param>
@@ -143,6 +172,20 @@ namespace SeleniumFixture.Impl
         /// <param name="clickMode">click mode, by default </param>
         /// <returns>this</returns>
         IActionProvider Click(By selector, ClickMode clickMode = ClickMode.ClickOne);
+
+        /// <summary>
+        /// Click the elements provided
+        /// </summary>
+        /// <param name="elements">element list</param>
+        /// <param name="clickMode">click mode, by default</param>
+        /// <returns></returns>
+        IActionProvider Click(IEnumerable<IWebDriver> elements, ClickMode clickMode = ClickMode.ClickOne);
+
+        /// <summary>
+        /// Click all elements provided
+        /// </summary>
+        /// <returns></returns>
+        IActionProvider Click(params IWebElement[] elements);
 
         /// <summary>
         /// Count the number of elements present
@@ -179,6 +222,21 @@ namespace SeleniumFixture.Impl
         /// <param name="clickMode">click mode</param>
         /// <returns>this</returns>
         IActionProvider DoubleClick(By selector, ClickMode clickMode = ClickMode.ClickOne);
+
+        /// <summary>
+        /// Double click the provided elements
+        /// </summary>
+        /// <param name="elements">elements</param>
+        /// <param name="clickMode">click mode</param>
+        /// <returns></returns>
+        IActionProvider DoubleClick(IEnumerable<IWebElement> elements, ClickMode clickMode = ClickMode.ClickOne);
+
+        /// <summary>
+        /// Double click all elements provided
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <returns></returns>
+        IActionProvider DoubleClick(params IWebElement[] elements);
 
         /// <summary>
         /// Execute arbitrary javascript
@@ -218,6 +276,13 @@ namespace SeleniumFixture.Impl
         IFillAction Fill(IEnumerable<IWebElement> elements);
 
         /// <summary>
+        /// Fill all elements
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <returns></returns>
+        IFillAction Fill(params IWebElement[] elements);
+
+        /// <summary>
         /// Find a specified element by selector
         /// </summary>
         /// <param name="selector">selector to use to locate element</param>
@@ -225,11 +290,25 @@ namespace SeleniumFixture.Impl
         IWebElement FindElement(string selector);
 
         /// <summary>
+        /// Find elements using By selector
+        /// </summary>
+        /// <param name="by"></param>
+        /// <returns></returns>
+        IWebElement FindElement(By by);
+
+        /// <summary>
         /// Find All elements meeting the specified selector
         /// </summary>
         /// <param name="selector">selector to use to find elements</param>
         /// <returns>elements</returns>
         ReadOnlyCollection<IWebElement> FindElements(string selector);
+
+        /// <summary>
+        /// Find all elements by selector
+        /// </summary>
+        /// <param name="by">selector</param>
+        /// <returns></returns>
+        ReadOnlyCollection<IWebElement> FindElements(By by);
 
         /// <summary>
         /// Focus an element

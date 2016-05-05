@@ -637,5 +637,97 @@ namespace SeleniumFixture.Impl
             return _fixture.Data.Locate<IYieldsAction>().Yields(type, requestName, constraints);
         }
 
+        /// <summary>
+        /// AutoFill provided elements
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <returns></returns>
+        public IThenSubmitAction AutoFill(params IWebElement[] elements)
+        {
+            return AutoFill((IEnumerable<IWebElement>)elements);
+        }
+
+        /// <summary>
+        /// AutoFill provided elements as a specific type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="elements"></param>
+        /// <returns></returns>
+        public IThenSubmitAction AutoFillAs<T>(params IWebElement[] elements)
+        {
+            return AutoFill((IEnumerable<IWebElement>)elements);
+        }
+
+        /// <summary>
+        /// Clear the provided elements
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <returns></returns>
+        public IActionProvider Clear(IEnumerable<IWebElement> elements)
+        {
+            return _fixture.Data.Locate<IClearAction>().Clear(elements);
+        }
+
+        /// <summary>
+        /// Clear the provided elements
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <returns></returns>
+        public IActionProvider Clear(params IWebElement[] elements)
+        {
+            return _fixture.Data.Locate<IClearAction>().Clear(elements);
+        }
+
+        /// <summary>
+        /// Click provided elements
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <param name="clickMode"></param>
+        /// <returns></returns>
+        public IActionProvider Click(IEnumerable<IWebDriver> elements, ClickMode clickMode = ClickMode.ClickOne)
+        {
+            return _fixture.Data.Locate<IClickAction>().Click((IEnumerable<IWebElement>)elements, clickMode);
+        }
+
+        /// <summary>
+        /// Click the provided elements
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <returns></returns>
+        public IActionProvider Click(params IWebElement[] elements)
+        {
+            return Click((IEnumerable<IWebDriver>)elements, ClickMode.ClickAny);
+        }
+
+        /// <summary>
+        /// Double click provided elements
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <param name="clickMode"></param>
+        /// <returns></returns>
+        public IActionProvider DoubleClick(IEnumerable<IWebElement> elements, ClickMode clickMode = ClickMode.ClickOne)
+        {
+            return _fixture.Data.Locate<IDoubleClickAction>().DoubleClick(elements, clickMode);
+        }
+
+        /// <summary>
+        /// Double click provided elements
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <returns></returns>
+        public IActionProvider DoubleClick(params IWebElement[] elements)
+        {
+            return DoubleClick((IEnumerable<IWebElement>)elements, ClickMode.ClickAny);
+        }
+        
+        /// <summary>
+        /// Fill provided elements
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <returns></returns>
+        public IFillAction Fill(params IWebElement[] elements)
+        {
+            return Fill((IEnumerable<IWebElement>)elements);
+        }
     }
 }

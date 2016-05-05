@@ -13,6 +13,8 @@ namespace SeleniumFixture.Impl
         IActionProvider Click(string selector, ClickMode clickMode = ClickMode.ClickAll);
 
         IActionProvider Click(By selector, ClickMode clickMode = ClickMode.ClickAll);
+
+        IActionProvider Click(IEnumerable<IWebElement> elements, ClickMode clickMode = ClickMode.ClickAll);
     }
 
     /// <summary>
@@ -25,6 +27,51 @@ namespace SeleniumFixture.Impl
         public ClickAction(IActionProvider actionProvider)
         {
             _actionProvider = actionProvider;
+        }
+
+        public IActionProvider Click(IEnumerable<IWebElement> elements, ClickMode clickMode = ClickMode.ClickAll)
+        {
+            switch (clickMode)
+            {
+                case ClickMode.ClickOne:
+                    var element = elements.FirstOrDefault();
+
+                    if(element != null)
+                    {
+                        element.Click();
+                    }
+                    break;
+
+                case ClickMode.ClickAny:
+                    elements.Apply(c => c.Click());
+                    break;
+
+                case ClickMode.ClickAll:
+                    bool found = false;
+
+                    elements.Apply(c => { c.Click(); found = true; });
+
+                    if (!found)
+                    {
+                        throw new Exception("No elements found in collection");
+                    }                    
+                    break;
+
+                case ClickMode.ClickFirst:
+                    elements.First().Click();
+                    break;
+            }
+
+            var configuration = _actionProvider.UsingFixture.Configuration;
+
+            var waitTime = (int)(configuration.FixtureImplicitWait * 1000);
+
+            if (waitTime >= 0)
+            {
+                Thread.Sleep(waitTime);
+            }
+
+            return configuration.AlwaysWaitForAjax ? _actionProvider.Wait.ForAjax().Then : _actionProvider;
         }
 
         public virtual IActionProvider Click(string selector, ClickMode clickMode = ClickMode.ClickAll)
