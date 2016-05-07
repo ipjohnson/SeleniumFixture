@@ -35,8 +35,8 @@
     <DocumentationFile>bin\Release\SeleniumFixture.xUnit.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SimpleFixture, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SimpleFixture.1.2.1\lib\portable-net45+win+wpa81+wp80\SimpleFixture.dll</HintPath>
+    <Reference Include="SimpleFixture, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleFixture.1.3.0\lib\portable45-net45+win8+wp8+wpa81\SimpleFixture.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
