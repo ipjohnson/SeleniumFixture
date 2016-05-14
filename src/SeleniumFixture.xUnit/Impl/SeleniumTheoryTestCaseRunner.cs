@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using SimpleFixture.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,12 @@ namespace SeleniumFixture.xUnit.Impl
     public class SeleniumTheoryTestCaseRunner : XunitTestCaseRunner
     {
         static readonly object[] NoArguments = new object[0];
+        static readonly System.Reflection.MethodInfo FreezeMethod;
+
+        static SeleniumTheoryTestCaseRunner()
+        {
+            FreezeMethod = typeof(SeleniumTheoryTestCaseRunner).GetMethod("FreezeValue");
+        }
 
         readonly ExceptionAggregator cleanupAggregator = new ExceptionAggregator();
         readonly IMessageSink diagnosticMessageSink;
@@ -99,9 +106,9 @@ namespace SeleniumFixture.xUnit.Impl
         {
             var runtimeMethod = TestCase.Method.ToRuntimeMethod();
 
-            foreach(var driverAttribute in driverAttributes)
+            foreach (var driverAttribute in driverAttributes)
             {
-                foreach(var driver in driverAttribute.GetDrivers(runtimeMethod))
+                foreach (var driver in driverAttribute.GetDrivers(runtimeMethod))
                 {
                     Fixture newFixture = null;
                     object initializerReturn = null;
@@ -117,16 +124,28 @@ namespace SeleniumFixture.xUnit.Impl
 
                     List<object> parameterList = new List<object>();
                     var parameters = methodToRun.GetParameters().ToArray();
-                    
+
                     try
                     {
                         newFixture = FixtureCreationAttribute.GetNewFixture(driver, runtimeMethod);
 
-                        var initializeAttribute = ReflectionHelper.GetAttribute<IFixtureInitializationAttribute>(runtimeMethod);
-                        
-                        if(initializeAttribute != null)
+                        var initializeDataAttributes = ReflectionHelper.GetAttributes<FixtureInitializationAttribute>(runtimeMethod);
+
+                        foreach (var initializeDataAttribute in initializeDataAttributes)
                         {
-                            initializerReturn = initializeAttribute.Initialize(runtimeMethod, newFixture);                            
+                            if (initializeDataAttribute is IMethodInfoAware)
+                            {
+                                ((IMethodInfoAware)initializeDataAttribute).Method = runtimeMethod;
+                            }
+
+                            initializeDataAttribute.Initialize(newFixture.Data);
+                        }
+
+                        var initializeAttribute = ReflectionHelper.GetAttribute<IFixtureInitializationAttribute>(runtimeMethod);
+
+                        if (initializeAttribute != null)
+                        {
+                            initializerReturn = initializeAttribute.Initialize(runtimeMethod, newFixture);
                         }
 
                         int dataRowIndex = 0;
@@ -134,6 +153,7 @@ namespace SeleniumFixture.xUnit.Impl
                         for (int i = 0; i < parameters.Length; i++)
                         {
                             var parameter = parameters[i];
+                            var attributes = parameter.GetCustomAttributes(true);
 
                             if (parameter.ParameterType == typeof(IWebDriver))
                             {
@@ -143,6 +163,65 @@ namespace SeleniumFixture.xUnit.Impl
                             {
                                 parameterList.Add(newFixture);
                             }
+                            else if (attributes.Any(a => a is GenerateAttribute))
+                            {
+                                var generateAttribute = (GenerateAttribute)attributes.First(a => a is GenerateAttribute);
+
+                                InitializeCustomAttribute(generateAttribute);
+
+                                var constraintName = generateAttribute.ConstraintName ?? parameter.Name;
+                                var min = generateAttribute.Min;
+                                var max = generateAttribute.Max;
+
+                                var value = newFixture.Data.Generate(parameter.ParameterType, constraintName, new { min, max });
+                                parameterList.Add(value);
+                            }
+                            else if (attributes.Any(a => a is LocateAttribute))
+                            {
+                                var locateAttribute = (LocateAttribute)attributes.First(a => a is LocateAttribute);
+
+                                InitializeCustomAttribute(locateAttribute);
+
+                                var value = locateAttribute.Value;
+
+                                if(value == null)
+                                {
+                                    value = newFixture.Data.Generate(new SimpleFixture.DataRequest(null, 
+                                                                                                   newFixture.Data, 
+                                                                                                   parameter.ParameterType, 
+                                                                                                   parameter.Name, 
+                                                                                                   false, 
+                                                                                                   null, 
+                                                                                                   null));
+                                }
+
+                                parameterList.Add(value);
+                            }
+                            else if (attributes.Any(a => a is FreezeAttribute))
+                            {
+                                var freeze = (FreezeAttribute)attributes.FirstOrDefault(a => a is FreezeAttribute);
+
+                                InitializeCustomAttribute(freeze);
+
+                                var value = freeze.Value;
+
+                                if (value == null)
+                                {
+                                    var constraintName = freeze.ConstraintName ?? parameter.Name;
+                                    var min = freeze.Min;
+                                    var max = freeze.Max;
+
+                                    value = newFixture.Data.Generate(parameter.ParameterType, constraintName, new { min, max });                                    
+                                }
+
+                                parameterList.Add(value);
+
+                                object lastObject = parameterList.Last();
+                                var closedFreezeMethod =
+                                    FreezeMethod.MakeGenericMethod(lastObject.GetType());
+
+                                closedFreezeMethod.Invoke(null, new object[] { newFixture.Data, value, freeze.For });
+                            }
                             else if (initializerReturn != null && parameter.ParameterType == initializerReturn.GetType())
                             {
                                 parameterList.Add(initializerReturn);
@@ -151,7 +230,7 @@ namespace SeleniumFixture.xUnit.Impl
                             else if (dataRowIndex < dataRow.Length)
                             {
                                 var dataValue = dataRow[dataRowIndex];
-                                dataRowIndex++;                    
+                                dataRowIndex++;
                                 parameterList.Add(dataValue);
                             }
                             else
@@ -167,11 +246,11 @@ namespace SeleniumFixture.xUnit.Impl
                     }
 
                     var convertedDataRow = Reflector.ConvertArguments(parameterList.ToArray(), parameters.Select(p => p.ParameterType).ToArray());
-                    var theoryDisplayName = 
+                    var theoryDisplayName =
                         TestCase.TestMethod.Method.GetDisplayNameWithArguments(DisplayName + " " + GetDriverName(driver),
-                                                                               dataRow, 
+                                                                               dataRow,
                                                                                resolvedTypes);
-                    //CreateTheoryDisplayName(TestCase.TestMethod.Method, DisplayName, convertedDataRow, resolvedTypes);
+
                     var test = new XunitTest(TestCase, theoryDisplayName);
                     var skipReason = SkipReason;
                     var testRunner = new XunitTestRunner(test, MessageBus, TestClass, ConstructorArguments, methodToRun, convertedDataRow, skipReason, BeforeAfterAttributes, Aggregator, CancellationTokenSource);
@@ -179,11 +258,16 @@ namespace SeleniumFixture.xUnit.Impl
                     runSummary.Aggregate(await testRunner.RunAsync());
 
                     var timer = new ExecutionTimer();
-                    timer.Aggregate(() => DisposeOfData(driverAttribute, driver,newFixture,dataRow));
+                    timer.Aggregate(() => DisposeOfData(driverAttribute, driver, newFixture, dataRow));
 
                     runSummary.Time += timer.Total;
                 }
             }
+        }
+
+        private void InitializeCustomAttribute(object attribute)
+        {
+            throw new NotImplementedException();
         }
 
         private void DisposeOfData(WebDriverAttribute driverAttribute, IWebDriver driver, Fixture newFixture, object[] dataRow)
@@ -192,16 +276,16 @@ namespace SeleniumFixture.xUnit.Impl
 
             var finalizeAttribute = ReflectionHelper.GetAttribute<IFixtureFinalizerAttribute>(runtimeMethod);
 
-            if(finalizeAttribute != null)
+            if (finalizeAttribute != null)
             {
                 finalizeAttribute.IFixtureFinalizerAttribute(runtimeMethod, newFixture);
             }
 
-            foreach(var data in dataRow)
+            foreach (var data in dataRow)
             {
                 IDisposable disposable = data as IDisposable;
 
-                if(disposable != null)
+                if (disposable != null)
                 {
                     disposable.Dispose();
                 }
@@ -297,6 +381,16 @@ namespace SeleniumFixture.xUnit.Impl
                         fixture.Driver.Dispose();
                     }
                 }
+            }
+        }
+
+        private static void FreezeValue<T>(SimpleFixture.Fixture fixture, T freezeValue, Type forType)
+        {
+            var returnValue = fixture.Return(freezeValue);
+
+            if (forType != null)
+            {
+                returnValue.For(forType);
             }
         }
     }
