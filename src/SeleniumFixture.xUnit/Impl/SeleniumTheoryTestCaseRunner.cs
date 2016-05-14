@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
 using Xunit.Sdk;
+using System.Reflection;
 
 namespace SeleniumFixture.xUnit.Impl
 {
@@ -167,7 +168,7 @@ namespace SeleniumFixture.xUnit.Impl
                             {
                                 var generateAttribute = (GenerateAttribute)attributes.First(a => a is GenerateAttribute);
 
-                                InitializeCustomAttribute(generateAttribute);
+                                InitializeCustomAttribute(generateAttribute, runtimeMethod, parameter);
 
                                 var constraintName = generateAttribute.ConstraintName ?? parameter.Name;
                                 var min = generateAttribute.Min;
@@ -180,7 +181,7 @@ namespace SeleniumFixture.xUnit.Impl
                             {
                                 var locateAttribute = (LocateAttribute)attributes.First(a => a is LocateAttribute);
 
-                                InitializeCustomAttribute(locateAttribute);
+                                InitializeCustomAttribute(locateAttribute, runtimeMethod, parameter);
 
                                 var value = locateAttribute.Value;
 
@@ -201,7 +202,7 @@ namespace SeleniumFixture.xUnit.Impl
                             {
                                 var freeze = (FreezeAttribute)attributes.FirstOrDefault(a => a is FreezeAttribute);
 
-                                InitializeCustomAttribute(freeze);
+                                InitializeCustomAttribute(freeze, runtimeMethod, parameter);
 
                                 var value = freeze.Value;
 
@@ -264,10 +265,22 @@ namespace SeleniumFixture.xUnit.Impl
                 }
             }
         }
-
-        private void InitializeCustomAttribute(object attribute)
+        
+        private void InitializeCustomAttribute(object attribute, MethodInfo runtimeMethod, ParameterInfo parameterInfo)
         {
-            throw new NotImplementedException();
+            var methodInfoAware = attribute as IMethodInfoAware;
+
+            if(methodInfoAware != null)
+            {
+                methodInfoAware.Method = runtimeMethod;
+            }
+
+            var parameterAware = attribute as IParameterInfoAware;
+
+            if(parameterAware != null)
+            {
+                parameterAware.Parameter = parameterInfo;
+            }
         }
 
         private void DisposeOfData(WebDriverAttribute driverAttribute, IWebDriver driver, Fixture newFixture, object[] dataRow)
@@ -361,29 +374,7 @@ namespace SeleniumFixture.xUnit.Impl
 
             return returnString;
         }
-
-        private void DisposeOfData(IEnumerable<object> dataRow)
-        {
-            foreach (object o in dataRow)
-            {
-                IDisposable disposable = o as IDisposable;
-
-                if (disposable != null)
-                {
-                    disposable.Dispose();
-                }
-                else
-                {
-                    Fixture fixture = o as Fixture;
-
-                    if (fixture != null)
-                    {
-                        fixture.Driver.Dispose();
-                    }
-                }
-            }
-        }
-
+        
         private static void FreezeValue<T>(SimpleFixture.Fixture fixture, T freezeValue, Type forType)
         {
             var returnValue = fixture.Return(freezeValue);
