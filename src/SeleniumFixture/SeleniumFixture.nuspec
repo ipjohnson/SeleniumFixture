@@ -15,7 +15,6 @@
     <tags>Selenium Test Fixture Data Generation PageObject</tags>
     <dependencies >
       <dependency id="Selenium.Support" version="2.44.0" />
-      <dependency id="SimpleFixture" version="1.1.2" />
     </dependencies>
   </metadata>
 </package>
