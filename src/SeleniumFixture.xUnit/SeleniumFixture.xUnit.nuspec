@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/ipjohnson/SeleniumFixture</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Provides xUnit attributes for SeleniumFixture</description>
-    <releaseNotes>$releaseNotes$</releaseNotes>
+    <releaseNotes>Adding dnx support for SeleniumFixture.xUnit</releaseNotes>
     <copyright>Copyright ©  2015</copyright>
     <tags>Selenium Test Fixture Data Generation PageObject xUnit</tags>
     <dependencies >
