@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,14 @@ namespace SeleniumFixture.xUnit.Impl
     public class SeleniumTheoryDiscoverer : IXunitTestCaseDiscoverer
     {
         readonly IMessageSink diagnosticMessageSink;
+
+        public const string ClassName = "SeleniumFixture.xUnit.Impl.SeleniumTheoryDiscoverer";
+
+#if DNX
+        public const string AssemblyName = "SeleniumFixture.xUnit.dnx";
+#else
+        public const string AssemblyName = "SeleniumFixture.xUnit";
+#endif
 
         public SeleniumTheoryDiscoverer(IMessageSink diagnosticMessageSink) 
         {
@@ -71,11 +80,20 @@ namespace SeleniumFixture.xUnit.Impl
 
         public IEnumerable<IXunitTestCase> Discover(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, IAttributeInfo theoryAttribute)
         {
-            var skipReason = theoryAttribute.GetNamedArgument<string>("Skip");
-            if (skipReason != null)
-                return new[] { CreateTestCaseForSkip(discoveryOptions, testMethod, theoryAttribute, skipReason) };
+            try
+            {
+                var skipReason = theoryAttribute.GetNamedArgument<string>("Skip");
+                if (skipReason != null)
+                    return new[] { CreateTestCaseForSkip(discoveryOptions, testMethod, theoryAttribute, skipReason) };
 
-            return new[] { CreateTestCaseForTheory(discoveryOptions, testMethod, theoryAttribute) };
+                return new[] { CreateTestCaseForTheory(discoveryOptions, testMethod, theoryAttribute) };
+            }
+            catch(Exception exp)
+            {
+                File.WriteAllText(@"c:\temp\errors.txt", exp.Message);
+            }
+
+            return new IXunitTestCase[] { };
         }
     }
 }

@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeleniumFixture", "SeleniumFixture\SeleniumFixture.csproj", "{9EB00E94-F1DB-40E4-A131-4B28B347785F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeleniumFixture.xUnit", "SeleniumFixture.xUnit\SeleniumFixture.xUnit.csproj", "{0714F5E0-B98A-44BC-89CC-700A346406AC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dnx", "dnx", "{60DC6FB3-8DEC-4858-9624-4D535B089E28}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SeleniumFixture.xUnit", "SeleniumFixture.xUnit.dnx\SeleniumFixture.xUnit.xproj", "{99C7A982-F02C-4C48-9E38-6030898D4140}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,8 +25,15 @@ Global
 		{0714F5E0-B98A-44BC-89CC-700A346406AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0714F5E0-B98A-44BC-89CC-700A346406AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0714F5E0-B98A-44BC-89CC-700A346406AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99C7A982-F02C-4C48-9E38-6030898D4140}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99C7A982-F02C-4C48-9E38-6030898D4140}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99C7A982-F02C-4C48-9E38-6030898D4140}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99C7A982-F02C-4C48-9E38-6030898D4140}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{99C7A982-F02C-4C48-9E38-6030898D4140} = {60DC6FB3-8DEC-4858-9624-4D535B089E28}
 	EndGlobalSection
 EndGlobal

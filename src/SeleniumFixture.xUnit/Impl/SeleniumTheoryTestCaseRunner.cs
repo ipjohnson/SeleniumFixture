@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 using System.Reflection;
+using System.IO;
 
 namespace SeleniumFixture.xUnit.Impl
 {
@@ -70,7 +71,7 @@ namespace SeleniumFixture.xUnit.Impl
 
             try
             {
-                var runtimeMethod = TestCase.TestMethod.Method.ToRuntimeMethod();
+                var runtimeMethod = GetMethodInfo(TestCase.TestMethod.Method);
                 var driverAttributes = ReflectionHelper.GetAttributes<WebDriverAttribute>(runtimeMethod);
                 var dataAttributes = new List<IAttributeInfo>(
                             TestCase.TestMethod.Method.GetCustomAttributes(typeof(DataAttribute)));
@@ -86,27 +87,26 @@ namespace SeleniumFixture.xUnit.Impl
 
                         foreach (var dataRow in discoverer.GetData(dataAttribute, TestCase.TestMethod.Method))
                         {
-                            await ExecuteTestMethod(runSummary, driverAttributes, dataRow);
+                            await ExecuteTestMethod(runtimeMethod, runSummary, driverAttributes, dataRow);
                         }
                     }
                 }
                 else
                 {
-                    await ExecuteTestMethod(runSummary, driverAttributes, new object[0]);
+                    await ExecuteTestMethod(runtimeMethod, runSummary, driverAttributes, new object[0]);
                 }
             }
             catch (Exception ex)
             {
+                File.WriteAllText(@"c:\temp\errors.txt", ex.Message);
                 return RunTest_DataDiscoveryException(ex);
             }
 
             return runSummary;
         }
 
-        private async Task ExecuteTestMethod(RunSummary runSummary, IEnumerable<WebDriverAttribute> driverAttributes, object[] dataRow)
+        private async Task ExecuteTestMethod(MethodInfo runtimeMethod, RunSummary runSummary, IEnumerable<WebDriverAttribute> driverAttributes, object[] dataRow)
         {
-            var runtimeMethod = TestCase.Method.ToRuntimeMethod();
-
             foreach (var driverAttribute in driverAttributes)
             {
                 foreach (var driver in driverAttribute.GetDrivers(runtimeMethod))
@@ -115,7 +115,7 @@ namespace SeleniumFixture.xUnit.Impl
                     object initializerReturn = null;
 
                     ITypeInfo[] resolvedTypes = null;
-                    var methodToRun = TestMethod;
+                    var methodToRun = runtimeMethod;
 
                     if (methodToRun.IsGenericMethodDefinition)
                     {
@@ -136,7 +136,13 @@ namespace SeleniumFixture.xUnit.Impl
                         {
                             if (initializeDataAttribute is IMethodInfoAware)
                             {
+#if DNX
+                                var property = initializeDataAttribute.GetType().GetRuntimeProperty("Method");
+
+                                property.SetValue(initializeDataAttribute, runtimeMethod);
+#else
                                 ((IMethodInfoAware)initializeDataAttribute).Method = runtimeMethod;
+#endif
                             }
 
                             initializeDataAttribute.Initialize(newFixture.Data);
@@ -185,14 +191,14 @@ namespace SeleniumFixture.xUnit.Impl
 
                                 var value = locateAttribute.Value;
 
-                                if(value == null)
+                                if (value == null)
                                 {
-                                    value = newFixture.Data.Generate(new SimpleFixture.DataRequest(null, 
-                                                                                                   newFixture.Data, 
-                                                                                                   parameter.ParameterType, 
-                                                                                                   parameter.Name, 
-                                                                                                   false, 
-                                                                                                   null, 
+                                    value = newFixture.Data.Generate(new SimpleFixture.DataRequest(null,
+                                                                                                   newFixture.Data,
+                                                                                                   parameter.ParameterType,
+                                                                                                   parameter.Name,
+                                                                                                   false,
+                                                                                                   null,
                                                                                                    null));
                                 }
 
@@ -212,7 +218,7 @@ namespace SeleniumFixture.xUnit.Impl
                                     var min = freeze.Min;
                                     var max = freeze.Max;
 
-                                    value = newFixture.Data.Generate(parameter.ParameterType, constraintName, new { min, max });                                    
+                                    value = newFixture.Data.Generate(parameter.ParameterType, constraintName, new { min, max });
                                 }
 
                                 parameterList.Add(value);
@@ -254,7 +260,7 @@ namespace SeleniumFixture.xUnit.Impl
 
                     var test = new XunitTest(TestCase, theoryDisplayName);
                     var skipReason = SkipReason;
-                    var testRunner = new XunitTestRunner(test, MessageBus, TestClass, ConstructorArguments, methodToRun, convertedDataRow, skipReason, BeforeAfterAttributes, Aggregator, CancellationTokenSource);
+                    XunitTestRunner testRunner = CreateTestRunner(test, MessageBus, TestClass, ConstructorArguments, methodToRun, convertedDataRow, skipReason, BeforeAfterAttributes, Aggregator, CancellationTokenSource);
 
                     runSummary.Aggregate(await testRunner.RunAsync());
 
@@ -265,27 +271,51 @@ namespace SeleniumFixture.xUnit.Impl
                 }
             }
         }
-        
+
+        private XunitTestRunner CreateTestRunner(XunitTest test, IMessageBus messageBus, Type testClass, object[] constructorArguments, MethodInfo methodToRun, object[] convertedDataRow, string skipReason, IReadOnlyList<BeforeAfterTestAttribute> beforeAfterAttributes, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource)
+        {
+#if DNX
+            var constructor = typeof(XunitTestRunner).GetConstructors().First(c => c.GetParameters().Count() == 10);
+            return (XunitTestRunner)constructor.Invoke(new object[] { test, MessageBus, TestClass, ConstructorArguments, methodToRun, convertedDataRow, skipReason, BeforeAfterAttributes, Aggregator, CancellationTokenSource });
+#else
+            return new XunitTestRunner(test, MessageBus, TestClass, ConstructorArguments, methodToRun, convertedDataRow, skipReason, BeforeAfterAttributes, Aggregator, CancellationTokenSource);
+#endif
+        }
+
         private void InitializeCustomAttribute(object attribute, MethodInfo runtimeMethod, ParameterInfo parameterInfo)
         {
+            var parameterAware = attribute as IParameterInfoAware;
             var methodInfoAware = attribute as IMethodInfoAware;
+#if DNX            
+            if (methodInfoAware != null)
+            {
+                var property = methodInfoAware.GetType().GetRuntimeProperty("Method");
 
-            if(methodInfoAware != null)
+                property.SetValue(methodInfoAware, runtimeMethod);
+            }
+
+            if(parameterAware != null)
+            {
+                var property = parameterAware.GetType().GetRuntimeProperty("Parameter");
+
+                property.SetValue(parameterAware, parameterInfo);
+            }
+#else
+            if (methodInfoAware != null)
             {
                 methodInfoAware.Method = runtimeMethod;
             }
 
-            var parameterAware = attribute as IParameterInfoAware;
-
-            if(parameterAware != null)
+            if (parameterAware != null)
             {
                 parameterAware.Parameter = parameterInfo;
-            }
+            }     
+#endif
         }
 
         private void DisposeOfData(WebDriverAttribute driverAttribute, IWebDriver driver, Fixture newFixture, object[] dataRow)
         {
-            var runtimeMethod = TestCase.Method.ToRuntimeMethod();
+            var runtimeMethod = GetMethodInfo(TestCase.Method);
 
             var finalizeAttribute = ReflectionHelper.GetAttribute<IFixtureFinalizerAttribute>(runtimeMethod);
 
@@ -305,6 +335,17 @@ namespace SeleniumFixture.xUnit.Impl
             }
 
             driverAttribute.ReturnDriver(runtimeMethod, driver);
+        }
+
+        private MethodInfo GetMethodInfo(IMethodInfo testMethod)
+        {
+#if DNX
+            var toRuntimeMethod = typeof(ReflectionAbstractionExtensions).GetMethod("ToRuntimeMethod");
+
+            return (MethodInfo)toRuntimeMethod.Invoke(null, new object[] { testMethod });
+#else
+            return testMethod.ToRuntimeMethod();
+#endif
         }
 
         RunSummary RunTest_DataDiscoveryException(Exception dataDiscoveryException)
@@ -374,7 +415,7 @@ namespace SeleniumFixture.xUnit.Impl
 
             return returnString;
         }
-        
+
         private static void FreezeValue<T>(SimpleFixture.Fixture fixture, T freezeValue, Type forType)
         {
             var returnValue = fixture.Return(freezeValue);
