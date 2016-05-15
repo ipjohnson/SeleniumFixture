@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-rc1-final",
+  "version": "1.0.0-rc1",
   "description": "SeleniumFixture support for xUnit and DNX",
   "compilationOptions": {
     "emitEntryPoint": false,
