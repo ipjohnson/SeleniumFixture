@@ -90,10 +90,10 @@ namespace SeleniumFixture.xUnit.Impl
             }
             catch(Exception exp)
             {
-                File.WriteAllText(@"c:\temp\errors.txt", exp.Message);
+                diagnosticMessageSink.OnMessage(new DiagnosticMessage($"Exception thrown during theory discovery on '{testMethod.TestClass.Class.Name}.{testMethod.Method.Name}'; falling back to single test case.{Environment.NewLine}{exp}"));
             }
 
-            return new IXunitTestCase[] { };
+            return new[] { CreateTestCaseForTheory(discoveryOptions, testMethod, theoryAttribute) };
         }
     }
 }
