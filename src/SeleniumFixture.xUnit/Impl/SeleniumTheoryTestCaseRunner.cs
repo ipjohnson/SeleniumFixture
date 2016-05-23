@@ -98,7 +98,6 @@ namespace SeleniumFixture.xUnit.Impl
             }
             catch (Exception ex)
             {
-                File.WriteAllText(@"c:\temp\errors.txt", ex.Message);
                 return RunTest_DataDiscoveryException(ex);
             }
 
