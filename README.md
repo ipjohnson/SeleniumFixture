@@ -12,7 +12,7 @@ fixture.Navigate.To("http://ipjohnson.github.io/SeleniumFixture/TestSite/InputFo
 fixture.AutoFill("//form");
 ```
 
-###Click & DoubleClick
+### Click & DoubleClick
 Provides short hand for clicking and double clicking elements
 
 ```C#
@@ -26,7 +26,7 @@ fixture.Click("button[type='submit']");
 fixture.DoubleClick("button.some-class", ClickMode.Any);
 ```
 
-###Fill
+### Fill
 Fill allows you to easily populate form elements with a given set of values. Currently textboxs, radiobutton, checkbox, select and textarea are supported.
 
 ```C#
@@ -47,7 +47,7 @@ fixture.Fill("//form")
 fixture.Fill(".some-class").With(1111);
 ```
 
-###AutoFill
+### AutoFill
 Sometimes its useful to populate a form with random data. The AutoFill method can be used to fill a html input elements.
 
 ```C#
@@ -61,7 +61,7 @@ fixture.AutoFill("//form", seedWith: new { FirstName = "Bob"});
 fixture.AutoFill("#someDiv");
 ```
 
-###Wait
+### Wait
 It's useful to wait for certain things to happen on page, the Wait API provides a number of helpful wait methods for things like ajax or form elements to exists.
 
 ```C#
@@ -75,7 +75,7 @@ fixture.Wait.ForElement("#someElement");
 fixture.Wait.Until(i => i.CheckForElement("#someElement"), 20);
 ```
 
-###PageObject Pattern
+### PageObject Pattern
 The [PageObject](http://martinfowler.com/bliki/PageObject.html) pattern is very useful and SeleniumFixture fully supports using PageObject classes to help package logic. [SimpleFixture](https://github.com/ipjohnson/SimpleFixture) is used to create instances of PageObjects allowing for very complex object. For example, injecting constructor parameters , properties (using ImportAttribute), and etc.
 
 ```C#
@@ -98,7 +98,7 @@ public class FormPage
 }
 ```
 
-###IActionProvider Property
+### IActionProvider Property
 The IActionProvider allows a page object to import the functionality of the Fixture into a local property. When PageObjects are constructed any IActionProvider property with a setter will be Populated with an instance of IActionProvider. Usually this property is named I
 
 ```C#
@@ -107,7 +107,7 @@ I.Fill("//form").With(new { FirstName = "Sterling" });
 I.Click("#submitButton").Wait.ForAjax().Then.Yields<HomePage>();
 ```
 
-###Validate 
+### Validate 
 PageObjects can validate themselves upon creation one of two ways. You can either have a method name "Validate" or a property called "Validate" that is an Action. Either choice will be called once the page object has been created.
 
 ```C#
@@ -124,7 +124,7 @@ public class HomePage
 }
 ```
 
-###Yields
+### Yields
 Yields is how you can create new PageObject instances. It takes the type of page as the generic parameter and will instantiate a new instance of T. Note: your page types do not have to inherit from any particular type, you could use structs if you felt so inclined.
 
 ```C#
@@ -150,7 +150,7 @@ public class OtherPage
 
 Note: Should() is part of [Fluent Assertions](https://github.com/dennisdoomen/fluentassertions).
 
-###xUnit support
+### xUnit support
 [xUnit 2.0](https://github.com/xunit/xunit) is a very extensible testing framework that SeleniumFixture.xUnit provides support for out of the box. Currently there are a set of attributes that make setup and tear down of IWebDrivers and Fixture easier. You can customize initialization and finalization of WebDriver & Fixtures. It also supports creation of PageObjects as well as xUnit DataAttributes
 
 ```C#
