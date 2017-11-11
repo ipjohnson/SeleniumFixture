@@ -9,8 +9,8 @@ namespace SeleniumFixture.Impl
 {
     public class ImportSeleniumTypePropertySelector : SeleniumTypePropertySelector
     {
-        public ImportSeleniumTypePropertySelector(IConstraintHelper helper)
-            : base(helper)
+        public ImportSeleniumTypePropertySelector(IFixtureConfiguration configuration, IConstraintHelper helper)
+            : base(configuration, helper)
         {
 
         }

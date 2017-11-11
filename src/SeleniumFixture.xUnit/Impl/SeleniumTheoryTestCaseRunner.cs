@@ -10,6 +10,7 @@ using Xunit.Abstractions;
 using Xunit.Sdk;
 using System.Reflection;
 using System.IO;
+using SimpleFixture;
 
 namespace SeleniumFixture.xUnit.Impl
 {
@@ -195,6 +196,7 @@ namespace SeleniumFixture.xUnit.Impl
                                     value = newFixture.Data.Generate(new SimpleFixture.DataRequest(null,
                                                                                                    newFixture.Data,
                                                                                                    parameter.ParameterType,
+                                                                                                   DependencyType.Root,
                                                                                                    parameter.Name,
                                                                                                    false,
                                                                                                    null,

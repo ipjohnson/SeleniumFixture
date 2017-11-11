@@ -32,7 +32,7 @@ namespace SeleniumFixture
     /// <summary>
     /// Configuration object for SeleniumFoxture
     /// </summary>
-    public class SeleniumFixtureConfiguration 
+    public class SeleniumFixtureConfiguration : DefaultFixtureConfiguration
     {
         /// <summary>
         /// Default constructor

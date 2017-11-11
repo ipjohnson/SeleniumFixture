@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +20,7 @@ namespace SeleniumFixture.Impl
         /// <param name="throwsIfNotSupported">throws if driver does not support taking a screenshot</param>
         /// <param name="format"></param>
         /// <returns></returns>
-        IActionProvider TakeScreenshot(string screenshotName, bool throwsIfNotSupported, ImageFormat format);
+        IActionProvider TakeScreenshot(string screenshotName, bool throwsIfNotSupported, ScreenshotImageFormat format);
     }
 
     /// <summary>
@@ -47,10 +46,8 @@ namespace SeleniumFixture.Impl
         /// <param name="throwsIfNotSupported">throws if driver does not support taking a screenshot</param>
         /// <param name="format"></param>
         /// <returns></returns>
-        public virtual IActionProvider TakeScreenshot(string screenshotName, bool throwsIfNotSupported, ImageFormat format)
+        public virtual IActionProvider TakeScreenshot(string screenshotName, bool throwsIfNotSupported, ScreenshotImageFormat format)
         {
-            format = format ?? ImageFormat.Png;
-
             if (string.IsNullOrEmpty(screenshotName))
             {
                 screenshotName = GetScreenshotName(format);
@@ -70,13 +67,13 @@ namespace SeleniumFixture.Impl
 
             if (screenshotDriver != null)
             {
-                screenshotDriver.GetScreenshot().SaveAsFile(screenshotName,format);
+                screenshotDriver.GetScreenshot().SaveAsFile(screenshotName, format);
             }
 
             return _actionProvider;
         }
 
-        protected virtual string GetScreenshotName(ImageFormat format)
+        protected virtual string GetScreenshotName(ScreenshotImageFormat format)
         {
             StackTrace stackTrace = new StackTrace();
 

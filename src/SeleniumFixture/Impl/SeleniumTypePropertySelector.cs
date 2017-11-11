@@ -9,7 +9,7 @@ namespace SeleniumFixture
 {
     public class SeleniumTypePropertySelector : TypePropertySelector
     {
-        public SeleniumTypePropertySelector(IConstraintHelper helper) : base(helper)
+        public SeleniumTypePropertySelector(IFixtureConfiguration configuration, IConstraintHelper helper) : base(configuration, helper)
         {
 
         }

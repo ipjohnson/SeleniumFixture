@@ -65,7 +65,7 @@ namespace SeleniumFixture.Impl
         /// <returns>new instance</returns>
         public virtual object Yields(Type type, string requestName = null, object constraints = null)
         {
-            var request = new DataRequest(null, _actionProvider.UsingFixture.Data, type, requestName, false, constraints, null);
+            var request = new DataRequest(null, _actionProvider.UsingFixture.Data, type, DependencyType.Root, requestName, false, constraints, null);
 
             return _actionProvider.UsingFixture.Data.Generate(request);
         }

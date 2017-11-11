@@ -23,14 +23,8 @@ namespace SeleniumFixture.xUnit
             {
                 return creationAttribute.CreateFixture(driver);
             }
-
-            string baseAddress = null;
-
-#if !DNX
-            baseAddress = ConfigurationManager.AppSettings["BaseAddress"];
-#endif
-
-            return new Fixture(driver,baseAddress);
+            
+            return new Fixture(driver);
         }
     }
 }

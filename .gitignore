@@ -19,3 +19,5 @@
 /Examples/SeleniumFixture.ExampleTests/SeleniumFixture.xUnit.ExampleTests/obj/Debug
 /Examples/SeleniumFixture.ExampleTests/SeleniumFixture.xUnit.ExampleTests/bin/Debug
 /artifacts
+/src/SeleniumFixture/obj
+/src/SeleniumFixture.xUnit/obj

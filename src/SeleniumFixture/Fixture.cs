@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing.Imaging;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -477,7 +476,7 @@ namespace SeleniumFixture
         /// <param name="throwsIfNotSupported">throw exception if screen shot is not supported by the current driver</param>
         /// <param name="format">format of image</param>
         /// <returns></returns>
-        public IActionProvider TakeScreenshot(string screenshotName = null, bool throwsIfNotSupported = false, ImageFormat format = null)
+        public IActionProvider TakeScreenshot(string screenshotName = null, bool throwsIfNotSupported = false, ScreenshotImageFormat format = ScreenshotImageFormat.Png)
         {
             return _actionProvider.TakeScreenshot(screenshotName, throwsIfNotSupported, format);
         }
@@ -616,7 +615,7 @@ namespace SeleniumFixture
 
             var dataConfiguration = configuration.DataConfiguration;
 
-            dataConfiguration.Export<ITypePropertySelector>(g => new SeleniumTypePropertySelector(g.Locate<IConstraintHelper>()));
+            dataConfiguration.Export<ITypePropertySelector>(g => new SeleniumTypePropertySelector(configuration.DataConfiguration, g.Locate<IConstraintHelper>()));
             dataConfiguration.Export<IPropertySetter>(g => new Impl.PropertySetter());
 
             SetupDependencyInjection(webDriver, configuration, dataConfiguration);
@@ -647,7 +646,9 @@ namespace SeleniumFixture
                                       return o;
                                   }
 
+#if !NETSTANDARD2_0
                                   PageFactory.InitElements(webDriver, o);
+#endif
 
                                   return o;
                               });
@@ -762,16 +763,21 @@ namespace SeleniumFixture
 
             IModelService modelService = Data.Configuration.Locate<IModelService>();
 
-            TypePopulator typePopulator = new TypePopulator(Data.Configuration.Locate<IConstraintHelper>(),
-                                                            new ImportSeleniumTypePropertySelector(Data.Configuration.Locate<IConstraintHelper>()),
-                                                            new Impl.PropertySetter());
+            var constraintHelper = Data.Configuration.Locate<IConstraintHelper>();
+
+            TypePopulator typePopulator = new TypePopulator(Data.Configuration,
+                                                            constraintHelper,
+                                                            new ImportSeleniumTypePropertySelector(Data.Configuration, constraintHelper),
+                                                            new Impl.PropertySetter(),
+                                                            new TypeFieldSelector(constraintHelper), 
+                                                            new FieldSetter());
 
             typePopulator.Populate(o, r, modelService.GetModel(r.RequestedType));
 
             return o;
         }
 
-        #endregion
+#endregion
 
     }
 }

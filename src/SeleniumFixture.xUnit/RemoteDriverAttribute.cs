@@ -28,18 +28,32 @@ namespace SeleniumFixture.xUnit
 
     }
 
+    [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
     public class RemoteDriverAttribute : WebDriverAttribute
     {
+        private RemoteWebDriverCapability _capabilities;
+
         public RemoteDriverAttribute(RemoteWebDriverCapability capability)
         {
             Capability = capability;
-        }       
+        }
 
         public override IEnumerable<IWebDriver> GetDrivers(MethodInfo testMethod)
         {
-            yield return CreateWebDriver(testMethod, Capability, Hub);
+            var providerAttribute = ReflectionHelper.GetAttribute<RemoteWebDriverProviderAttribute>(testMethod);
+
+            if (providerAttribute != null)
+            {
+                //return providerAttribute.ProvideDriver(testMethod, Capability);
+            }
+            else
+            {
+
+
+                yield return CreateWebDriver(testMethod, Capability, Hub);
+            }
         }
-        
+
         /// <summary>
         /// Url for grid
         /// </summary>
@@ -84,7 +98,7 @@ namespace SeleniumFixture.xUnit
                     capabilities = DesiredCapabilities.Safari();
                     break;
             }
-            
+
             if (string.IsNullOrEmpty(hub))
             {
                 var attr = ReflectionHelper.GetAttribute<RemoteWebDriverHubAddressAttribute>(testMethod);

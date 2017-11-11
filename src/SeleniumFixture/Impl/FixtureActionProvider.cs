@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Linq;
 using System.Threading;
 using OpenQA.Selenium;
@@ -596,7 +595,7 @@ namespace SeleniumFixture.Impl
         /// <param name="throwsIfNotSupported">throw exception if screen shot is not supported by the current driver</param>
         /// <param name="format">Image format, png by default</param>
         /// <returns></returns>
-        public virtual IActionProvider TakeScreenshot(string screenshotName = null, bool throwsIfNotSupported = false, ImageFormat format = null)
+        public virtual IActionProvider TakeScreenshot(string screenshotName = null, bool throwsIfNotSupported = false, ScreenshotImageFormat format = ScreenshotImageFormat.Png)
         {
             return _fixture.Data.Locate<ITakeScreenshotAction>().TakeScreenshot(screenshotName, throwsIfNotSupported, format);
         }

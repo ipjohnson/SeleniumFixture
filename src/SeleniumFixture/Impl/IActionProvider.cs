@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -288,13 +287,7 @@ namespace SeleniumFixture.Impl
         /// <param name="selector">selector to use to locate element</param>
         /// <returns>element or throws an exception</returns>
         IWebElement FindElement(string selector);
-
-        /// <summary>
-        /// Find elements using By selector
-        /// </summary>
-        /// <param name="by"></param>
-        /// <returns></returns>
-        IWebElement FindElement(By by);
+        
 
         /// <summary>
         /// Find All elements meeting the specified selector
@@ -302,14 +295,7 @@ namespace SeleniumFixture.Impl
         /// <param name="selector">selector to use to find elements</param>
         /// <returns>elements</returns>
         ReadOnlyCollection<IWebElement> FindElements(string selector);
-
-        /// <summary>
-        /// Find all elements by selector
-        /// </summary>
-        /// <param name="by">selector</param>
-        /// <returns></returns>
-        ReadOnlyCollection<IWebElement> FindElements(By by);
-
+        
         /// <summary>
         /// Focus an element
         /// </summary>
@@ -393,7 +379,7 @@ namespace SeleniumFixture.Impl
         /// <param name="throwsIfNotSupported">throw exception if screen shot is not supported by the current driver</param>
         /// <param name="format">Image format, png by default</param>
         /// <returns></returns>
-        IActionProvider TakeScreenshot(string screenshotName = null, bool throwsIfNotSupported = false, ImageFormat format = null);
+        IActionProvider TakeScreenshot(string screenshotName = null, bool throwsIfNotSupported = false, ScreenshotImageFormat format = ScreenshotImageFormat.Png);
 
         /// <summary>
         /// Fixture for this action provider

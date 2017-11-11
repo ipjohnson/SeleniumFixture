@@ -1,136 +1,15 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0714F5E0-B98A-44BC-89CC-700A346406AC}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SeleniumFixture.xUnit</RootNamespace>
-    <AssemblyName>SeleniumFixture.xUnit</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\SeleniumFixture.xUnit.XML</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\SeleniumFixture.xUnit.XML</DocumentationFile>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="SimpleFixture, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SimpleFixture.1.3.0\lib\portable45-net45+win8+wp8+wpa81\SimpleFixture.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WebDriver, Version=2.53.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Selenium.WebDriver.2.53.0\lib\net40\WebDriver.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.abstractions.2.0.0\lib\net35\xunit.abstractions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="xunit.assert, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.assert.2.1.0\lib\dotnet\xunit.assert.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="xunit.core, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.extensibility.core.2.1.0\lib\dotnet\xunit.core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="xunit.execution.desktop, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.extensibility.execution.2.1.0\lib\net45\xunit.execution.desktop.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <PackageReference Include="xunit" Version="2.3.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="ChromeDriverAttribute.cs" />
-    <Compile Include="ChromeDriverProviderAttribute.cs" />
-    <Compile Include="ChromeOptionsAttribute.cs" />
-    <Compile Include="EdgeDriverAttribute.cs" />
-    <Compile Include="EdgeDriverProviderAttribute.cs" />
-    <Compile Include="EdgeOptionsAttribute.cs" />
-    <Compile Include="FirefoxDriverAttribute.cs" />
-    <Compile Include="FirefoxDriverProviderAttribute.cs" />
-    <Compile Include="FirefoxProfileAttribute.cs" />
-    <Compile Include="FixtureCreationAttribute.cs" />
-    <Compile Include="IFixtureFinalizerAttribute.cs" />
-    <Compile Include="IFixtureInitializationAttribute.cs" />
-    <Compile Include="Impl\ExceptionExtensions.cs" />
-    <Compile Include="Impl\ReflectionHelper.cs" />
-    <Compile Include="Impl\SeleniumTheoryDiscoverer.cs" />
-    <Compile Include="Impl\SeleniumTheoryTestCase.cs" />
-    <Compile Include="Impl\SeleniumTheoryTestCaseRunner.cs" />
-    <Compile Include="Impl\SerializationHelper.cs" />
-    <Compile Include="Impl\XunitSkippedDataRowTestCase.cs" />
-    <Compile Include="InternetExplorerDriverAttribute.cs" />
-    <Compile Include="InternetExplorerDriverProviderAttribute.cs" />
-    <Compile Include="InternetExplorerOptionsAttribute.cs" />
-    <Compile Include="IWebDriverFinalizerAttribute.cs" />
-    <Compile Include="IWebDriverInitializationAttribute.cs" />
-    <Compile Include="IWebDriverResetAttribute.cs" />
-    <Compile Include="RemoteWebDriverHubAddressAttribute.cs" />
-    <Compile Include="WebDriverAttribute.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RemoteDriverAttribute.cs" />
-    <Compile Include="RemoteWebDriverProviderAttribute.cs" />
-    <Compile Include="SeleniumTheoryAttribute.cs" />
+    <ProjectReference Include="..\SeleniumFixture\SeleniumFixture.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="SeleniumFixture.xUnit.nuspec" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SeleniumFixture\SeleniumFixture.csproj">
-      <Project>{9eb00e94-f1db-40e4-a131-4b28b347785f}</Project>
-      <Name>SeleniumFixture</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>xcopy /Y "$(TargetPath)" "$(ProjectDir)..\..\Output\bin\$(PlatformName)\"
-xcopy /Y "$(TargetDir)$(TargetName).xml" "$(ProjectDir)..\..\Output\bin\$(PlatformName)\"
-xcopy /Y "$(TargetDir)$(TargetName).pdb" "$(ProjectDir)..\..\Output\bin\$(PlatformName)\"
-</PostBuildEvent>
-  </PropertyGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props'))" />
-  </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>
