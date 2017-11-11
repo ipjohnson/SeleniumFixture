@@ -126,7 +126,7 @@ namespace SeleniumFixture.Impl
                 i =>
                 {
                     // static cast because I want an exception to be thrown when the driver doesn't support executing javascript
-                    IJavaScriptExecutor executor = (IJavaScriptExecutor)_actionProvider.UsingFixture.Driver;
+                    var executor = (IJavaScriptExecutor)_actionProvider.UsingFixture.Driver;
 
                     return (bool)executor.ExecuteScript(_actionProvider.UsingFixture.Configuration.AjaxActiveTest);
                 }, timeout)
@@ -212,10 +212,10 @@ namespace SeleniumFixture.Impl
                 timeout = _actionProvider.UsingFixture.Configuration.DefaultTimeout;
             }
 
-            DateTime expire = DateTime.Now.AddSeconds(timeout.Value);
-            bool untilResult = false;
+            var expire = DateTime.Now.AddSeconds(timeout.Value);
+            var untilResult = false;
 
-            int defaultWaitIntercal = (int)(_actionProvider.UsingFixture.Configuration.DefaultWaitInterval * 1000);
+            var defaultWaitIntercal = (int)(_actionProvider.UsingFixture.Configuration.DefaultWaitInterval * 1000);
 
             while (!untilResult)
             {

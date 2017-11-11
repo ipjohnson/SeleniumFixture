@@ -73,7 +73,7 @@ namespace SeleniumFixture.Impl
 
         public static bool IsJavaScriptEnabled(ISearchContext context, string jQueryTest = "return typeof jQuery != 'undefined';")
         {
-            IJavaScriptExecutor executor = context as IJavaScriptExecutor;
+            var executor = context as IJavaScriptExecutor;
 
             if (executor == null && context is IWrapsDriver)
             {
@@ -82,7 +82,7 @@ namespace SeleniumFixture.Impl
 
             if (executor != null)
             {
-                object returnValue = executor.ExecuteScript(jQueryTest);
+                var returnValue = executor.ExecuteScript(jQueryTest);
 
                 if (returnValue is bool)
                 {

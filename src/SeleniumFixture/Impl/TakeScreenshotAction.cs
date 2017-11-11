@@ -71,7 +71,7 @@ namespace SeleniumFixture.Impl
 
         protected virtual string GetScreenshotName(ScreenshotImageFormat format)
         {
-            StackTrace stackTrace = new StackTrace();
+            var stackTrace = new StackTrace();
 
             StackFrame stackFrame = null;
 
@@ -91,7 +91,7 @@ namespace SeleniumFixture.Impl
 
             var method = stackFrame.GetMethod();
 
-            string returnName = method.DeclaringType != null ? method.DeclaringType.Name + "_" : "";
+            var returnName = method.DeclaringType != null ? method.DeclaringType.Name + "_" : "";
 
             returnName += method.Name + "." + format.ToString().ToLower();
 

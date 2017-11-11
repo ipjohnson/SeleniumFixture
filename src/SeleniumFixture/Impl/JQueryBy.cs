@@ -60,14 +60,14 @@ namespace SeleniumFixture.Impl
 
         protected virtual ReadOnlyCollection<IWebElement> FindElementsOnElement(IWrapsDriver wrapsDriver)
         {
-            IJavaScriptExecutor executor = wrapsDriver.WrappedDriver as IJavaScriptExecutor;
+            var executor = wrapsDriver.WrappedDriver as IJavaScriptExecutor;
 
             if (executor == null)
             {
                 throw new Exception("IWrapsDriver does not implement IJavaScriptExecutor");
             }
 
-            string script =
+            var script =
                 @"  var returnList = [];
                     $(arguments[0]).find('" + _selector + @"').each(function () { returnList.push(this); });
                     return returnList;";
@@ -79,7 +79,7 @@ namespace SeleniumFixture.Impl
 
         protected virtual ReadOnlyCollection<IWebElement> FindElementsOnDriver(IJavaScriptExecutor executor)
         {
-            IEnumerable<object> matchedItems =
+            var matchedItems =
                 (IEnumerable<object>)executor.ExecuteScript("return jQuery.find('" + _selector + "')");
 
             return new ReadOnlyCollection<IWebElement>(matchedItems.Cast<IWebElement>().ToList());

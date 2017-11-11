@@ -21,7 +21,7 @@ namespace SeleniumFixture.Impl
 
         public virtual IActionProvider MoveTheMouseTo(string selector, int? x = null, int? y = null)
         {
-            Actions action = new Actions(_actionProvider.UsingFixture.Driver);
+            var action = new Actions(_actionProvider.UsingFixture.Driver);
 
             var element = _actionProvider.FindElement(selector);
 
@@ -41,7 +41,7 @@ namespace SeleniumFixture.Impl
 
         public virtual IActionProvider MoveTheMouseTo(By selector, int? x = null, int? y = null)
         {
-            Actions action = new Actions(_actionProvider.UsingFixture.Driver);
+            var action = new Actions(_actionProvider.UsingFixture.Driver);
 
             var element = _actionProvider.FindElement(selector);
 

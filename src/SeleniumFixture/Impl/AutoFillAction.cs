@@ -38,20 +38,20 @@ namespace SeleniumFixture.Impl
 
         protected virtual void AutoFillElement()
         {
-            Dictionary<string, List<IWebElement>> radioButtons = new Dictionary<string, List<IWebElement>>();
+            var radioButtons = new Dictionary<string, List<IWebElement>>();
 
-            foreach (IWebElement element in _elements)
+            foreach (var element in _elements)
             {
                 if (!ProcessFormElement(element, radioButtons))
                 {
-                    foreach (IWebElement findElement in element.FindElements(By.CssSelector("input, select, textarea, datalist")))
+                    foreach (var findElement in element.FindElements(By.CssSelector("input, select, textarea, datalist")))
                     {
                         ProcessFormElement(findElement, radioButtons);
                     }
                 }
             }
 
-            foreach (KeyValuePair<string, List<IWebElement>> keyValuePair in radioButtons)
+            foreach (var keyValuePair in radioButtons)
             {
                 AutoFillRadioButtonGroup(keyValuePair.Key, keyValuePair.Value);
             }
@@ -59,7 +59,7 @@ namespace SeleniumFixture.Impl
 
         protected virtual bool ProcessFormElement(IWebElement findElement, Dictionary<string, List<IWebElement>> radioButtons)
         {
-            bool returnValue = false;
+            var returnValue = false;
 
             if (findElement.TagName == "select")
             {
@@ -95,7 +95,7 @@ namespace SeleniumFixture.Impl
             }
             else
             {
-                object setValue = _constraintHelper.GetValue<object>(_seedWith, null, key);
+                var setValue = _constraintHelper.GetValue<object>(_seedWith, null, key);
 
                 if (setValue != null)
                 {
@@ -105,7 +105,7 @@ namespace SeleniumFixture.Impl
 
             if (!string.IsNullOrEmpty(stringConstraintValue))
             {
-                foreach (IWebElement webElement in values)
+                foreach (var webElement in values)
                 {
                     if (webElement.GetAttribute(ElementContants.ValueAttribute) == stringConstraintValue)
                     {
@@ -154,7 +154,7 @@ namespace SeleniumFixture.Impl
                 return;
             }
 
-            string elementId = element.GetAttribute("id") ?? element.GetAttribute("name");
+            var elementId = element.GetAttribute("id") ?? element.GetAttribute("name");
             object setValue = null;
 
             if (!string.IsNullOrEmpty(elementId))
@@ -173,12 +173,12 @@ namespace SeleniumFixture.Impl
 
         protected virtual void AutoFillCheckBox(IWebElement element)
         {
-            string elementId = element.GetAttribute("id") ?? element.GetAttribute("name");
+            var elementId = element.GetAttribute("id") ?? element.GetAttribute("name");
             bool? checkedValue = null;
 
             if (!string.IsNullOrEmpty(elementId))
             {
-                object checkValue = _constraintHelper.GetValue<object>(_seedWith, null, elementId);
+                var checkValue = _constraintHelper.GetValue<object>(_seedWith, null, elementId);
 
                 if (checkValue != null)
                 {
@@ -244,8 +244,8 @@ namespace SeleniumFixture.Impl
 
         protected virtual void AutoFillSelectElement(IWebElement element)
         {
-            SelectElement selectElement = new SelectElement(element);
-            bool setValue = false;
+            var selectElement = new SelectElement(element);
+            var setValue = false;
 
             if (_isSimpleSeed)
             {
@@ -253,13 +253,13 @@ namespace SeleniumFixture.Impl
             }
             else
             {
-                string elementId = element.GetAttribute("id") ?? element.GetAttribute("name");
+                var elementId = element.GetAttribute("id") ?? element.GetAttribute("name");
 
-                object value = _constraintHelper.GetValue<object>(_seedWith, null, elementId);
+                var value = _constraintHelper.GetValue<object>(_seedWith, null, elementId);
 
                 if (value != null)
                 {
-                    string stringValue = GetStringFromValue(value);
+                    var stringValue = GetStringFromValue(value);
 
                     var option = selectElement.Options.FirstOrDefault(e => e.GetAttribute(ElementContants.ValueAttribute) == stringValue);
 

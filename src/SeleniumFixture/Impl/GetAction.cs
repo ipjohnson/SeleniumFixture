@@ -257,7 +257,7 @@ namespace SeleniumFixture.Impl
 
         protected virtual FormData GetFormData(IEnumerable<IWebElement> elements, FormData formData)
         {
-            foreach (IWebElement webElement in elements)
+            foreach (var webElement in elements)
             {
                 var name = webElement.GetAttribute(ElementContants.IdAttribute) ??
                            webElement.GetAttribute(ElementContants.NameAttribute);
@@ -346,13 +346,13 @@ namespace SeleniumFixture.Impl
             }
 
             string returnString = null;
-            IWebElement element = elements.FirstOrDefault();
+            var element = elements.FirstOrDefault();
 
             if (element != null)
             {
                 if (element.TagName == "select")
                 {
-                    SelectElement selectElement = new SelectElement(element);
+                    var selectElement = new SelectElement(element);
 
                     if (selectElement.SelectedOption != null)
                     {
@@ -363,7 +363,7 @@ namespace SeleniumFixture.Impl
                          element.TagName == "textarea" ||
                          element.TagName == "datalist")
                 {
-                    string type = element.GetAttribute(ElementContants.TypeAttribute);
+                    var type = element.GetAttribute(ElementContants.TypeAttribute);
 
                     switch (type)
                     {
@@ -384,9 +384,9 @@ namespace SeleniumFixture.Impl
 
         protected virtual IEnumerable<string> ReturnElementsListOfStrings(IEnumerable<IWebElement> elements)
         {
-            foreach (IWebElement webElement in elements)
+            foreach (var webElement in elements)
             {
-                foreach (string s in ReturnElementAsString(webElement))
+                foreach (var s in ReturnElementAsString(webElement))
                 {
                     yield return s;
                 }
@@ -397,7 +397,7 @@ namespace SeleniumFixture.Impl
         {
             if (element.TagName == "select")
             {
-                SelectElement selectElement = new SelectElement(element);
+                var selectElement = new SelectElement(element);
 
                 if (selectElement.SelectedOption != null)
                 {
@@ -408,7 +408,7 @@ namespace SeleniumFixture.Impl
                      element.TagName == "textarea" ||
                      element.TagName == "datalist")
             {
-                string type = element.GetAttribute(ElementContants.TypeAttribute);
+                var type = element.GetAttribute(ElementContants.TypeAttribute);
 
                 switch (type)
                 {
@@ -424,7 +424,7 @@ namespace SeleniumFixture.Impl
             }
             else
             {
-                foreach (string returnElementsListOfString in 
+                foreach (var returnElementsListOfString in 
                     ReturnElementsListOfStrings(element.FindElements(By.CssSelector("input, select, textarea, datalist"))))
                 {
                     yield return returnElementsListOfString;
@@ -434,23 +434,23 @@ namespace SeleniumFixture.Impl
 
         protected virtual T ReturnElementsAsComplex<T>(IEnumerable<IWebElement> elements)
         {
-            T returnValue = _actionProvider.UsingFixture.Data.Locate<T>();
-            List<IWebElement> localElements = new List<IWebElement>(elements);
+            var returnValue = _actionProvider.UsingFixture.Data.Locate<T>();
+            var localElements = new List<IWebElement>(elements);
 
-            foreach (PropertyInfo propertyInfo in returnValue.GetType().GetProperties())
+            foreach (var propertyInfo in returnValue.GetType().GetProperties())
             {
                 if (propertyInfo.SetMethod != null &&
                     propertyInfo.SetMethod.IsPublic &&
                     !propertyInfo.SetMethod.IsStatic &&
                     propertyInfo.SetMethod.GetParameters().Count() == 1)
                 {
-                    string propertyName = propertyInfo.Name;
+                    var propertyName = propertyInfo.Name;
 
                     var matchedElements = FindMatchingElements(localElements, propertyName);
 
                     if (matchedElements.Count > 0)
                     {
-                        foreach (IWebElement webElement in matchedElements)
+                        foreach (var webElement in matchedElements)
                         {
                             if (FillPropertyUsingElement(propertyInfo, webElement, returnValue))
                             {
@@ -465,7 +465,7 @@ namespace SeleniumFixture.Impl
 
         protected virtual bool FillPropertyUsingElement(PropertyInfo propertyInfo, IWebElement webElement, object fillObject)
         {
-            bool returnValue = false;
+            var returnValue = false;
 
             switch (webElement.TagName)
             {
@@ -488,11 +488,11 @@ namespace SeleniumFixture.Impl
 
         protected virtual bool FillPropertyFromSelect(PropertyInfo propertyInfo, IWebElement webElement, object fillObject)
         {
-            SelectElement selectElement = new SelectElement(webElement);
+            var selectElement = new SelectElement(webElement);
 
             if (selectElement.SelectedOption != null)
             {
-                string value = selectElement.SelectedOption.GetAttribute(ElementContants.ValueAttribute);
+                var value = selectElement.SelectedOption.GetAttribute(ElementContants.ValueAttribute);
 
                 if (value != null)
                 {
@@ -522,7 +522,7 @@ namespace SeleniumFixture.Impl
 
         protected virtual bool FillPropertyFromInput(PropertyInfo propertyInfo, IWebElement webElement, object fillObject)
         {
-            bool returnValue = false;
+            var returnValue = false;
             object setValue = null;
             var type = webElement.GetAttribute(ElementContants.TypeAttribute);
 
@@ -573,9 +573,9 @@ namespace SeleniumFixture.Impl
 
         protected virtual ReadOnlyCollection<IWebElement> FindMatchingElements(IEnumerable<IWebElement> localElements, string propertyName)
         {
-            List<IWebElement> returnValue = new List<IWebElement>();
+            var returnValue = new List<IWebElement>();
 
-            foreach (IWebElement localElement in localElements)
+            foreach (var localElement in localElements)
             {
                 var localName = localElement.GetAttribute(ElementContants.IdAttribute) ??
                                 localElement.GetAttribute(ElementContants.NameAttribute);
@@ -595,7 +595,7 @@ namespace SeleniumFixture.Impl
 
                     if (elements.Count == 0)
                     {
-                        bool keepSearching = false;
+                        var keepSearching = false;
 
                         if (char.IsUpper(propertyName[0]))
                         {

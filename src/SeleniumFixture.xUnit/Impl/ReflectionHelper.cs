@@ -9,7 +9,7 @@ namespace SeleniumFixture.xUnit.Impl
     {
         public static T GetAttribute<T>(MethodInfo methodInfo) where T : class
         {
-            Attribute returnAttribute = methodInfo.GetCustomAttributes().FirstOrDefault(a => a is T) ??
+            var returnAttribute = methodInfo.GetCustomAttributes().FirstOrDefault(a => a is T) ??
                                 (methodInfo.DeclaringType.GetCustomAttributes().FirstOrDefault(a => a is T) ??
                                  methodInfo.DeclaringType.Assembly.GetCustomAttributes().FirstOrDefault(a => a is T));
 
@@ -18,7 +18,7 @@ namespace SeleniumFixture.xUnit.Impl
 
         public static IEnumerable<T> GetAttributes<T>(MethodInfo methodInfo) where T : class
         {
-            List<T> returnList = new List<T>();
+            var returnList = new List<T>();
 
             returnList.AddRange(methodInfo.GetCustomAttributes().OfType<T>());
 

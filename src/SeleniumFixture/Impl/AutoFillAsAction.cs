@@ -21,7 +21,7 @@ namespace SeleniumFixture.Impl
 
         public virtual IThenSubmitAction PerformFill(string requestName, object constraints)
         {
-            T seedValue = _actionProvider.UsingFixture.Data.Generate<T>(requestName, constraints);
+            var seedValue = _actionProvider.UsingFixture.Data.Generate<T>(requestName, constraints);
 
             return new AutoFillAction(_actionProvider, _elements, seedValue).PerformFill();
         }

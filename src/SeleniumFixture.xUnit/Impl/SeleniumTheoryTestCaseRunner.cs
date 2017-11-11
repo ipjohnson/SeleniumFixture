@@ -121,7 +121,7 @@ namespace SeleniumFixture.xUnit.Impl
                         methodToRun = methodToRun.MakeGenericMethod(resolvedTypes.Select(t => ((IReflectionTypeInfo)t).Type).ToArray());
                     }
 
-                    List<object> parameterList = new List<object>();
+                    var parameterList = new List<object>();
                     var parameters = methodToRun.GetParameters().ToArray();
 
                     try
@@ -147,9 +147,9 @@ namespace SeleniumFixture.xUnit.Impl
                             initializerReturn = initializeAttribute.Initialize(runtimeMethod, newFixture);
                         }
 
-                        int dataRowIndex = 0;
+                        var dataRowIndex = 0;
 
-                        for (int i = 0; i < parameters.Length; i++)
+                        for (var i = 0; i < parameters.Length; i++)
                         {
                             var parameter = parameters[i];
                             var attributes = parameter.GetCustomAttributes(true);
@@ -216,7 +216,7 @@ namespace SeleniumFixture.xUnit.Impl
 
                                 parameterList.Add(value);
 
-                                object lastObject = parameterList.Last();
+                                var lastObject = parameterList.Last();
                                 var closedFreezeMethod =
                                     FreezeMethod.MakeGenericMethod(lastObject.GetType());
 
@@ -253,7 +253,7 @@ namespace SeleniumFixture.xUnit.Impl
 
                     var test = new XunitTest(TestCase, theoryDisplayName);
                     var skipReason = SkipReason;
-                    XunitTestRunner testRunner = CreateTestRunner(test, MessageBus, TestClass, ConstructorArguments, methodToRun, convertedDataRow, skipReason, BeforeAfterAttributes, Aggregator, CancellationTokenSource);
+                    var testRunner = CreateTestRunner(test, MessageBus, TestClass, ConstructorArguments, methodToRun, convertedDataRow, skipReason, BeforeAfterAttributes, Aggregator, CancellationTokenSource);
 
                     runSummary.Aggregate(await testRunner.RunAsync());
 
@@ -272,14 +272,12 @@ namespace SeleniumFixture.xUnit.Impl
 
         private void InitializeCustomAttribute(object attribute, MethodInfo runtimeMethod, ParameterInfo parameterInfo)
         {
-            var parameterAware = attribute as IParameterInfoAware;
-            var methodInfoAware = attribute as IMethodInfoAware;
-            if (methodInfoAware != null)
+            if (attribute is IMethodInfoAware methodInfoAware)
             {
                 methodInfoAware.Method = runtimeMethod;
             }
 
-            if (parameterAware != null)
+            if (attribute is IParameterInfoAware parameterAware)
             {
                 parameterAware.Parameter = parameterInfo;
             }
@@ -298,7 +296,7 @@ namespace SeleniumFixture.xUnit.Impl
 
             foreach (var data in dataRow)
             {
-                IDisposable disposable = data as IDisposable;
+                var disposable = data as IDisposable;
 
                 if (disposable != null)
                 {
@@ -330,11 +328,11 @@ namespace SeleniumFixture.xUnit.Impl
 
         private string CreateTheoryDisplayName(IMethodInfo method, string displayName, object[] convertedDataRow, ITypeInfo[] resolvedTypes)
         {
-            string returnString = displayName;
+            var returnString = displayName;
 
             if (convertedDataRow.Length == 1)
             {
-                IWebDriver driver = convertedDataRow[0] as IWebDriver;
+                var driver = convertedDataRow[0] as IWebDriver;
 
                 if (driver == null && convertedDataRow[0] is Fixture)
                 {
@@ -347,7 +345,7 @@ namespace SeleniumFixture.xUnit.Impl
 
                     if (property != null)
                     {
-                        ICapabilities capabilities = property.GetValue(driver) as ICapabilities;
+                        var capabilities = property.GetValue(driver) as ICapabilities;
 
                         if (capabilities != null)
                         {
@@ -362,7 +360,7 @@ namespace SeleniumFixture.xUnit.Impl
 
         private string GetDriverName(IWebDriver driver)
         {
-            string returnString = "";
+            var returnString = "";
 
             if (driver != null)
             {
@@ -370,7 +368,7 @@ namespace SeleniumFixture.xUnit.Impl
 
                 if (property != null)
                 {
-                    ICapabilities capabilities = property.GetValue(driver) as ICapabilities;
+                    var capabilities = property.GetValue(driver) as ICapabilities;
 
                     if (capabilities != null)
                     {

@@ -11,7 +11,7 @@ namespace SeleniumFixture.xUnit
 
         public static Fixture GetNewFixture(IWebDriver driver, MethodInfo method)
         {
-            FixtureCreationAttribute creationAttribute = ReflectionHelper.GetAttribute<FixtureCreationAttribute>(method);
+            var creationAttribute = ReflectionHelper.GetAttribute<FixtureCreationAttribute>(method);
 
             if (creationAttribute != null)
             {

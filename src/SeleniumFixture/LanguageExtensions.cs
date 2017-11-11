@@ -8,7 +8,7 @@ namespace SeleniumFixture
     {
         public static void Apply<T>(this IEnumerable<T> enumerable, Action<T> action)
         {
-            foreach (T t in enumerable)
+            foreach (var t in enumerable)
             {
                 action(t);
             }

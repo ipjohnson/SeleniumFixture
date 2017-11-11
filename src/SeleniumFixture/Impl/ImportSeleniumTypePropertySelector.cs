@@ -16,7 +16,7 @@ namespace SeleniumFixture.Impl
 
         public override IEnumerable<PropertyInfo> SelectProperties(object instance, DataRequest request, ComplexModel model)
         {
-            foreach (PropertyInfo runtimeProperty in instance.GetType().GetRuntimeProperties())
+            foreach (var runtimeProperty in instance.GetType().GetRuntimeProperties())
             {
                 if (runtimeProperty.GetSetMethod(true) == null)
                 {

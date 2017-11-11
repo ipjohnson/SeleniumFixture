@@ -319,14 +319,14 @@ namespace SeleniumFixture.Impl
         /// <exception cref="System.Exception">Javascript not supported by driver  + _fixture.Driver</exception>
         public virtual T ExecuteJavaScript<T>(string javascript, params object[] args)
         {
-            IJavaScriptExecutor executor = _fixture.Driver as IJavaScriptExecutor;
+            var executor = _fixture.Driver as IJavaScriptExecutor;
 
             if (executor == null)
             {
                 throw new Exception("Javascript not supported by driver " + _fixture.Driver);
             }
 
-            object returnValue = executor.ExecuteScript(javascript, args);
+            var returnValue = executor.ExecuteScript(javascript, args);
 
             if (typeof(T) == typeof(IEnumerable<IWebElement>) ||
                 typeof(T) == typeof(ICollection<IWebElement>) ||
@@ -361,7 +361,7 @@ namespace SeleniumFixture.Impl
         /// <exception cref="System.Exception">Javascript not supported by driver  + _fixture.Driver</exception>
         public virtual void ExecuteJavaScript(string javascript, params object[] args)
         {
-            IJavaScriptExecutor executor = _fixture.Driver as IJavaScriptExecutor;
+            var executor = _fixture.Driver as IJavaScriptExecutor;
 
             if (executor == null)
             {
@@ -497,7 +497,7 @@ namespace SeleniumFixture.Impl
         /// </returns>
         public virtual IFillAction Fill(IEnumerable<IWebElement> elements)
         {
-            ReadOnlyCollection<IWebElement> readOnlyElements = elements as ReadOnlyCollection<IWebElement> ??
+            var readOnlyElements = elements as ReadOnlyCollection<IWebElement> ??
                                                                new ReadOnlyCollection<IWebElement>(new List<IWebElement>(elements));
 
             return _fixture.Data.Locate<IFillAction>(constraints: new { elements = readOnlyElements });
@@ -518,7 +518,7 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public virtual ISendToAction Send(object sendValue)
         {
-            string sendValueString = sendValue.ToString();
+            var sendValueString = sendValue.ToString();
 
             return _fixture.Data.Locate<ISendToAction>(constraints: new { sendValue = sendValueString });
         }

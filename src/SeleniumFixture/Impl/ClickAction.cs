@@ -45,7 +45,7 @@ namespace SeleniumFixture.Impl
                     break;
 
                 case ClickMode.ClickAll:
-                    bool found = false;
+                    var found = false;
 
                     elements.Apply(c => { c.Click(); found = true; });
 

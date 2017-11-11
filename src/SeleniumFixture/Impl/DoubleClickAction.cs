@@ -29,7 +29,7 @@ namespace SeleniumFixture.Impl
 
         public IActionProvider DoubleClick(IEnumerable<IWebElement> elements, ClickMode clickMode = ClickMode.ClickAll)
         {
-            bool found = false;
+            var found = false;
             Actions action = null;
 
             switch (clickMode)
@@ -96,7 +96,7 @@ namespace SeleniumFixture.Impl
                     {
                         var element = _actionProvider.FindElement(selector);
 
-                        Actions action = new Actions(_fixture.Driver);
+                        var action = new Actions(_fixture.Driver);
                         action.DoubleClick(element);
                         action.Perform();
                     }
@@ -106,7 +106,7 @@ namespace SeleniumFixture.Impl
                     {
                         _actionProvider.FindElements(selector).Apply(element =>
                         {
-                            Actions action = new Actions(_fixture.Driver);
+                            var action = new Actions(_fixture.Driver);
                             action.DoubleClick(element);
                             action.Perform();
                         });
@@ -123,7 +123,7 @@ namespace SeleniumFixture.Impl
 
                         all.Apply(element =>
                         {
-                            Actions action = new Actions(_fixture.Driver);
+                            var action = new Actions(_fixture.Driver);
                             action.DoubleClick(element);
                             action.Perform();
                         });
@@ -139,7 +139,7 @@ namespace SeleniumFixture.Impl
                             throw new Exception("Could not locate any using selector: " + selector);
                         }
 
-                        Actions action = new Actions(_fixture.Driver);
+                        var action = new Actions(_fixture.Driver);
                         action.DoubleClick(firstList[0]);
                         action.Perform();
                     }
@@ -166,7 +166,7 @@ namespace SeleniumFixture.Impl
                     {
                         var element = _actionProvider.FindElement(selector);
 
-                        Actions action = new Actions(_fixture.Driver);
+                        var action = new Actions(_fixture.Driver);
                         action.DoubleClick(element);
                         action.Perform();
                     }
@@ -176,7 +176,7 @@ namespace SeleniumFixture.Impl
                     {
                         _actionProvider.FindElements(selector).Apply(element =>
                         {
-                            Actions action = new Actions(_fixture.Driver);
+                            var action = new Actions(_fixture.Driver);
                             action.DoubleClick(element);
                             action.Perform();
                         });
@@ -195,7 +195,7 @@ namespace SeleniumFixture.Impl
 
                         all.Apply(element =>
                         {
-                            Actions action = new Actions(_fixture.Driver);
+                            var action = new Actions(_fixture.Driver);
                             action.DoubleClick(element);
                             action.Perform();
                         });
@@ -211,7 +211,7 @@ namespace SeleniumFixture.Impl
                             throw new Exception("Could not locate any using selector: " + selector);
                         }
 
-                        Actions action = new Actions(_fixture.Driver);
+                        var action = new Actions(_fixture.Driver);
                         action.DoubleClick(firstList[0]);
                         action.Perform();
                     }

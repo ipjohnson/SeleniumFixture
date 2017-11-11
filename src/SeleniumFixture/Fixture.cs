@@ -692,7 +692,7 @@ namespace SeleniumFixture
                     switch (member.MemberType)
                     {
                         case MemberTypes.Property:
-                            PropertyInfo propertyInfo = (PropertyInfo)member;
+                            var propertyInfo = (PropertyInfo)member;
 
                             if (propertyInfo.GetMethod != null)
                             {
@@ -700,7 +700,7 @@ namespace SeleniumFixture
                             }
                             break;
                         case MemberTypes.Method:
-                            MethodInfo methodInfo = (MethodInfo)member;
+                            var methodInfo = (MethodInfo)member;
 
                             if (!methodInfo.GetParameters().Any() && methodInfo.ReturnType == typeof(void))
                             {
@@ -722,7 +722,7 @@ namespace SeleniumFixture
                                 throw;
                             }
 
-                            string formatString = AssertionFailedException.FormatErrorMessage(exp, instance.GetType());
+                            var formatString = AssertionFailedException.FormatErrorMessage(exp, instance.GetType());
 
                             Exception newException = null;
 
@@ -756,11 +756,11 @@ namespace SeleniumFixture
                 return o;
             }
 
-            IModelService modelService = Data.Configuration.Locate<IModelService>();
+            var modelService = Data.Configuration.Locate<IModelService>();
 
             var constraintHelper = Data.Configuration.Locate<IConstraintHelper>();
 
-            TypePopulator typePopulator = new TypePopulator(Data.Configuration,
+            var typePopulator = new TypePopulator(Data.Configuration,
                                                             constraintHelper,
                                                             new ImportSeleniumTypePropertySelector(Data.Configuration, constraintHelper),
                                                             new Impl.PropertySetter(),

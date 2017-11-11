@@ -98,18 +98,18 @@ namespace SeleniumFixture.Impl
 
         protected virtual void SetObjectValuesIntoForm(IWebElement webElement, object fillValues)
         {
-            foreach (PropertyInfo runtimeProperty in fillValues.GetType().GetRuntimeProperties())
+            foreach (var runtimeProperty in fillValues.GetType().GetRuntimeProperties())
             {
                 if (runtimeProperty.CanRead && 
                    !runtimeProperty.GetMethod.GetParameters().Any() &&
                     runtimeProperty.GetMethod.IsPublic && 
                    !runtimeProperty.GetMethod.IsStatic)
                 {
-                    ReadOnlyCollection<IWebElement> elements = webElement.FindElements(By.Id(runtimeProperty.Name));
+                    var elements = webElement.FindElements(By.Id(runtimeProperty.Name));
                     
                     if (elements.Count == 0)
                     {
-                        string searchString = char.IsUpper(runtimeProperty.Name[0]) ? 
+                        var searchString = char.IsUpper(runtimeProperty.Name[0]) ? 
                                                 "" + char.ToLower(runtimeProperty.Name[0]) : 
                                                 "" + char.ToUpper(runtimeProperty.Name[0]);
 
@@ -127,7 +127,7 @@ namespace SeleniumFixture.Impl
 
                         if (elements.Count == 0)
                         {
-                            string searchString = char.IsUpper(runtimeProperty.Name[0]) ?
+                            var searchString = char.IsUpper(runtimeProperty.Name[0]) ?
                                                     "" + char.ToLower(runtimeProperty.Name[0]) :
                                                     "" + char.ToUpper(runtimeProperty.Name[0]);
 
@@ -150,7 +150,7 @@ namespace SeleniumFixture.Impl
                                                         null,
                                                         CultureInfo.CurrentCulture);
 
-                    foreach (IWebElement element in elements)
+                    foreach (var element in elements)
                     {
                         FillElementWithValues(element, value);
                     }
@@ -160,7 +160,7 @@ namespace SeleniumFixture.Impl
 
         protected virtual void SetDictionaryValuesIntoForm(IWebElement webElement, IEnumerable<KeyValuePair<string, object>> keyValuePairs)
         {
-            foreach (KeyValuePair<string, object> keyValuePair in keyValuePairs)
+            foreach (var keyValuePair in keyValuePairs)
             {
                 var elements = webElement.FindElements(Using.Auto(keyValuePair.Key));
 
@@ -169,7 +169,7 @@ namespace SeleniumFixture.Impl
                     throw new Exception("Could not locate any element using: " + keyValuePair.Key);
                 }
 
-                foreach (IWebElement element in elements)
+                foreach (var element in elements)
                 {
                     FillElementWithValues(element, keyValuePair.Value);
                 }
@@ -178,12 +178,12 @@ namespace SeleniumFixture.Impl
 
         protected virtual IEnumerable<KeyValuePair<string, object>> GetSetValues(object fillValues)
         {
-            if (fillValues is IEnumerable<KeyValuePair<string, object>>)
+            if (fillValues is IEnumerable<KeyValuePair<string, object>> pairs)
             {
-                return (IEnumerable<KeyValuePair<string, object>>)fillValues;
+                return pairs;
             }
 
-            List<KeyValuePair<string, object>> returnValue = new List<KeyValuePair<string, object>>();
+            var returnValue = new List<KeyValuePair<string, object>>();
 
             foreach (var runtimeProperty in fillValues.GetType().GetRuntimeProperties().Where(p => p.CanRead &&
                                                                                                    p.GetMethod.IsPublic &&
@@ -223,17 +223,16 @@ namespace SeleniumFixture.Impl
                     break;
 
                 case ElementContants.CheckBoxType:
-                    if (setValue is bool)
+                    if (setValue is bool b)
                     {
-                        if ((bool)setValue != webElement.Selected)
+                        if (b != webElement.Selected)
                         {
                             webElement.Click();
                         }
                     }
                     else if (setValue is string)
                     {
-                        bool setBool;
-                        if (bool.TryParse(setValue.ToString(), out setBool))
+                        if (bool.TryParse(setValue.ToString(), out var setBool))
                         {
                             if (setBool != webElement.Selected)
                             {
@@ -260,13 +259,13 @@ namespace SeleniumFixture.Impl
 
         protected static void SetPrimitiveIntoSelectElement(IWebElement webElement, object setValue)
         {
-            SelectElement selectElement = new SelectElement(webElement);
+            var selectElement = new SelectElement(webElement);
 
             string valueString = null;
 
             if (setValue is Enum)
             {
-                object value = Convert.ChangeType(setValue, Enum.GetUnderlyingType(setValue.GetType()));
+                var value = Convert.ChangeType(setValue, Enum.GetUnderlyingType(setValue.GetType()));
                 valueString = value.ToString();
             }
             else if(setValue != null)
@@ -274,9 +273,9 @@ namespace SeleniumFixture.Impl
                 valueString = setValue.ToString();
             }
 
-            bool valueWasSet = false;
+            var valueWasSet = false;
 
-            foreach (IWebElement element in selectElement.Options)
+            foreach (var element in selectElement.Options)
             {
                 if (element.GetAttribute(ElementContants.ValueAttribute) == valueString)
                 {
@@ -288,7 +287,7 @@ namespace SeleniumFixture.Impl
 
             if (!valueWasSet)
             {
-                foreach (IWebElement element in selectElement.Options)
+                foreach (var element in selectElement.Options)
                 {
                     if (element.GetAttribute("text") == valueString)
                     {
