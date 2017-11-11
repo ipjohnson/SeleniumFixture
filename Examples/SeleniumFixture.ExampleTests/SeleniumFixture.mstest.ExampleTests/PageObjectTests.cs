@@ -7,7 +7,7 @@ namespace SeleniumFixture.mstest.ExampleTests
     [TestClass]
     public class PageObjectTests
     {
-        //[TestMethod]
+        [TestMethod]
         public void Fixture_DriveApp_ClicksAroundAndAutoFillsStuff()
         {
             using (var driver = new FirefoxDriver())
