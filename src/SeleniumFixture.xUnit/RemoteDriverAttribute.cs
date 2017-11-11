@@ -1,28 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
-using OpenQA.Selenium.Safari;
 using SeleniumFixture.xUnit.Impl;
-using Xunit.Sdk;
 
 namespace SeleniumFixture.xUnit
 {
     [Flags]
     public enum RemoteWebDriverCapability
     {
+        [Obsolete("Selenium no longer provides an Android device driver.")]
         Andriod = 1,
+        [Obsolete("Use the ChromeOptions class to set capabilities for use with Chrome. For use with the Java remote server or grid, use the ToCapabilites method of the ChromeOptions class.")]
         Chrome = 2,
+        [Obsolete("Use the FirefoxOptions class to set capabilities for use with Firefox. For use with the Java remote server or grid, use the ToCapabilites method of the FirefoxOptions class.")]
         FireFox = 4,
         HtmlUnit = 8,
         HtmlUnitWithJS = 16,
+        [Obsolete("Use the InternetExplorerOptions class to set capabilities for use with Internet Explorer. For use with the Java remote server or grid, use the ToCapabilites method of the InternetExplorerOptions class.")]
         InternetExplorer = 32,
+        [Obsolete("Selenium no longer provides an iOS device driver.")]
         IPhone = 64,
+        [Obsolete("Selenium no longer provides an iOS device driver.")]
         IPad = 128,
+        [Obsolete("Use the SafariOptions class to set capabilities for use with Safari. For use with the Java remote server or grid, use the ToCapabilites method of the SafariOptions class.")]
         Safari = 256,
         MajorFour = FireFox | InternetExplorer | Chrome | Safari,
 

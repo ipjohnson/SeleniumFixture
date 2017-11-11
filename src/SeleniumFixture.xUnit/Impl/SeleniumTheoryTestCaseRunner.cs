@@ -3,13 +3,11 @@ using SimpleFixture.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 using System.Reflection;
-using System.IO;
 using SimpleFixture;
 
 namespace SeleniumFixture.xUnit.Impl
@@ -17,7 +15,7 @@ namespace SeleniumFixture.xUnit.Impl
     public class SeleniumTheoryTestCaseRunner : XunitTestCaseRunner
     {
         static readonly object[] NoArguments = new object[0];
-        static readonly System.Reflection.MethodInfo FreezeMethod;
+        static readonly MethodInfo FreezeMethod;
 
         static SeleniumTheoryTestCaseRunner()
         {
@@ -228,7 +226,7 @@ namespace SeleniumFixture.xUnit.Impl
                                 var closedFreezeMethod =
                                     FreezeMethod.MakeGenericMethod(lastObject.GetType());
 
-                                closedFreezeMethod.Invoke(null, new object[] { newFixture.Data, value, freeze.For });
+                                closedFreezeMethod.Invoke(null, new [] { newFixture.Data, value, freeze.For });
                             }
                             else if (initializerReturn != null && parameter.ParameterType == initializerReturn.GetType())
                             {

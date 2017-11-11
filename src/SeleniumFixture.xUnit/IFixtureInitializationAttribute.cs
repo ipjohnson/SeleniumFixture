@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 
 namespace SeleniumFixture.xUnit
 {
@@ -15,7 +10,8 @@ namespace SeleniumFixture.xUnit
         /// <summary>
         /// Provide fixture initializer
         /// </summary>
-        /// <param name="fixture">fixture</param>
+        /// <param name="testMethod">The test method</param>
+        /// <param name="fixture">The fixture</param>
         /// <returns></returns>
         object Initialize(MethodInfo testMethod, Fixture fixture);
     }

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SeleniumFixture.xUnit.Impl
 {
@@ -22,16 +20,16 @@ namespace SeleniumFixture.xUnit.Impl
         {
             List<T> returnList = new List<T>();
 
-            returnList.AddRange(methodInfo.GetCustomAttributes().Where(a => a is T).Select(a => a as T));
+            returnList.AddRange(methodInfo.GetCustomAttributes().OfType<T>());
 
             if(returnList.Count == 0)
             {
-                returnList.AddRange(methodInfo.DeclaringType.GetCustomAttributes().Where(a => a is T).Select(a => a as T));
+                returnList.AddRange(methodInfo.DeclaringType.GetCustomAttributes().OfType<T>());
             }
 
             if(returnList.Count == 0)
             {
-                returnList.AddRange(methodInfo.DeclaringType.Assembly.GetCustomAttributes().Where(a => a is T).Select(a => a as T));
+                returnList.AddRange(methodInfo.DeclaringType.Assembly.GetCustomAttributes().OfType<T>());
             }
 
             return returnList;

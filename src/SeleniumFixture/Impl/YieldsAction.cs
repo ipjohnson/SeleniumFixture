@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SimpleFixture;
 
 namespace SeleniumFixture.Impl
@@ -21,7 +17,7 @@ namespace SeleniumFixture.Impl
                 /// <summary>
         /// Yields a Page Object using SimpleFixture
         /// </summary>
-        /// <param name=ElementContants.TypeAttribute>Type of object to Generate</param>
+        /// <param name="type">Type of object to Generate</param>
         /// <param name="requestName">request name</param>
         /// <param name="constraints">constraints for the locate</param>
         /// <returns>new instance</returns>
