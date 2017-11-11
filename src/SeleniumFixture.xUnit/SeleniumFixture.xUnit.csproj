@@ -2,9 +2,12 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Selenium.Support" Version="3.7.0" />
+    <PackageReference Include="SimpleFixture" Version="3.0.2" />
     <PackageReference Include="xunit" Version="2.3.0" />
   </ItemGroup>
 
