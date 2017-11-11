@@ -134,13 +134,7 @@ namespace SeleniumFixture.xUnit.Impl
                         {
                             if (initializeDataAttribute is IMethodInfoAware)
                             {
-#if DNX
-                                var property = initializeDataAttribute.GetType().GetRuntimeProperty("Method");
-
-                                property.SetValue(initializeDataAttribute, runtimeMethod);
-#else
                                 ((IMethodInfoAware)initializeDataAttribute).Method = runtimeMethod;
-#endif
                             }
 
                             initializeDataAttribute.Initialize(newFixture.Data);
@@ -273,33 +267,13 @@ namespace SeleniumFixture.xUnit.Impl
 
         private XunitTestRunner CreateTestRunner(XunitTest test, IMessageBus messageBus, Type testClass, object[] constructorArguments, MethodInfo methodToRun, object[] convertedDataRow, string skipReason, IReadOnlyList<BeforeAfterTestAttribute> beforeAfterAttributes, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource)
         {
-#if DNX
-            var constructor = typeof(XunitTestRunner).GetConstructors().First(c => c.GetParameters().Count() == 10);
-            return (XunitTestRunner)constructor.Invoke(new object[] { test, MessageBus, TestClass, ConstructorArguments, methodToRun, convertedDataRow, skipReason, BeforeAfterAttributes, Aggregator, CancellationTokenSource });
-#else
             return new XunitTestRunner(test, MessageBus, TestClass, ConstructorArguments, methodToRun, convertedDataRow, skipReason, BeforeAfterAttributes, Aggregator, CancellationTokenSource);
-#endif
         }
 
         private void InitializeCustomAttribute(object attribute, MethodInfo runtimeMethod, ParameterInfo parameterInfo)
         {
             var parameterAware = attribute as IParameterInfoAware;
             var methodInfoAware = attribute as IMethodInfoAware;
-#if DNX            
-            if (methodInfoAware != null)
-            {
-                var property = methodInfoAware.GetType().GetRuntimeProperty("Method");
-
-                property.SetValue(methodInfoAware, runtimeMethod);
-            }
-
-            if(parameterAware != null)
-            {
-                var property = parameterAware.GetType().GetRuntimeProperty("Parameter");
-
-                property.SetValue(parameterAware, parameterInfo);
-            }
-#else
             if (methodInfoAware != null)
             {
                 methodInfoAware.Method = runtimeMethod;
@@ -308,8 +282,7 @@ namespace SeleniumFixture.xUnit.Impl
             if (parameterAware != null)
             {
                 parameterAware.Parameter = parameterInfo;
-            }     
-#endif
+            }
         }
 
         private void DisposeOfData(WebDriverAttribute driverAttribute, IWebDriver driver, Fixture newFixture, object[] dataRow)
@@ -338,13 +311,7 @@ namespace SeleniumFixture.xUnit.Impl
 
         private MethodInfo GetMethodInfo(IMethodInfo testMethod)
         {
-#if DNX
-            var toRuntimeMethod = typeof(ReflectionAbstractionExtensions).GetMethod("ToRuntimeMethod");
-
-            return (MethodInfo)toRuntimeMethod.Invoke(null, new object[] { testMethod });
-#else
             return testMethod.ToRuntimeMethod();
-#endif
         }
 
         RunSummary RunTest_DataDiscoveryException(Exception dataDiscoveryException)

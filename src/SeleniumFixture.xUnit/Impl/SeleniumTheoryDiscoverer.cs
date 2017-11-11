@@ -10,12 +10,8 @@ namespace SeleniumFixture.xUnit.Impl
         readonly IMessageSink diagnosticMessageSink;
 
         public const string ClassName = "SeleniumFixture.xUnit.Impl.SeleniumTheoryDiscoverer";
-
-#if DNX
-        public const string AssemblyName = "SeleniumFixture.xUnit.dnx";
-#else
+        
         public const string AssemblyName = "SeleniumFixture.xUnit";
-#endif
 
         public SeleniumTheoryDiscoverer(IMessageSink diagnosticMessageSink) 
         {
