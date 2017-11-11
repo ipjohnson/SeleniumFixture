@@ -1,5 +1,4 @@
 ﻿using SimpleFixture;
-using SimpleFixture.Impl;
 
 namespace SeleniumFixture
 {

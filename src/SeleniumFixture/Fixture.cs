@@ -3,13 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.PageObjects;
-using OpenQA.Selenium.Support.UI;
 using SeleniumFixture.Exceptions;
 using SeleniumFixture.Impl;
 using SimpleFixture;
@@ -504,7 +499,7 @@ namespace SeleniumFixture
         /// <summary>
         /// Yields a Page Object using SimpleFixture
         /// </summary>
-        /// <param name=ElementContants.TypeAttribute>Type of object to Generate</param>
+        /// <param name="type">Type of object to Generate</param>
         /// <param name="requestName">request name</param>
         /// <param name="constraints">constraints for the locate</param>
         /// <returns>new instance</returns>

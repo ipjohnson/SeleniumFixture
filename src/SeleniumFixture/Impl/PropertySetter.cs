@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using SimpleFixture.Impl;
 
 namespace SeleniumFixture.Impl
@@ -19,7 +14,7 @@ namespace SeleniumFixture.Impl
             var methods = propertyInfo.DeclaringType.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
 
             var method =
-                methods.FirstOrDefault(m => m.Name == "set_" + propertyInfo.Name && m.GetParameters().Count() == 1);
+                methods.FirstOrDefault(m => m.Name == "set_" + propertyInfo.Name && m.GetParameters().Length == 1);
 
             if (method != null)
             {

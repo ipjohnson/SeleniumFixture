@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
 using System.Linq;
 using System.Threading;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Interactions;
-using OpenQA.Selenium.Internal;
-using SimpleFixture;
 
 namespace SeleniumFixture.Impl
 {
@@ -716,7 +712,7 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public IActionProvider DoubleClick(params IWebElement[] elements)
         {
-            return DoubleClick((IEnumerable<IWebElement>)elements, ClickMode.ClickAny);
+            return DoubleClick(elements, ClickMode.ClickAny);
         }
         
         /// <summary>

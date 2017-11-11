@@ -1,17 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.Remote;
 using SeleniumFixture.xUnit.Impl;
-using Xunit;
-using Xunit.Abstractions;
-using Xunit.Sdk;
 
 namespace SeleniumFixture.xUnit
 {
@@ -39,12 +31,24 @@ namespace SeleniumFixture.xUnit
             }
             else
             {
+                var optionsProvider = ReflectionHelper.GetAttribute<FirefoxOptionsAttribute>(testMethod);
                 var provider = ReflectionHelper.GetAttribute<FirefoxProfileAttribute>(testMethod);
 
-
-                driver = new FirefoxDriver(provider != null ?
-                                         provider.CreateProfile(testMethod) :
-                                         new FirefoxProfile());
+                if (optionsProvider == null && provider == null)
+                {
+                    driver = new FirefoxDriver();
+                }
+                else if (optionsProvider != null)
+                {
+                    var options = optionsProvider.ProvideOptions(testMethod);
+                    var service = FirefoxDriverService.CreateDefaultService();
+                    driver = new FirefoxDriver(service, options, TimeSpan.FromSeconds(60));
+                }
+                else
+                {
+                    var profile = provider.CreateProfile(testMethod);
+                    driver = new FirefoxDriver(profile);
+                }
             }
 
             InitializeDriver(testMethod, driver);
