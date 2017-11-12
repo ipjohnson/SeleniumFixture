@@ -8,6 +8,11 @@ namespace SeleniumFixture.xUnit
 {
     public abstract class WebDriverAttribute : Attribute
     {
+        /// <summary>
+        /// The default command timeout for HTTP requests in a RemoteWebDriver instance.
+        /// </summary>
+        protected static readonly TimeSpan DefaultCommandTimeout = TimeSpan.FromSeconds(60);
+
         private class InternalStorageHelper<T> where T : IWebDriver
         {
             private static InternalStorageHelper<T> _instance;
@@ -101,6 +106,12 @@ namespace SeleniumFixture.xUnit
                 driver.Manage().Window.Maximize();
                 driver.Navigate().GoToUrl("about:blank");
             }
+        }
+
+        protected TimeSpan GetWebDriverCommandTimeout(MethodInfo method)
+        {
+            var commandTimeoutAttribute = ReflectionHelper.GetAttribute<WebDriverCommandTimeoutAttribute>(method);
+            return commandTimeoutAttribute?.Timeout ?? DefaultCommandTimeout;
         }
 
         protected T GetSharedInstance<T>(Func<T> createMethod) where T : IWebDriver

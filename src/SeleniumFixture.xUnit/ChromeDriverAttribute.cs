@@ -3,6 +3,7 @@ using OpenQA.Selenium.Chrome;
 using SeleniumFixture.xUnit.Impl;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace SeleniumFixture.xUnit
 {
@@ -18,7 +19,7 @@ namespace SeleniumFixture.xUnit
             ReturnDriver(testMethod, driver as ChromeDriver);
         }
 
-        public static ChromeDriver CreateWebDriver(MethodInfo testMethod)
+        private ChromeDriver CreateWebDriver(MethodInfo testMethod)
         {
             ChromeDriver driver = null;
 
@@ -32,7 +33,11 @@ namespace SeleniumFixture.xUnit
             {
                 var optionsProvider = ReflectionHelper.GetAttribute<ChromeOptionsAttribute>(testMethod);
 
-                driver = new ChromeDriver(optionsProvider != null ? optionsProvider.ProvideOptions(testMethod) : new ChromeOptions());
+                var service = ChromeDriverService.CreateDefaultService();
+                var options = optionsProvider != null ? optionsProvider.ProvideOptions(testMethod) : new ChromeOptions();
+                var commandTimeout = this.GetWebDriverCommandTimeout(testMethod);
+
+                driver = new ChromeDriver(service, options, commandTimeout);
             }
 
             InitializeDriver(testMethod, driver);
