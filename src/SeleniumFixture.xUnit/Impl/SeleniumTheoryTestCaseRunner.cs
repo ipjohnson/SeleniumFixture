@@ -340,9 +340,7 @@ namespace SeleniumFixture.xUnit.Impl
 
                     if (property != null)
                     {
-                        var capabilities = property.GetValue(driver) as ICapabilities;
-
-                        if (capabilities != null)
+                        if (property.GetValue(driver) is ICapabilities capabilities)
                         {
                             returnString += string.Format(" {0} {1}", capabilities.BrowserName, capabilities.Version);
                         }
