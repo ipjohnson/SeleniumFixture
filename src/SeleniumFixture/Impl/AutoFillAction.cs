@@ -210,9 +210,7 @@ namespace SeleniumFixture.Impl
 
             if (!string.IsNullOrEmpty(name))
             {
-                List<IWebElement> radioButtonGroup;
-
-                if (!radioButtons.TryGetValue(name, out radioButtonGroup))
+                if (!radioButtons.TryGetValue(name, out var radioButtonGroup))
                 {
                     radioButtonGroup = new List<IWebElement>();
 
@@ -225,13 +223,13 @@ namespace SeleniumFixture.Impl
 
         protected virtual string GetStringFromValue(object stringObject)
         {
-            if (stringObject is string)
+            if (stringObject is string s)
             {
-                return stringObject as string;
+                return s;
             }
-            if (stringObject is DateTime)
+            if (stringObject is DateTime date)
             {
-                return ((DateTime)stringObject).ToString("MM/dd/yyyy");
+                return date.ToString("MM/dd/yyyy");
             }
 
             if (stringObject is Enum)

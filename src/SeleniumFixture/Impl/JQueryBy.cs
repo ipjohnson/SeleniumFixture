@@ -60,9 +60,7 @@ namespace SeleniumFixture.Impl
 
         protected virtual ReadOnlyCollection<IWebElement> FindElementsOnElement(IWrapsDriver wrapsDriver)
         {
-            var executor = wrapsDriver.WrappedDriver as IJavaScriptExecutor;
-
-            if (executor == null)
+            if (!(wrapsDriver.WrappedDriver is IJavaScriptExecutor executor))
             {
                 throw new Exception("IWrapsDriver does not implement IJavaScriptExecutor");
             }

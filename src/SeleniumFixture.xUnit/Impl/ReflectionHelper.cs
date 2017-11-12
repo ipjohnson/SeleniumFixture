@@ -16,7 +16,7 @@ namespace SeleniumFixture.xUnit.Impl
             return returnAttribute as T;
         }
 
-        public static IEnumerable<T> GetAttributes<T>(MethodInfo methodInfo) where T : class
+        public static List<T> GetAttributes<T>(MethodInfo methodInfo) where T : class
         {
             var returnList = new List<T>();
 

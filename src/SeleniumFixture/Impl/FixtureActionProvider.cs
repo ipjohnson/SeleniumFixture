@@ -319,9 +319,7 @@ namespace SeleniumFixture.Impl
         /// <exception cref="System.Exception">Javascript not supported by driver  + _fixture.Driver</exception>
         public virtual T ExecuteJavaScript<T>(string javascript, params object[] args)
         {
-            var executor = _fixture.Driver as IJavaScriptExecutor;
-
-            if (executor == null)
+            if (!(_fixture.Driver is IJavaScriptExecutor executor))
             {
                 throw new Exception("Javascript not supported by driver " + _fixture.Driver);
             }
@@ -361,9 +359,7 @@ namespace SeleniumFixture.Impl
         /// <exception cref="System.Exception">Javascript not supported by driver  + _fixture.Driver</exception>
         public virtual void ExecuteJavaScript(string javascript, params object[] args)
         {
-            var executor = _fixture.Driver as IJavaScriptExecutor;
-
-            if (executor == null)
+            if (!(_fixture.Driver is IJavaScriptExecutor executor))
             {
                 throw new Exception("Javascript not supported by driver " + _fixture.Driver);
             }

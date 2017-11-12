@@ -80,14 +80,11 @@ namespace SeleniumFixture.Impl
                 executor = ((IWrapsDriver)context).WrappedDriver as IJavaScriptExecutor;
             }
 
-            if (executor != null)
-            {
-                var returnValue = executor.ExecuteScript(jQueryTest);
+            var returnValue = executor?.ExecuteScript(jQueryTest);
 
-                if (returnValue is bool)
-                {
-                    return (bool)returnValue;
-                }
+            if (returnValue is bool b)
+            {
+                return b;
             }
 
             return false;

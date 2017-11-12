@@ -132,9 +132,9 @@ namespace SeleniumFixture.xUnit.Impl
 
                         foreach (var initializeDataAttribute in initializeDataAttributes)
                         {
-                            if (initializeDataAttribute is IMethodInfoAware)
+                            if (initializeDataAttribute is IMethodInfoAware aware)
                             {
-                                ((IMethodInfoAware)initializeDataAttribute).Method = runtimeMethod;
+                                aware.Method = runtimeMethod;
                             }
 
                             initializeDataAttribute.Initialize(newFixture.Data);
@@ -289,16 +289,11 @@ namespace SeleniumFixture.xUnit.Impl
 
             var finalizeAttribute = ReflectionHelper.GetAttribute<IFixtureFinalizerAttribute>(runtimeMethod);
 
-            if (finalizeAttribute != null)
-            {
-                finalizeAttribute.IFixtureFinalizerAttribute(runtimeMethod, newFixture);
-            }
+            finalizeAttribute?.IFixtureFinalizerAttribute(runtimeMethod, newFixture);
 
             foreach (var data in dataRow)
             {
-                var disposable = data as IDisposable;
-
-                if (disposable != null)
+                if (data is IDisposable disposable)
                 {
                     disposable.Dispose();
                 }
@@ -368,9 +363,7 @@ namespace SeleniumFixture.xUnit.Impl
 
                 if (property != null)
                 {
-                    var capabilities = property.GetValue(driver) as ICapabilities;
-
-                    if (capabilities != null)
+                    if (property.GetValue(driver) is ICapabilities capabilities)
                     {
                         returnString += string.Format(" {0} {1}", capabilities.BrowserName, capabilities.Version);
                     }
