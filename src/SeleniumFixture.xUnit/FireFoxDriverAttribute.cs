@@ -31,23 +31,25 @@ namespace SeleniumFixture.xUnit
             }
             else
             {
-                var optionsProvider = ReflectionHelper.GetAttribute<FirefoxOptionsAttribute>(testMethod);
-                var provider = ReflectionHelper.GetAttribute<FirefoxProfileAttribute>(testMethod);
+                var profileProvider = ReflectionHelper.GetAttribute<FirefoxProfileAttribute>(testMethod);
+                if (profileProvider != null)
+                {
+                    // depreicated provider
+                    var binary = new FirefoxBinary();
+                    var profile = profileProvider.CreateProfile(testMethod);
+                    var commandTimeout = GetWebDriverCommandTimeout(testMethod);
 
-                if (optionsProvider == null && provider == null)
-                {
-                    driver = new FirefoxDriver();
-                }
-                else if (optionsProvider != null)
-                {
-                    var options = optionsProvider.ProvideOptions(testMethod);
-                    var service = FirefoxDriverService.CreateDefaultService();
-                    driver = new FirefoxDriver(service, options, TimeSpan.FromSeconds(60));
+                    driver = new FirefoxDriver(binary, profile, commandTimeout);
                 }
                 else
                 {
-                    var profile = provider.CreateProfile(testMethod);
-                    driver = new FirefoxDriver(profile);
+                    var optionsProvider = ReflectionHelper.GetAttribute<FirefoxOptionsAttribute>(testMethod);
+
+                    var service = FirefoxDriverService.CreateDefaultService();
+                    var options = optionsProvider != null ? optionsProvider.ProvideOptions(testMethod) : new FirefoxOptions();
+                    var commandTimeout = GetWebDriverCommandTimeout(testMethod);
+
+                    driver = new FirefoxDriver(service, options, commandTimeout);
                 }
             }
 
