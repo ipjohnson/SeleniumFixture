@@ -50,10 +50,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Navigate the fixture
         /// </summary>
-        public virtual INavigateAction Navigate
-        {
-            get { return _fixture.Data.Locate<INavigateAction>(); }
-        }
+        public virtual INavigateAction Navigate => _fixture.Data.Locate<INavigateAction>();
 
         /// <summary>
         /// Find a specified element by selector
@@ -179,10 +176,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Get values from page
         /// </summary>
-        public virtual IGetAction Get
-        {
-            get { return _fixture.Data.Locate<IGetAction>(); }
-        }
+        public virtual IGetAction Get => _fixture.Data.Locate<IGetAction>();
 
         /// <summary>
         /// Checks for element.
@@ -502,10 +496,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Wait for something to happen
         /// </summary>
-        public virtual IWaitAction Wait
-        {
-            get { return _fixture.Data.Locate<IWaitAction>(); }
-        }
+        public virtual IWaitAction Wait => _fixture.Data.Locate<IWaitAction>();
 
         /// <summary>
         /// Send the value to a particular element or set of elements
@@ -574,10 +565,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Switch to
         /// </summary>
-        public virtual ISwitchToAction SwitchTo
-        {
-            get { return new SwitchAction(this); }
-        }
+        public virtual ISwitchToAction SwitchTo => new SwitchAction(this);
 
         /// <summary>
         /// Take a screen shot using the current driver.
@@ -595,10 +583,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Fixture for this action provider
         /// </summary>
-        public virtual Fixture UsingFixture
-        {
-            get { return _fixture; }
-        }
+        public virtual Fixture UsingFixture => _fixture;
 
         /// <summary>
         /// Yields a Page Object using SimpleFixture

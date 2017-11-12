@@ -89,10 +89,7 @@ namespace SeleniumFixture
         /// <summary>
         /// Navigate the fixture
         /// </summary>
-        public INavigateAction Navigate
-        {
-            get { return _actionProvider.Navigate; }
-        }
+        public INavigateAction Navigate => _actionProvider.Navigate;
 
         /// <summary>
         /// Find a specified element by selector
@@ -167,10 +164,7 @@ namespace SeleniumFixture
         /// <summary>
         /// Get values from a web element
         /// </summary>
-        public IGetAction Get
-        {
-            get { return _actionProvider.Get; }
-        }
+        public IGetAction Get => _actionProvider.Get;
 
         /// <summary>
         /// Check for the element specified in the selector
@@ -421,10 +415,7 @@ namespace SeleniumFixture
         /// <summary>
         /// Wait for something to happen
         /// </summary>
-        public IWaitAction Wait
-        {
-            get { return _actionProvider.Wait; }
-        }
+        public IWaitAction Wait => _actionProvider.Wait;
 
         /// <summary>
         /// Send the value to a particular element or set of elements
@@ -459,10 +450,7 @@ namespace SeleniumFixture
         /// <summary>
         /// Switch to
         /// </summary>
-        public ISwitchToAction SwitchTo
-        {
-            get { return _actionProvider.SwitchTo; }
-        }
+        public ISwitchToAction SwitchTo => _actionProvider.SwitchTo;
 
         /// <summary>
         /// Take a screen shot of the driver
@@ -479,10 +467,7 @@ namespace SeleniumFixture
         /// <summary>
         /// Fixture for this action provider
         /// </summary>
-        public Fixture UsingFixture
-        {
-            get { return _actionProvider.UsingFixture; }
-        }
+        public Fixture UsingFixture => _actionProvider.UsingFixture;
 
         /// <summary>
         /// Yields a Page Object using SimpleFixture

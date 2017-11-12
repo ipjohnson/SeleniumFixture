@@ -134,18 +134,12 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Title on the page
         /// </summary>
-        public virtual string PageTitle
-        {
-            get { return _actionProvider.UsingFixture.Driver.Title; }
-        }
+        public virtual string PageTitle => _actionProvider.UsingFixture.Driver.Title;
 
         /// <summary>
         /// Url for the page
         /// </summary>
-        public virtual string PageUrl
-        {
-            get { return _actionProvider.UsingFixture.Driver.Url; }
-        }
+        public virtual string PageUrl => _actionProvider.UsingFixture.Driver.Url;
 
         /// <summary>
         /// Size property from a specific element
@@ -158,10 +152,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Source for the page
         /// </summary>
-        public virtual string PageSource
-        {
-            get { return _actionProvider.UsingFixture.Driver.PageSource; }
-        }
+        public virtual string PageSource => _actionProvider.UsingFixture.Driver.PageSource;
 
         /// <summary>
         /// Get the value for a specified element
@@ -198,10 +189,7 @@ namespace SeleniumFixture.Impl
         /// <summary>
         /// Alert text, will throw exception if there are no alerts
         /// </summary>
-        public virtual string AlertText
-        {
-            get { return _actionProvider.UsingFixture.Driver.SwitchTo().Alert().Text; }
-        }
+        public virtual string AlertText => _actionProvider.UsingFixture.Driver.SwitchTo().Alert().Text;
 
         /// <summary>
         /// Get an attribute for a specified element
