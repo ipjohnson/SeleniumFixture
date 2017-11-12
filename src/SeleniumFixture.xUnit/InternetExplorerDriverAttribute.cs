@@ -33,9 +33,11 @@ namespace SeleniumFixture.xUnit
             {
                 var optionsProvider = ReflectionHelper.GetAttribute<InternetExplorerOptionsAttribute>(testMethod);
 
-                driver = new InternetExplorerDriver(optionsProvider != null ?
-                                                  optionsProvider.ProvideOptions(testMethod) :
-                                                  new InternetExplorerOptions {  IgnoreZoomLevel = true });
+                var service = InternetExplorerDriverService.CreateDefaultService();
+                var options = optionsProvider != null ? optionsProvider.ProvideOptions(testMethod) : new InternetExplorerOptions { IgnoreZoomLevel = true };
+                var commandTimeout = GetWebDriverCommandTimeout(testMethod);
+
+                driver = new InternetExplorerDriver(service, options, commandTimeout);
             }
 
             InitializeDriver(testMethod, driver);

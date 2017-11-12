@@ -116,7 +116,10 @@ namespace SeleniumFixture.xUnit
 
         public static IWebDriver CreateWebDriverInstance(MethodInfo testMethod, string hub, DesiredCapabilities capabilities)
         {
-            var driver = string.IsNullOrEmpty(hub) ? new RemoteWebDriver(capabilities) : new RemoteWebDriver(new Uri(hub), capabilities);
+            var commandTimeout = GetWebDriverCommandTimeout(testMethod);
+
+            // there is no overload that takes commandTimeout unless you provide a hub
+            var driver = string.IsNullOrEmpty(hub) ? new RemoteWebDriver(capabilities) : new RemoteWebDriver(new Uri(hub), capabilities, commandTimeout);
 
             InitializeDriver(testMethod, driver);
 

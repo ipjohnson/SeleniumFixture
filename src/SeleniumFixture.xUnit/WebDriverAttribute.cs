@@ -108,7 +108,7 @@ namespace SeleniumFixture.xUnit
             }
         }
 
-        protected TimeSpan GetWebDriverCommandTimeout(MethodInfo method)
+        protected static TimeSpan GetWebDriverCommandTimeout(MethodInfo method)
         {
             var commandTimeoutAttribute = ReflectionHelper.GetAttribute<WebDriverCommandTimeoutAttribute>(method);
             return commandTimeoutAttribute?.Timeout ?? DefaultCommandTimeout;
