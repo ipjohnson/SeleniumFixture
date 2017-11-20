@@ -46,7 +46,10 @@ namespace SeleniumFixture.xUnit
 
             if (providerAttribute != null)
             {
-               yield return providerAttribute.ProvideDriver(testMethod, Capability);
+                foreach (var webDriver in providerAttribute.ProvideDriver(testMethod, Capability))
+                {
+                    yield return webDriver;
+                }
             }
             else
             {
