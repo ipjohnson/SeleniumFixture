@@ -32,7 +32,11 @@ namespace SeleniumFixture.xUnit
             {
                 var optionsProvider = ReflectionHelper.GetAttribute<ChromeOptionsAttribute>(testMethod);
 
-                driver = new ChromeDriver(optionsProvider != null ? optionsProvider.ProvideOptions(testMethod) : new ChromeOptions());
+                var service = ChromeDriverService.CreateDefaultService();
+                var options = optionsProvider != null ? optionsProvider.ProvideOptions(testMethod) : new ChromeOptions();
+                var commandTimeout = GetWebDriverCommandTimeout(testMethod);
+
+                driver = new ChromeDriver(service, options, commandTimeout);
             }
 
             InitializeDriver(testMethod, driver);

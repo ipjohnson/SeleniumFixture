@@ -32,7 +32,11 @@ namespace SeleniumFixture.xUnit
             {
                 var optionsProvider = ReflectionHelper.GetAttribute<EdgeOptionsAttribute>(testMethod);
 
-                driver = new EdgeDriver(optionsProvider != null ? optionsProvider.ProvideOptions(testMethod) : new EdgeOptions());
+                var service = EdgeDriverService.CreateDefaultService();
+                var options = optionsProvider != null ? optionsProvider.ProvideOptions(testMethod) : new EdgeOptions();
+                var commandTimeout = GetWebDriverCommandTimeout(testMethod);
+
+                driver = new EdgeDriver(service, options, commandTimeout);
             }
 
             InitializeDriver(testMethod, driver);
