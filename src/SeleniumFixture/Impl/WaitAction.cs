@@ -91,7 +91,7 @@ namespace SeleniumFixture.Impl
     /// </summary>
     public class WaitAction : IWaitAction
     {
-        protected readonly IActionProvider _actionProvider;
+        protected readonly IActionProvider ActionProvider;
 
         /// <summary>
         /// Default constructor
@@ -99,8 +99,8 @@ namespace SeleniumFixture.Impl
         /// <param name="actionProvider"></param>
         public WaitAction(IActionProvider actionProvider)
         {
-            _actionProvider = actionProvider;
-            Then = _actionProvider;
+            ActionProvider = actionProvider;
+            Then = ActionProvider;
         }
 
         /// <summary>
@@ -126,9 +126,9 @@ namespace SeleniumFixture.Impl
                 i =>
                 {
                     // static cast because I want an exception to be thrown when the driver doesn't support executing javascript
-                    var executor = (IJavaScriptExecutor)_actionProvider.UsingFixture.Driver;
+                    var executor = (IJavaScriptExecutor)ActionProvider.UsingFixture.Driver;
 
-                    return (bool)executor.ExecuteScript(_actionProvider.UsingFixture.Configuration.AjaxActiveTest);
+                    return (bool)executor.ExecuteScript(ActionProvider.UsingFixture.Configuration.AjaxActiveTest);
                 }, timeout)
                 .For(0.1);
         }
@@ -209,19 +209,19 @@ namespace SeleniumFixture.Impl
         {
             if (!timeout.HasValue)
             {
-                timeout = _actionProvider.UsingFixture.Configuration.DefaultTimeout;
+                timeout = ActionProvider.UsingFixture.Configuration.DefaultTimeout;
             }
 
             var expire = DateTime.Now.AddSeconds(timeout.Value);
             var untilResult = false;
 
-            var defaultWaitIntercal = (int)(_actionProvider.UsingFixture.Configuration.DefaultWaitInterval * 1000);
+            var defaultWaitIntercal = (int)(ActionProvider.UsingFixture.Configuration.DefaultWaitInterval * 1000);
 
             while (!untilResult)
             {
                 Thread.Sleep(defaultWaitIntercal);
 
-                untilResult = testFunc(_actionProvider);
+                untilResult = testFunc(ActionProvider);
 
                 if (DateTime.Now > expire)
                 {

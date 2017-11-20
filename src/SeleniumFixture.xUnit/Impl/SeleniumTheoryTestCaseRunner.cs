@@ -22,8 +22,8 @@ namespace SeleniumFixture.xUnit.Impl
             FreezeMethod = typeof(SeleniumTheoryTestCaseRunner).GetMethod("FreezeValue");
         }
 
-        readonly ExceptionAggregator cleanupAggregator = new ExceptionAggregator();
-        readonly IMessageSink diagnosticMessageSink;
+        readonly ExceptionAggregator _cleanupAggregator = new ExceptionAggregator();
+        readonly IMessageSink _diagnosticMessageSink;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XunitTheoryTestCaseRunner"/> class.
@@ -46,7 +46,7 @@ namespace SeleniumFixture.xUnit.Impl
                                          CancellationTokenSource cancellationTokenSource)
             : base(testCase, displayName, skipReason, constructorArguments, NoArguments, messageBus, aggregator, cancellationTokenSource)
         {
-            this.diagnosticMessageSink = diagnosticMessageSink;
+            this._diagnosticMessageSink = diagnosticMessageSink;
         }
 
         /// <inheritdoc/>
@@ -58,7 +58,7 @@ namespace SeleniumFixture.xUnit.Impl
         /// <inheritdoc/>
         protected override Task BeforeTestCaseFinishedAsync()
         {
-            Aggregator.Aggregate(cleanupAggregator);
+            Aggregator.Aggregate(_cleanupAggregator);
 
             return base.BeforeTestCaseFinishedAsync();
         }
@@ -82,7 +82,7 @@ namespace SeleniumFixture.xUnit.Impl
                         var discovererAttribute = dataAttribute.GetCustomAttributes(typeof(DataDiscovererAttribute)).First();
                         var args = discovererAttribute.GetConstructorArguments().Cast<string>().ToList();
                         var discovererType = SerializationHelper.GetType(args[1], args[0]);
-                        var discoverer = ExtensibilityPointFactory.GetDataDiscoverer(diagnosticMessageSink, discovererType);
+                        var discoverer = ExtensibilityPointFactory.GetDataDiscoverer(_diagnosticMessageSink, discovererType);
 
                         foreach (var dataRow in discoverer.GetData(dataAttribute, TestCase.TestMethod.Method))
                         {
@@ -289,7 +289,7 @@ namespace SeleniumFixture.xUnit.Impl
 
             var finalizeAttribute = ReflectionHelper.GetAttribute<IFixtureFinalizerAttribute>(runtimeMethod);
 
-            finalizeAttribute?.IFixtureFinalizerAttribute(runtimeMethod, newFixture);
+            finalizeAttribute?.FixtureFinalizerAttribute(runtimeMethod, newFixture);
 
             foreach (var data in dataRow)
             {

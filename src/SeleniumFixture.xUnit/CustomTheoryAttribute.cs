@@ -8,16 +8,16 @@ namespace SeleniumFixture.xUnit
 {
     public class CustomTheoryDiscoverer : IXunitTestCaseDiscoverer
     {
-        readonly IMessageSink diagnosticMessageSink;
+        readonly IMessageSink _diagnosticMessageSink;
 
         public CustomTheoryDiscoverer(IMessageSink diagnosticMessageSink)
         {
-            this.diagnosticMessageSink = diagnosticMessageSink;
+            this._diagnosticMessageSink = diagnosticMessageSink;
         }
 
         public IEnumerable<IXunitTestCase> Discover(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, IAttributeInfo factAttribute)
         {
-            yield return new XunitTheoryTestCase(diagnosticMessageSink, discoveryOptions.MethodDisplayOrDefault(), testMethod);
+            yield return new XunitTheoryTestCase(_diagnosticMessageSink, discoveryOptions.MethodDisplayOrDefault(), testMethod);
         }
     }
 

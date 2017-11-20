@@ -18,13 +18,13 @@ namespace SeleniumFixture.Impl
 
     public class DoubleClickAction : IDoubleClickAction
     {
-        protected readonly IActionProvider _actionProvider;
-        protected readonly Fixture _fixture;
+        protected readonly IActionProvider ActionProvider;
+        protected readonly Fixture Fixture;
 
         public DoubleClickAction(IActionProvider actionProvider)
         {
-            _actionProvider = actionProvider;
-            _fixture = _actionProvider.UsingFixture;
+            ActionProvider = actionProvider;
+            Fixture = ActionProvider.UsingFixture;
         }
 
         public IActionProvider DoubleClick(IEnumerable<IWebElement> elements, ClickMode clickMode = ClickMode.ClickAll)
@@ -37,7 +37,7 @@ namespace SeleniumFixture.Impl
                 case ClickMode.ClickAll:
                     elements.Apply(allElement =>
                     {
-                        action = new Actions(_fixture.Driver);
+                        action = new Actions(Fixture.Driver);
                         action.DoubleClick(allElement);
                         action.Perform();
                         found = true;
@@ -51,7 +51,7 @@ namespace SeleniumFixture.Impl
                 case ClickMode.ClickAny:
                     elements.Apply(anyElement =>
                     {
-                        action = new Actions(_fixture.Driver);
+                        action = new Actions(Fixture.Driver);
                         action.DoubleClick(anyElement);
                         action.Perform();
                         found = true;
@@ -60,7 +60,7 @@ namespace SeleniumFixture.Impl
                 case ClickMode.ClickFirst:
                     var firstElement = elements.First();
 
-                    action = new Actions(_fixture.Driver);
+                    action = new Actions(Fixture.Driver);
                     action.DoubleClick(firstElement);
                     action.Perform();
                     break;
@@ -69,14 +69,14 @@ namespace SeleniumFixture.Impl
                     if(oneElement != null)
 
                     {
-                        action = new Actions(_fixture.Driver);
+                        action = new Actions(Fixture.Driver);
                         action.DoubleClick(oneElement);
                         action.Perform();
                     }
                     break;
             }
 
-            var configuration = _fixture.Configuration;
+            var configuration = Fixture.Configuration;
 
             var waitTime = (int)(configuration.FixtureImplicitWait * 1000);
 
@@ -85,7 +85,7 @@ namespace SeleniumFixture.Impl
                 Thread.Sleep(waitTime);
             }
 
-            return configuration.AlwaysWaitForAjax ? _fixture.Wait.ForAjax().Then : _actionProvider;
+            return configuration.AlwaysWaitForAjax ? Fixture.Wait.ForAjax().Then : ActionProvider;
         }
 
         public virtual IActionProvider DoubleClick(string selector, ClickMode clickMode = ClickMode.ClickAll)
@@ -94,9 +94,9 @@ namespace SeleniumFixture.Impl
             {
                 case ClickMode.ClickOne:
                     {
-                        var element = _actionProvider.FindElement(selector);
+                        var element = ActionProvider.FindElement(selector);
 
-                        var action = new Actions(_fixture.Driver);
+                        var action = new Actions(Fixture.Driver);
                         action.DoubleClick(element);
                         action.Perform();
                     }
@@ -104,9 +104,9 @@ namespace SeleniumFixture.Impl
 
                 case ClickMode.ClickAny:
                     {
-                        _actionProvider.FindElements(selector).Apply(element =>
+                        ActionProvider.FindElements(selector).Apply(element =>
                         {
-                            var action = new Actions(_fixture.Driver);
+                            var action = new Actions(Fixture.Driver);
                             action.DoubleClick(element);
                             action.Perform();
                         });
@@ -114,7 +114,7 @@ namespace SeleniumFixture.Impl
                     break;
                 case ClickMode.ClickAll:
                     {
-                        var all = _actionProvider.FindElements(selector);
+                        var all = ActionProvider.FindElements(selector);
 
                         if (all.Count == 0)
                         {
@@ -123,7 +123,7 @@ namespace SeleniumFixture.Impl
 
                         all.Apply(element =>
                         {
-                            var action = new Actions(_fixture.Driver);
+                            var action = new Actions(Fixture.Driver);
                             action.DoubleClick(element);
                             action.Perform();
                         });
@@ -132,21 +132,21 @@ namespace SeleniumFixture.Impl
 
                 case ClickMode.ClickFirst:
                     {
-                        var firstList = _actionProvider.FindElements(selector);
+                        var firstList = ActionProvider.FindElements(selector);
 
                         if (firstList.Count == 0)
                         {
                             throw new Exception("Could not locate any using selector: " + selector);
                         }
 
-                        var action = new Actions(_fixture.Driver);
+                        var action = new Actions(Fixture.Driver);
                         action.DoubleClick(firstList[0]);
                         action.Perform();
                     }
                     break;
             }
 
-            var configuration = _fixture.Configuration;
+            var configuration = Fixture.Configuration;
 
             var waitTime = (int)(configuration.FixtureImplicitWait * 1000);
 
@@ -155,7 +155,7 @@ namespace SeleniumFixture.Impl
                 Thread.Sleep(waitTime);
             }
 
-            return configuration.AlwaysWaitForAjax ? _fixture.Wait.ForAjax().Then : _actionProvider;
+            return configuration.AlwaysWaitForAjax ? Fixture.Wait.ForAjax().Then : ActionProvider;
         }
 
         public virtual IActionProvider DoubleClick(By selector, ClickMode clickMode = ClickMode.ClickAll)
@@ -164,9 +164,9 @@ namespace SeleniumFixture.Impl
             {
                 case ClickMode.ClickOne:
                     {
-                        var element = _actionProvider.FindElement(selector);
+                        var element = ActionProvider.FindElement(selector);
 
-                        var action = new Actions(_fixture.Driver);
+                        var action = new Actions(Fixture.Driver);
                         action.DoubleClick(element);
                         action.Perform();
                     }
@@ -174,9 +174,9 @@ namespace SeleniumFixture.Impl
 
                 case ClickMode.ClickAny:
                     {
-                        _actionProvider.FindElements(selector).Apply(element =>
+                        ActionProvider.FindElements(selector).Apply(element =>
                         {
-                            var action = new Actions(_fixture.Driver);
+                            var action = new Actions(Fixture.Driver);
                             action.DoubleClick(element);
                             action.Perform();
                         });
@@ -186,7 +186,7 @@ namespace SeleniumFixture.Impl
                     break;
                 case ClickMode.ClickAll:
                     {
-                        var all = _actionProvider.FindElements(selector);
+                        var all = ActionProvider.FindElements(selector);
 
                         if (all.Count == 0)
                         {
@@ -195,7 +195,7 @@ namespace SeleniumFixture.Impl
 
                         all.Apply(element =>
                         {
-                            var action = new Actions(_fixture.Driver);
+                            var action = new Actions(Fixture.Driver);
                             action.DoubleClick(element);
                             action.Perform();
                         });
@@ -204,21 +204,21 @@ namespace SeleniumFixture.Impl
 
                 case ClickMode.ClickFirst:
                     {
-                        var firstList = _actionProvider.FindElements(selector);
+                        var firstList = ActionProvider.FindElements(selector);
 
                         if (firstList.Count == 0)
                         {
                             throw new Exception("Could not locate any using selector: " + selector);
                         }
 
-                        var action = new Actions(_fixture.Driver);
+                        var action = new Actions(Fixture.Driver);
                         action.DoubleClick(firstList[0]);
                         action.Perform();
                     }
                     break;
             }
 
-            var configuration = _fixture.Configuration;
+            var configuration = Fixture.Configuration;
 
             var waitTime = (int)(configuration.FixtureImplicitWait * 1000);
 
@@ -227,7 +227,7 @@ namespace SeleniumFixture.Impl
                 Thread.Sleep(waitTime);
             }
 
-            return configuration.AlwaysWaitForAjax ? _fixture.Wait.ForAjax().Then : _actionProvider;
+            return configuration.AlwaysWaitForAjax ? Fixture.Wait.ForAjax().Then : ActionProvider;
         }
     }
 }

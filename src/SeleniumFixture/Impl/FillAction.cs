@@ -21,27 +21,27 @@ namespace SeleniumFixture.Impl
 
     public class FillAction : IFillAction
     {
-        protected readonly bool _jQueryEnabled;
-        protected readonly Fixture _fixture;
-        protected readonly ReadOnlyCollection<IWebElement> _elements;
+        protected readonly bool JQueryEnabled;
+        protected readonly Fixture Fixture;
+        protected readonly ReadOnlyCollection<IWebElement> Elements;
 
         public FillAction(ReadOnlyCollection<IWebElement> elements, Fixture fixture)
         {
-            _fixture = fixture;
-            _elements = elements;
-            _jQueryEnabled = elements.Count != 0 && AutoBy.IsJavaScriptEnabled(elements[0]);
+            Fixture = fixture;
+            Elements = elements;
+            JQueryEnabled = elements.Count != 0 && AutoBy.IsJavaScriptEnabled(elements[0]);
         }
 
         public virtual IThenSubmitAction With(object fillValues)
         {
             FillElementsWithValues(fillValues);
 
-            return new ThenSubmitAction(_fixture, _elements.FirstOrDefault());
+            return new ThenSubmitAction(Fixture, Elements.FirstOrDefault());
         }
 
         protected virtual void FillElementsWithValues(object fillValues)
         {
-            foreach (var webElement in _elements)
+            foreach (var webElement in Elements)
             {
                 FillElementWithValues(webElement, fillValues);
             }

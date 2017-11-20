@@ -23,11 +23,11 @@
     /// </summary>
     public class AlertAction : IAlertAction
     {
-        protected readonly IActionProvider _actionProvider;
+        protected readonly IActionProvider ActionProvider;
 
         public AlertAction(IActionProvider actionProvider)
         {
-            _actionProvider = actionProvider;
+            ActionProvider = actionProvider;
         }
 
         /// <summary>
@@ -36,9 +36,9 @@
         /// <returns>action provider</returns>
         public virtual IActionProvider Accept()
         {
-            _actionProvider.UsingFixture.Driver.SwitchTo().Alert().Accept();
+            ActionProvider.UsingFixture.Driver.SwitchTo().Alert().Accept();
 
-            return _actionProvider;
+            return ActionProvider;
         }
 
         /// <summary>
@@ -47,9 +47,9 @@
         /// <returns>action provider</returns>
         public virtual IActionProvider Dismiss()
         {
-            _actionProvider.UsingFixture.Driver.SwitchTo().Alert().Dismiss();
+            ActionProvider.UsingFixture.Driver.SwitchTo().Alert().Dismiss();
 
-            return _actionProvider;
+            return ActionProvider;
         }
     }
 }

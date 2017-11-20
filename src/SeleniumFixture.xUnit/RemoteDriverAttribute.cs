@@ -17,13 +17,13 @@ namespace SeleniumFixture.xUnit
         [Obsolete("Use the FirefoxOptions class to set capabilities for use with Firefox. For use with the Java remote server or grid, use the ToCapabilites method of the FirefoxOptions class.")]
         FireFox = 4,
         HtmlUnit = 8,
-        HtmlUnitWithJS = 16,
+        HtmlUnitWithJs = 16,
         [Obsolete("Use the InternetExplorerOptions class to set capabilities for use with Internet Explorer. For use with the Java remote server or grid, use the ToCapabilites method of the InternetExplorerOptions class.")]
         InternetExplorer = 32,
         [Obsolete("Selenium no longer provides an iOS device driver.")]
-        IPhone = 64,
+        Phone = 64,
         [Obsolete("Selenium no longer provides an iOS device driver.")]
-        IPad = 128,
+        Pad = 128,
         [Obsolete("Use the SafariOptions class to set capabilities for use with Safari. For use with the Java remote server or grid, use the ToCapabilites method of the SafariOptions class.")]
         Safari = 256,
         MajorFour = FireFox | InternetExplorer | Chrome | Safari,
@@ -46,12 +46,10 @@ namespace SeleniumFixture.xUnit
 
             if (providerAttribute != null)
             {
-                //return providerAttribute.ProvideDriver(testMethod, Capability);
+               yield return providerAttribute.ProvideDriver(testMethod, Capability);
             }
             else
             {
-
-
                 yield return CreateWebDriver(testMethod, Capability, Hub);
             }
         }
@@ -84,16 +82,16 @@ namespace SeleniumFixture.xUnit
                 case RemoteWebDriverCapability.HtmlUnit:
                     capabilities = DesiredCapabilities.HtmlUnit();
                     break;
-                case RemoteWebDriverCapability.HtmlUnitWithJS:
+                case RemoteWebDriverCapability.HtmlUnitWithJs:
                     capabilities = DesiredCapabilities.HtmlUnitWithJavaScript();
                     break;
                 case RemoteWebDriverCapability.InternetExplorer:
                     capabilities = DesiredCapabilities.InternetExplorer();
                     break;
-                case RemoteWebDriverCapability.IPad:
+                case RemoteWebDriverCapability.Pad:
                     capabilities = DesiredCapabilities.IPad();
                     break;
-                case RemoteWebDriverCapability.IPhone:
+                case RemoteWebDriverCapability.Phone:
                     capabilities = DesiredCapabilities.IPhone();
                     break;
                 case RemoteWebDriverCapability.Safari:

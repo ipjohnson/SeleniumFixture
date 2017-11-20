@@ -4,6 +4,6 @@ namespace SeleniumFixture.xUnit
 {
     public interface IFixtureFinalizerAttribute
     {
-        void IFixtureFinalizerAttribute(MethodInfo method, Fixture fixture);
+        void FixtureFinalizerAttribute(MethodInfo method, Fixture fixture);
     }
 }

@@ -10,16 +10,16 @@ namespace SeleniumFixture.Impl
 
     public class AutoFillAsActionProvider : IAutoFillAsActionProvider
     {
-        protected readonly IActionProvider _actionProvider;
+        protected readonly IActionProvider ActionProvider;
 
         public AutoFillAsActionProvider(IActionProvider actionProvider)
         {
-            _actionProvider = actionProvider;
+            ActionProvider = actionProvider;
         }
 
         public virtual IAutoFillAsAction<T> CreateAction<T>(IEnumerable<IWebElement> elements)
         {
-            return new AutoFillAsAction<T>(_actionProvider,elements);
+            return new AutoFillAsAction<T>(ActionProvider,elements);
         }
     }
 }

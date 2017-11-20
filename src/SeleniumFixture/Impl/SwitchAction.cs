@@ -56,7 +56,7 @@ namespace SeleniumFixture.Impl
     /// </summary>
     public class SwitchAction : ISwitchToAction
     {
-        protected readonly IActionProvider _actionProvider;
+        protected readonly IActionProvider ActionProvider;
 
         /// <summary>
         /// Default constructor
@@ -64,7 +64,7 @@ namespace SeleniumFixture.Impl
         /// <param name="actionProvider">action provider</param>
         public SwitchAction(IActionProvider actionProvider)
         {
-            _actionProvider = actionProvider;
+            ActionProvider = actionProvider;
         }
 
         /// <summary>
@@ -74,9 +74,9 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public virtual IYieldsAction Window(string windowName)
         {
-            _actionProvider.UsingFixture.Driver.SwitchTo().Window(windowName);
+            ActionProvider.UsingFixture.Driver.SwitchTo().Window(windowName);
 
-            return new YieldsAction(_actionProvider.UsingFixture);
+            return new YieldsAction(ActionProvider.UsingFixture);
         }
 
         /// <summary>
@@ -85,9 +85,9 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public virtual IYieldsAction ParentFrame()
         {
-            _actionProvider.UsingFixture.Driver.SwitchTo().ParentFrame();
+            ActionProvider.UsingFixture.Driver.SwitchTo().ParentFrame();
 
-            return new YieldsAction(_actionProvider.UsingFixture);
+            return new YieldsAction(ActionProvider.UsingFixture);
         }
 
         /// <summary>
@@ -97,9 +97,9 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public virtual IYieldsAction Frame(string frameName)
         {
-            _actionProvider.UsingFixture.Driver.SwitchTo().Frame(frameName);
+            ActionProvider.UsingFixture.Driver.SwitchTo().Frame(frameName);
 
-            return new YieldsAction(_actionProvider.UsingFixture);
+            return new YieldsAction(ActionProvider.UsingFixture);
         }
 
         /// <summary>
@@ -109,9 +109,9 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public virtual IYieldsAction Frame(IWebElement element)
         {
-            _actionProvider.UsingFixture.Driver.SwitchTo().Frame(element);
+            ActionProvider.UsingFixture.Driver.SwitchTo().Frame(element);
 
-            return new YieldsAction(_actionProvider.UsingFixture);
+            return new YieldsAction(ActionProvider.UsingFixture);
         }
 
         /// <summary>
@@ -121,11 +121,11 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public virtual IYieldsAction Frame(By selector)
         {
-            var element = _actionProvider.FindElement(selector);
+            var element = ActionProvider.FindElement(selector);
 
-            _actionProvider.UsingFixture.Driver.SwitchTo().Frame(element);
+            ActionProvider.UsingFixture.Driver.SwitchTo().Frame(element);
 
-            return new YieldsAction(_actionProvider.UsingFixture);
+            return new YieldsAction(ActionProvider.UsingFixture);
         }
 
         /// <summary>
@@ -134,9 +134,9 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public virtual IYieldsAction DefaultContent()
         {
-            _actionProvider.UsingFixture.Driver.SwitchTo().DefaultContent();
+            ActionProvider.UsingFixture.Driver.SwitchTo().DefaultContent();
 
-            return new YieldsAction(_actionProvider.UsingFixture);
+            return new YieldsAction(ActionProvider.UsingFixture);
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public virtual IAlert Alert()
         {
-            return _actionProvider.UsingFixture.Driver.SwitchTo().Alert();
+            return ActionProvider.UsingFixture.Driver.SwitchTo().Alert();
         }
     }
 }

@@ -20,11 +20,11 @@ namespace SeleniumFixture.Impl
     /// </summary>
     public class ClickAction : IClickAction
     {
-        protected readonly IActionProvider _actionProvider;
+        protected readonly IActionProvider ActionProvider;
 
         public ClickAction(IActionProvider actionProvider)
         {
-            _actionProvider = actionProvider;
+            ActionProvider = actionProvider;
         }
 
         public IActionProvider Click(IEnumerable<IWebElement> elements, ClickMode clickMode = ClickMode.ClickAll)
@@ -60,7 +60,7 @@ namespace SeleniumFixture.Impl
                     break;
             }
 
-            var configuration = _actionProvider.UsingFixture.Configuration;
+            var configuration = ActionProvider.UsingFixture.Configuration;
 
             var waitTime = (int)(configuration.FixtureImplicitWait * 1000);
 
@@ -69,7 +69,7 @@ namespace SeleniumFixture.Impl
                 Thread.Sleep(waitTime);
             }
 
-            return configuration.AlwaysWaitForAjax ? _actionProvider.Wait.ForAjax().Then : _actionProvider;
+            return configuration.AlwaysWaitForAjax ? ActionProvider.Wait.ForAjax().Then : ActionProvider;
         }
 
         public virtual IActionProvider Click(string selector, ClickMode clickMode = ClickMode.ClickAll)
@@ -77,15 +77,15 @@ namespace SeleniumFixture.Impl
             switch (clickMode)
             {
                 case ClickMode.ClickOne:
-                    _actionProvider.FindElement(selector).Click();
+                    ActionProvider.FindElement(selector).Click();
                     break;
 
                 case ClickMode.ClickAny:
-                    _actionProvider.FindElements(selector).Apply(c => c.Click());
+                    ActionProvider.FindElements(selector).Apply(c => c.Click());
                     break;
 
                 case ClickMode.ClickAll:
-                    var all = _actionProvider.FindElements(selector);
+                    var all = ActionProvider.FindElements(selector);
 
                     if (all.Count == 0)
                     {
@@ -95,7 +95,7 @@ namespace SeleniumFixture.Impl
                     break;
 
                 case ClickMode.ClickFirst:
-                    var firstList = _actionProvider.FindElements(selector);
+                    var firstList = ActionProvider.FindElements(selector);
 
                     if (firstList.Count == 0)
                     {
@@ -104,7 +104,7 @@ namespace SeleniumFixture.Impl
                     firstList[0].Click();
                     break;
             }
-            var configuration = _actionProvider.UsingFixture.Configuration;
+            var configuration = ActionProvider.UsingFixture.Configuration;
 
             var waitTime = (int)(configuration.FixtureImplicitWait * 1000);
 
@@ -113,7 +113,7 @@ namespace SeleniumFixture.Impl
                 Thread.Sleep(waitTime);
             }
 
-            return configuration.AlwaysWaitForAjax ? _actionProvider.Wait.ForAjax().Then : _actionProvider;
+            return configuration.AlwaysWaitForAjax ? ActionProvider.Wait.ForAjax().Then : ActionProvider;
         }
 
         public virtual IActionProvider Click(By selector, ClickMode clickMode = ClickMode.ClickAll)
@@ -121,13 +121,13 @@ namespace SeleniumFixture.Impl
             switch (clickMode)
             {
                 case ClickMode.ClickOne:
-                    _actionProvider.FindElement(selector).Click();
+                    ActionProvider.FindElement(selector).Click();
                     break;
                 case ClickMode.ClickAny:
-                    _actionProvider.FindElements(selector).Apply(c => c.Click());
+                    ActionProvider.FindElements(selector).Apply(c => c.Click());
                     break;
                 case ClickMode.ClickAll:
-                    var all = _actionProvider.FindElements(selector);
+                    var all = ActionProvider.FindElements(selector);
 
                     if (all.Count == 0)
                     {
@@ -136,7 +136,7 @@ namespace SeleniumFixture.Impl
                     all.Apply(c => c.Click());
                     break;
                 case ClickMode.ClickFirst:
-                    var firstList = _actionProvider.FindElements(selector);
+                    var firstList = ActionProvider.FindElements(selector);
 
                     if (firstList.Count == 0)
                     {
@@ -146,7 +146,7 @@ namespace SeleniumFixture.Impl
                     break;
             }
 
-            var configuration = _actionProvider.UsingFixture.Configuration;
+            var configuration = ActionProvider.UsingFixture.Configuration;
 
             var waitTime = (int)(configuration.FixtureImplicitWait * 1000);
 
@@ -155,7 +155,7 @@ namespace SeleniumFixture.Impl
                 Thread.Sleep(waitTime);
             }
             
-            return configuration.AlwaysWaitForAjax ? _actionProvider.Wait.ForAjax().Then : _actionProvider;
+            return configuration.AlwaysWaitForAjax ? ActionProvider.Wait.ForAjax().Then : ActionProvider;
         }
     }
 }

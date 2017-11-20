@@ -7,7 +7,7 @@ namespace SeleniumFixture.xUnit.Impl
 {
     public class SeleniumTheoryDiscoverer : IXunitTestCaseDiscoverer
     {
-        readonly IMessageSink diagnosticMessageSink;
+        readonly IMessageSink _diagnosticMessageSink;
 
         public const string ClassName = "SeleniumFixture.xUnit.Impl.SeleniumTheoryDiscoverer";
         
@@ -15,7 +15,7 @@ namespace SeleniumFixture.xUnit.Impl
 
         public SeleniumTheoryDiscoverer(IMessageSink diagnosticMessageSink) 
         {
-            this.diagnosticMessageSink = diagnosticMessageSink;
+            this._diagnosticMessageSink = diagnosticMessageSink;
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace SeleniumFixture.xUnit.Impl
         /// <param name="dataRow">The row of data for this test case.</param>
         /// <returns>The test case</returns>
         protected virtual IXunitTestCase CreateTestCaseForDataRow(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, IAttributeInfo theoryAttribute, object[] dataRow)
-            => new XunitTestCase(diagnosticMessageSink, discoveryOptions.MethodDisplayOrDefault(), testMethod, dataRow);
+            => new XunitTestCase(_diagnosticMessageSink, discoveryOptions.MethodDisplayOrDefault(), testMethod, dataRow);
 
         /// <summary>
         /// Creates a test case for a skipped theory. By default, returns an instance of <see cref="XunitTestCase"/>
@@ -40,7 +40,7 @@ namespace SeleniumFixture.xUnit.Impl
         /// <param name="skipReason">The skip reason that decorates <paramref name="theoryAttribute"/>.</param>
         /// <returns>The test case</returns>
         protected virtual IXunitTestCase CreateTestCaseForSkip(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, IAttributeInfo theoryAttribute, string skipReason)
-            => new XunitTestCase(diagnosticMessageSink, discoveryOptions.MethodDisplayOrDefault(), testMethod);
+            => new XunitTestCase(_diagnosticMessageSink, discoveryOptions.MethodDisplayOrDefault(), testMethod);
 
         /// <summary>
         /// Creates a test case for the entire theory. This is used when one or more of the theory data items
@@ -52,7 +52,7 @@ namespace SeleniumFixture.xUnit.Impl
         /// <param name="theoryAttribute">The theory attribute attached to the test method.</param>
         /// <returns>The test case</returns>
         protected virtual IXunitTestCase CreateTestCaseForTheory(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, IAttributeInfo theoryAttribute)
-            => new SeleniumTheoryTestCase(diagnosticMessageSink, discoveryOptions.MethodDisplayOrDefault(), testMethod);
+            => new SeleniumTheoryTestCase(_diagnosticMessageSink, discoveryOptions.MethodDisplayOrDefault(), testMethod);
 
         /// <summary>
         /// Creates a test case for a single row of data. By default, returns an instance of <see cref="XunitSkippedDataRowTestCase"/>
@@ -67,7 +67,7 @@ namespace SeleniumFixture.xUnit.Impl
         /// <param name="skipReason">The reason this test case is to be skipped</param>
         /// <returns>The test case</returns>
         protected virtual IXunitTestCase CreateTestCaseForSkippedDataRow(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, IAttributeInfo theoryAttribute, object[] dataRow, string skipReason)
-            => new XunitSkippedDataRowTestCase(diagnosticMessageSink, discoveryOptions.MethodDisplayOrDefault(), testMethod, skipReason, dataRow);
+            => new XunitSkippedDataRowTestCase(_diagnosticMessageSink, discoveryOptions.MethodDisplayOrDefault(), testMethod, skipReason, dataRow);
 
 
         public IEnumerable<IXunitTestCase> Discover(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, IAttributeInfo theoryAttribute)
@@ -82,7 +82,7 @@ namespace SeleniumFixture.xUnit.Impl
             }
             catch(Exception exp)
             {
-                diagnosticMessageSink.OnMessage(new DiagnosticMessage($"Exception thrown during theory discovery on '{testMethod.TestClass.Class.Name}.{testMethod.Method.Name}'; falling back to single test case.{Environment.NewLine}{exp}"));
+                _diagnosticMessageSink.OnMessage(new DiagnosticMessage($"Exception thrown during theory discovery on '{testMethod.TestClass.Class.Name}.{testMethod.Method.Name}'; falling back to single test case.{Environment.NewLine}{exp}"));
             }
 
             return new IXunitTestCase[] { };

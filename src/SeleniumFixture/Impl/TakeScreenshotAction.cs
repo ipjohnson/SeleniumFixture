@@ -24,7 +24,7 @@ namespace SeleniumFixture.Impl
     /// </summary>
     public class TakeScreenshotAction : ITakeScreenshotAction
     {
-        protected readonly IActionProvider _actionProvider;
+        protected readonly IActionProvider ActionProvider;
 
         /// <summary>
         /// Default constructor
@@ -32,7 +32,7 @@ namespace SeleniumFixture.Impl
         /// <param name="actionProvider"></param>
         public TakeScreenshotAction(IActionProvider actionProvider)
         {
-            _actionProvider = actionProvider;
+            ActionProvider = actionProvider;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace SeleniumFixture.Impl
 
             try
             {
-                screenshotDriver = ((ITakesScreenshot)_actionProvider.UsingFixture.Driver);
+                screenshotDriver = ((ITakesScreenshot)ActionProvider.UsingFixture.Driver);
             }
             catch (Exception)
             {
@@ -66,7 +66,7 @@ namespace SeleniumFixture.Impl
                 screenshotDriver.GetScreenshot().SaveAsFile(screenshotName, format);
             }
 
-            return _actionProvider;
+            return ActionProvider;
         }
 
         protected virtual string GetScreenshotName(ScreenshotImageFormat format)

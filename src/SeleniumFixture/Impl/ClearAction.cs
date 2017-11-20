@@ -32,7 +32,7 @@ namespace SeleniumFixture.Impl
     /// </summary>
     public class ClearAction : IClearAction
     {
-        protected readonly IActionProvider _actionProvider;
+        protected readonly IActionProvider ActionProvider;
 
         /// <summary>
         /// Default constructor
@@ -40,7 +40,7 @@ namespace SeleniumFixture.Impl
         /// <param name="actionProvider">action provider</param>
         public ClearAction(IActionProvider actionProvider)
         {
-            _actionProvider = actionProvider;
+            ActionProvider = actionProvider;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace SeleniumFixture.Impl
         {
             elements.Apply(e => e.Clear());
 
-            return _actionProvider;
+            return ActionProvider;
         }
 
         /// <summary>
@@ -62,9 +62,9 @@ namespace SeleniumFixture.Impl
         /// <returns>action provider</returns>
         public virtual IActionProvider Clear(string selector)
         {
-            _actionProvider.FindElements(selector).Apply(e => e.Clear());
+            ActionProvider.FindElements(selector).Apply(e => e.Clear());
 
-            return _actionProvider;
+            return ActionProvider;
         }
 
         /// <summary>
@@ -74,9 +74,9 @@ namespace SeleniumFixture.Impl
         /// <returns>action provider</returns>
         public virtual IActionProvider Clear(By selector)
         {
-            _actionProvider.FindElements(selector).Apply(e => e.Clear());
+            ActionProvider.FindElements(selector).Apply(e => e.Clear());
 
-            return _actionProvider;
+            return ActionProvider;
         }
     }
 }

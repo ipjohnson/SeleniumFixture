@@ -20,7 +20,7 @@ namespace SeleniumFixture
         /// <summary>
         /// CSS selector
         /// </summary>
-        CSS,
+        Css,
 
         /// <summary>
         /// XPath

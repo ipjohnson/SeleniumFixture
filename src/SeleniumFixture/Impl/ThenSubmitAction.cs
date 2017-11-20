@@ -20,7 +20,7 @@ namespace SeleniumFixture.Impl
     /// </summary>
     public class ThenSubmitAction : FixtureActionProvider, IThenSubmitAction
     {
-        protected readonly IWebElement _formElement;
+        protected readonly IWebElement FormElement;
 
         /// <summary>
         /// Default constructor
@@ -29,7 +29,7 @@ namespace SeleniumFixture.Impl
         /// <param name="formElement"></param>
         public ThenSubmitAction(Fixture fixture, IWebElement formElement) : base(fixture)
         {
-            _formElement = formElement;
+            FormElement = formElement;
         }
 
         /// <summary>
@@ -38,9 +38,9 @@ namespace SeleniumFixture.Impl
         /// <returns>this</returns>
         public virtual IYieldsAction ThenSubmit()
         {
-            _formElement.Submit();
+            FormElement.Submit();
 
-            var configuration = _fixture.Configuration;
+            var configuration = Fixture.Configuration;
 
             var waitTime = (int)(configuration.FixtureImplicitWait * 1000);
 
@@ -51,10 +51,10 @@ namespace SeleniumFixture.Impl
 
             if (configuration.AlwaysWaitForAjax)
             {
-                _fixture.Wait.ForAjax();
+                Fixture.Wait.ForAjax();
             }
 
-            return new YieldsAction(_fixture);
+            return new YieldsAction(Fixture);
         }
     }
 }

@@ -12,18 +12,18 @@ namespace SeleniumFixture.Impl
 
     public class MouseMoveAction : IMouseMoveAction
     {
-        protected readonly IActionProvider _actionProvider;
+        protected readonly IActionProvider ActionProvider;
 
         public MouseMoveAction(IActionProvider actionProvider)
         {
-            _actionProvider = actionProvider;
+            ActionProvider = actionProvider;
         }
 
         public virtual IActionProvider MoveTheMouseTo(string selector, int? x = null, int? y = null)
         {
-            var action = new Actions(_actionProvider.UsingFixture.Driver);
+            var action = new Actions(ActionProvider.UsingFixture.Driver);
 
-            var element = _actionProvider.FindElement(selector);
+            var element = ActionProvider.FindElement(selector);
 
             if (x.HasValue && y.HasValue)
             {
@@ -36,14 +36,14 @@ namespace SeleniumFixture.Impl
 
             action.Perform();
 
-            return _actionProvider;
+            return ActionProvider;
         }
 
         public virtual IActionProvider MoveTheMouseTo(By selector, int? x = null, int? y = null)
         {
-            var action = new Actions(_actionProvider.UsingFixture.Driver);
+            var action = new Actions(ActionProvider.UsingFixture.Driver);
 
-            var element = _actionProvider.FindElement(selector);
+            var element = ActionProvider.FindElement(selector);
 
             if (x.HasValue && y.HasValue)
             {
@@ -56,7 +56,7 @@ namespace SeleniumFixture.Impl
 
             action.Perform();
 
-            return _actionProvider;
+            return ActionProvider;
         }
     }
 }

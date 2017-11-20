@@ -29,7 +29,7 @@ namespace SeleniumFixture.Impl
     /// </summary>
     public class YieldsAction : IYieldsAction
     {
-        protected readonly IActionProvider _actionProvider;
+        protected readonly IActionProvider ActionProvider;
 
         /// <summary>
         /// Default constructor
@@ -37,7 +37,7 @@ namespace SeleniumFixture.Impl
         /// <param name="fixture">action provider</param>
         public YieldsAction(IActionProvider fixture)
         {
-            _actionProvider = fixture;
+            ActionProvider = fixture;
         }
 
         /// <summary>
@@ -61,9 +61,9 @@ namespace SeleniumFixture.Impl
         /// <returns>new instance</returns>
         public virtual object Yields(Type type, string requestName = null, object constraints = null)
         {
-            var request = new DataRequest(null, _actionProvider.UsingFixture.Data, type, DependencyType.Root, requestName, false, constraints, null);
+            var request = new DataRequest(null, ActionProvider.UsingFixture.Data, type, DependencyType.Root, requestName, false, constraints, null);
 
-            return _actionProvider.UsingFixture.Data.Generate(request);
+            return ActionProvider.UsingFixture.Data.Generate(request);
         }
     }
 }

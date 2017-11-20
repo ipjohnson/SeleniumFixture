@@ -33,8 +33,8 @@ namespace SeleniumFixture.Impl
     /// </summary>
     public class SendToAction : ISendToAction
     {
-        protected readonly string _sendValue;
-        protected readonly IActionProvider _actionProvider;
+        protected readonly string SendValue;
+        protected readonly IActionProvider ActionProvider;
 
         /// <summary>
         /// Default constructor
@@ -43,8 +43,8 @@ namespace SeleniumFixture.Impl
         /// <param name="sendValue">send value</param>
         public SendToAction(IActionProvider actionProvider, string sendValue)
         {
-            _sendValue = sendValue;
-            _actionProvider = actionProvider;
+            SendValue = sendValue;
+            ActionProvider = actionProvider;
         }
 
         /// <summary>
@@ -53,9 +53,9 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public virtual IActionProvider ToAlert()
         {
-            _actionProvider.UsingFixture.Driver.SwitchTo().Alert().SendKeys(_sendValue);
+            ActionProvider.UsingFixture.Driver.SwitchTo().Alert().SendKeys(SendValue);
 
-            return _actionProvider;
+            return ActionProvider;
         }
 
         /// <summary>
@@ -65,9 +65,9 @@ namespace SeleniumFixture.Impl
         /// <returns>action provider</returns>
         public virtual IActionProvider To(string selector)
         {
-            _actionProvider.FindElements(selector).Apply(e => e.SendKeys(_sendValue));
+            ActionProvider.FindElements(selector).Apply(e => e.SendKeys(SendValue));
 
-            return _actionProvider;
+            return ActionProvider;
         }
 
         /// <summary>
@@ -77,9 +77,9 @@ namespace SeleniumFixture.Impl
         /// <returns>action provider</returns>
         public virtual IActionProvider To(By selector)
         {
-            _actionProvider.FindElements(selector).Apply(e => e.SendKeys(_sendValue));
+            ActionProvider.FindElements(selector).Apply(e => e.SendKeys(SendValue));
 
-            return _actionProvider;
+            return ActionProvider;
         }
     }
 }

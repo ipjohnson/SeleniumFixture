@@ -7,7 +7,7 @@ namespace SeleniumFixture.xUnit.Impl
 {
     internal class XunitSkippedDataRowTestCase : XunitTestCase
     {
-        readonly string skipReason;
+        readonly string _skipReason;
 
         /// <summary/>
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -27,7 +27,7 @@ namespace SeleniumFixture.xUnit.Impl
         public XunitSkippedDataRowTestCase(IMessageSink diagnosticMessageSink, TestMethodDisplay defaultMethodDisplay, ITestMethod testMethod, string skipReason, object[] testMethodArguments = null) :
             base(diagnosticMessageSink, defaultMethodDisplay, testMethod, testMethodArguments)
         {
-            this.skipReason = skipReason;
+            this._skipReason = skipReason;
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace SeleniumFixture.xUnit.Impl
         /// <returns>The skip reason, if skipped; <c>null</c>, otherwise.</returns>
         protected override string GetSkipReason(IAttributeInfo factAttribute)
         {
-            return skipReason;
+            return _skipReason;
         }
     }
 }

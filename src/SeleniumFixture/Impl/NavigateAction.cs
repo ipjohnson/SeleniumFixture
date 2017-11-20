@@ -70,7 +70,7 @@ namespace SeleniumFixture.Impl
     /// </summary>
     public class NavigateAction : INavigateAction
     {
-        protected readonly IActionProvider _actionProvider;
+        protected readonly IActionProvider ActionProvider;
 
         /// <summary>
         /// Default constructor
@@ -78,7 +78,7 @@ namespace SeleniumFixture.Impl
         /// <param name="actionProvider">action provider</param>
         public NavigateAction(IActionProvider actionProvider)
         {
-            _actionProvider = actionProvider;
+            ActionProvider = actionProvider;
         }
 
         /// <summary>
@@ -90,12 +90,12 @@ namespace SeleniumFixture.Impl
         {
             if (url == null || !url.StartsWith("http", StringComparison.CurrentCultureIgnoreCase))
             {
-                url = _actionProvider.UsingFixture.Configuration.BaseAddress + url;
+                url = ActionProvider.UsingFixture.Configuration.BaseAddress + url;
             }
 
-            _actionProvider.UsingFixture.Driver.Navigate().GoToUrl(url);
+            ActionProvider.UsingFixture.Driver.Navigate().GoToUrl(url);
 
-            var configuration = _actionProvider.UsingFixture.Configuration;
+            var configuration = ActionProvider.UsingFixture.Configuration;
 
             var waitTime = (int)(configuration.FixtureImplicitWait * 1000);
 
@@ -106,10 +106,10 @@ namespace SeleniumFixture.Impl
 
             if (configuration.AlwaysWaitForAjax)
             {
-                _actionProvider.Wait.ForAjax();
+                ActionProvider.Wait.ForAjax();
             }
 
-            return _actionProvider;
+            return ActionProvider;
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace SeleniumFixture.Impl
         {
             To(url);
 
-            return _actionProvider.Yields<T>();
+            return ActionProvider.Yields<T>();
         }
 
         /// <summary>
@@ -132,9 +132,9 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public virtual IActionProvider To(Uri uri)
         {
-            _actionProvider.UsingFixture.Driver.Navigate().GoToUrl(uri);
+            ActionProvider.UsingFixture.Driver.Navigate().GoToUrl(uri);
 
-            var configuration = _actionProvider.UsingFixture.Configuration;
+            var configuration = ActionProvider.UsingFixture.Configuration;
 
             var waitTime = (int)(configuration.FixtureImplicitWait * 1000);
 
@@ -145,10 +145,10 @@ namespace SeleniumFixture.Impl
 
             if (configuration.AlwaysWaitForAjax)
             {
-                _actionProvider.Wait.ForAjax();
+                ActionProvider.Wait.ForAjax();
             }
 
-            return _actionProvider;
+            return ActionProvider;
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace SeleniumFixture.Impl
         {
             To(uri);
 
-            return _actionProvider.Yields<T>();
+            return ActionProvider.Yields<T>();
         }
 
         /// <summary>
@@ -170,9 +170,9 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public virtual IActionProvider Back()
         {
-            _actionProvider.UsingFixture.Driver.Navigate().Back();
+            ActionProvider.UsingFixture.Driver.Navigate().Back();
 
-            var configuration = _actionProvider.UsingFixture.Configuration;
+            var configuration = ActionProvider.UsingFixture.Configuration;
 
             var waitTime = (int)(configuration.FixtureImplicitWait * 1000);
 
@@ -183,10 +183,10 @@ namespace SeleniumFixture.Impl
 
             if (configuration.AlwaysWaitForAjax)
             {
-                _actionProvider.Wait.ForAjax();
+                ActionProvider.Wait.ForAjax();
             }
 
-            return _actionProvider;
+            return ActionProvider;
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace SeleniumFixture.Impl
         {
             Back();
 
-            return _actionProvider.Yields<T>();
+            return ActionProvider.Yields<T>();
         }
 
         /// <summary>
@@ -207,9 +207,9 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public virtual IActionProvider Forward()
         {
-            _actionProvider.UsingFixture.Driver.Navigate().Forward();
+            ActionProvider.UsingFixture.Driver.Navigate().Forward();
 
-            var configuration = _actionProvider.UsingFixture.Configuration;
+            var configuration = ActionProvider.UsingFixture.Configuration;
 
             var waitTime = (int)(configuration.FixtureImplicitWait * 1000);
 
@@ -220,10 +220,10 @@ namespace SeleniumFixture.Impl
 
             if (configuration.AlwaysWaitForAjax)
             {
-                _actionProvider.Wait.ForAjax();
+                ActionProvider.Wait.ForAjax();
             }
 
-            return _actionProvider;
+            return ActionProvider;
         }
 
         /// <summary>
@@ -235,7 +235,7 @@ namespace SeleniumFixture.Impl
         {
             Forward();
 
-            return _actionProvider.Yields<T>();
+            return ActionProvider.Yields<T>();
         }
     }
 }

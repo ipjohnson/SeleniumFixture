@@ -14,33 +14,33 @@ namespace SeleniumFixture.Impl
 
     public class AutoFillAction : IAutoFillAction
     {
-        protected readonly IActionProvider _actionProvider;
-        protected readonly IEnumerable<IWebElement> _elements;
-        protected readonly object _seedWith;
-        protected readonly bool _isSimpleSeed;
-        protected readonly IConstraintHelper _constraintHelper;
+        protected readonly IActionProvider ActionProvider;
+        protected readonly IEnumerable<IWebElement> Elements;
+        protected readonly object SeedWith;
+        protected readonly bool IsSimpleSeed;
+        protected readonly IConstraintHelper ConstraintHelper;
 
         public AutoFillAction(IActionProvider actionProvider, IEnumerable<IWebElement> elements, object seedWith)
         {
-            _actionProvider = actionProvider;
-            _elements = elements;
-            _seedWith = seedWith;
-            _isSimpleSeed = IsSeedSimple();
-            _constraintHelper = _actionProvider.UsingFixture.Data.Locate<IConstraintHelper>();
+            ActionProvider = actionProvider;
+            Elements = elements;
+            SeedWith = seedWith;
+            IsSimpleSeed = IsSeedSimple();
+            ConstraintHelper = ActionProvider.UsingFixture.Data.Locate<IConstraintHelper>();
         }
 
         public virtual IThenSubmitAction PerformFill()
         {
             AutoFillElement();
 
-            return new ThenSubmitAction(_actionProvider.UsingFixture, _elements.First());
+            return new ThenSubmitAction(ActionProvider.UsingFixture, Elements.First());
         }
 
         protected virtual void AutoFillElement()
         {
             var radioButtons = new Dictionary<string, List<IWebElement>>();
 
-            foreach (var element in _elements)
+            foreach (var element in Elements)
             {
                 if (!ProcessFormElement(element, radioButtons))
                 {
@@ -89,13 +89,13 @@ namespace SeleniumFixture.Impl
         {
             string stringConstraintValue = null;
 
-            if (_isSimpleSeed)
+            if (IsSimpleSeed)
             {
-                stringConstraintValue = GetStringFromValue(_seedWith);
+                stringConstraintValue = GetStringFromValue(SeedWith);
             }
             else
             {
-                var setValue = _constraintHelper.GetValue<object>(_seedWith, null, key);
+                var setValue = ConstraintHelper.GetValue<object>(SeedWith, null, key);
 
                 if (setValue != null)
                 {
@@ -115,7 +115,7 @@ namespace SeleniumFixture.Impl
                 }
             }
 
-            var radioElement = _actionProvider.Generate<IRandomDataGeneratorService>().NextInSet(values);
+            var radioElement = ActionProvider.Generate<IRandomDataGeneratorService>().NextInSet(values);
 
             if (radioElement != null)
             {
@@ -146,10 +146,10 @@ namespace SeleniumFixture.Impl
                 return;
             }
 
-            if (_isSimpleSeed)
+            if (IsSimpleSeed)
             {
                 element.Clear();
-                element.SendKeys(GetStringFromValue(_seedWith));
+                element.SendKeys(GetStringFromValue(SeedWith));
 
                 return;
             }
@@ -159,12 +159,12 @@ namespace SeleniumFixture.Impl
 
             if (!string.IsNullOrEmpty(elementId))
             {
-                setValue = _constraintHelper.GetValue<object>(_seedWith, null, elementId);
+                setValue = ConstraintHelper.GetValue<object>(SeedWith, null, elementId);
             }
 
             if (setValue == null)
             {
-                setValue = _actionProvider.Generate<string>(elementId, new { stringType = StringType.AlphaNumeric });
+                setValue = ActionProvider.Generate<string>(elementId, new { stringType = StringType.AlphaNumeric });
             }
 
             element.Clear();
@@ -178,7 +178,7 @@ namespace SeleniumFixture.Impl
 
             if (!string.IsNullOrEmpty(elementId))
             {
-                var checkValue = _constraintHelper.GetValue<object>(_seedWith, null, elementId);
+                var checkValue = ConstraintHelper.GetValue<object>(SeedWith, null, elementId);
 
                 if (checkValue != null)
                 {
@@ -195,7 +195,7 @@ namespace SeleniumFixture.Impl
 
             if (!checkedValue.HasValue)
             {
-                checkedValue = _actionProvider.Generate<bool>();
+                checkedValue = ActionProvider.Generate<bool>();
             }
 
             if (element.Selected != checkedValue.Value)
@@ -245,7 +245,7 @@ namespace SeleniumFixture.Impl
             var selectElement = new SelectElement(element);
             var setValue = false;
 
-            if (_isSimpleSeed)
+            if (IsSimpleSeed)
             {
                 setValue = true;
             }
@@ -253,7 +253,7 @@ namespace SeleniumFixture.Impl
             {
                 var elementId = element.GetAttribute("id") ?? element.GetAttribute("name");
 
-                var value = _constraintHelper.GetValue<object>(_seedWith, null, elementId);
+                var value = ConstraintHelper.GetValue<object>(SeedWith, null, elementId);
 
                 if (value != null)
                 {
@@ -282,7 +282,7 @@ namespace SeleniumFixture.Impl
             if (!setValue)
             {
                 var selectedOption =
-                    _actionProvider.Generate<IRandomDataGeneratorService>().NextInSet(
+                    ActionProvider.Generate<IRandomDataGeneratorService>().NextInSet(
                         selectElement.Options.Where(e => !string.IsNullOrEmpty(e.GetAttribute(ElementContants.ValueAttribute))));
 
                 if (selectedOption != null)
@@ -296,13 +296,13 @@ namespace SeleniumFixture.Impl
 
         protected virtual bool IsSeedSimple()
         {
-            if (_seedWith == null)
+            if (SeedWith == null)
                 return false;
 
-            return _seedWith.GetType().IsPrimitive ||
-                   _seedWith is string ||
-                   _seedWith is DateTime ||
-                   _seedWith is Enum;
+            return SeedWith.GetType().IsPrimitive ||
+                   SeedWith is string ||
+                   SeedWith is DateTime ||
+                   SeedWith is Enum;
         }
     }
 }

@@ -11,8 +11,8 @@ namespace SeleniumFixture.Impl
     /// </summary>
     public class AutoBy : By
     {
-        protected readonly string _selector;
-        protected readonly string _jQueryTest;
+        protected readonly string Selector;
+        protected readonly string JQueryTest;
 
         /// <summary>
         /// Default constructor
@@ -31,8 +31,8 @@ namespace SeleniumFixture.Impl
                 throw new ArgumentNullException("jQueryTest", "Must provide a valid javascript statement");
             }
 
-            _selector = selector;
-            _jQueryTest = jQueryTest;
+            Selector = selector;
+            JQueryTest = jQueryTest;
         }
 
         /// <summary>
@@ -59,13 +59,13 @@ namespace SeleniumFixture.Impl
         {
             By by = null;
 
-            if (_selector.StartsWith("//"))
+            if (Selector.StartsWith("//"))
             {
-                by = XPath(_selector);
+                by = XPath(Selector);
             }
             else
             {
-                by = IsJavaScriptEnabled(context, _jQueryTest) ? Using.JQuery(_selector) : CssSelector(_selector);
+                by = IsJavaScriptEnabled(context, JQueryTest) ? Using.JQuery(Selector) : CssSelector(Selector);
             }
 
             return context.FindElements(by);

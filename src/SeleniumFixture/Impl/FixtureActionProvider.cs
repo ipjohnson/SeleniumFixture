@@ -12,7 +12,7 @@ namespace SeleniumFixture.Impl
     /// </summary>
     public class FixtureActionProvider : IActionProvider
     {
-        protected readonly Fixture _fixture;
+        protected readonly Fixture Fixture;
 
         /// <summary>
         /// Default constructor
@@ -20,7 +20,7 @@ namespace SeleniumFixture.Impl
         /// <param name="fixture"></param>
         public FixtureActionProvider(Fixture fixture)
         {
-            _fixture = fixture;
+            Fixture = fixture;
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public virtual IActionProvider MoveTheMouseTo(string selector, int? x = null, int? y = null)
         {
-            return _fixture.Data.Locate<IMouseMoveAction>().MoveTheMouseTo(selector, x, y);
+            return Fixture.Data.Locate<IMouseMoveAction>().MoveTheMouseTo(selector, x, y);
         }
 
         /// <summary>
@@ -44,13 +44,13 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public virtual IActionProvider MoveTheMouseTo(By selector, int? x = null, int? y = null)
         {
-            return _fixture.Data.Locate<IMouseMoveAction>().MoveTheMouseTo(selector, x, y);
+            return Fixture.Data.Locate<IMouseMoveAction>().MoveTheMouseTo(selector, x, y);
         }
 
         /// <summary>
         /// Navigate the fixture
         /// </summary>
-        public virtual INavigateAction Navigate => _fixture.Data.Locate<INavigateAction>();
+        public virtual INavigateAction Navigate => Fixture.Data.Locate<INavigateAction>();
 
         /// <summary>
         /// Find a specified element by selector
@@ -64,22 +64,22 @@ namespace SeleniumFixture.Impl
                 throw new ArgumentNullException("selector");
             }
 
-            switch (_fixture.Configuration.Selector)
+            switch (Fixture.Configuration.Selector)
             {
                 case SelectorAlgorithm.JQuery:
-                    return _fixture.Driver.FindElement(Using.JQuery(selector));
+                    return Fixture.Driver.FindElement(Using.JQuery(selector));
 
-                case SelectorAlgorithm.CSS:
-                    return _fixture.Driver.FindElement(By.CssSelector(selector));
+                case SelectorAlgorithm.Css:
+                    return Fixture.Driver.FindElement(By.CssSelector(selector));
 
                 case SelectorAlgorithm.XPath:
-                    return _fixture.Driver.FindElement(By.XPath(selector));
+                    return Fixture.Driver.FindElement(By.XPath(selector));
 
                 case SelectorAlgorithm.Auto:
-                    return _fixture.Driver.FindElement(Using.Auto(selector));
+                    return Fixture.Driver.FindElement(Using.Auto(selector));
 
                 default:
-                    throw new Exception("Unknown SelectorAlgorithm " + _fixture.Configuration.Selector);
+                    throw new Exception("Unknown SelectorAlgorithm " + Fixture.Configuration.Selector);
 
             }
         }
@@ -91,7 +91,7 @@ namespace SeleniumFixture.Impl
         /// <returns>elements</returns>
         public virtual IWebElement FindElement(By selector)
         {
-            return _fixture.Driver.FindElement(selector);
+            return Fixture.Driver.FindElement(selector);
         }
 
         /// <summary>
@@ -106,22 +106,22 @@ namespace SeleniumFixture.Impl
                 throw new ArgumentNullException("selector");
             }
 
-            switch (_fixture.Configuration.Selector)
+            switch (Fixture.Configuration.Selector)
             {
                 case SelectorAlgorithm.JQuery:
-                    return _fixture.Driver.FindElements(Using.JQuery(selector));
+                    return Fixture.Driver.FindElements(Using.JQuery(selector));
 
-                case SelectorAlgorithm.CSS:
-                    return _fixture.Driver.FindElements(By.CssSelector(selector));
+                case SelectorAlgorithm.Css:
+                    return Fixture.Driver.FindElements(By.CssSelector(selector));
 
                 case SelectorAlgorithm.XPath:
-                    return _fixture.Driver.FindElements(By.XPath(selector));
+                    return Fixture.Driver.FindElements(By.XPath(selector));
 
                 case SelectorAlgorithm.Auto:
-                    return _fixture.Driver.FindElements(Using.Auto(selector));
+                    return Fixture.Driver.FindElements(Using.Auto(selector));
 
                 default:
-                    throw new Exception("Unknown SelectorAlgorithm " + _fixture.Configuration.Selector);
+                    throw new Exception("Unknown SelectorAlgorithm " + Fixture.Configuration.Selector);
             }
         }
 
@@ -158,7 +158,7 @@ namespace SeleniumFixture.Impl
         /// </returns>
         public virtual ReadOnlyCollection<IWebElement> FindElements(By element)
         {
-            return _fixture.Driver.FindElements(element);
+            return Fixture.Driver.FindElements(element);
         }
 
         /// <summary>
@@ -170,13 +170,13 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public virtual T Generate<T>(string requestName = null, object constraints = null)
         {
-            return _fixture.Data.Generate<T>(requestName, constraints);
+            return Fixture.Data.Generate<T>(requestName, constraints);
         }
 
         /// <summary>
         /// Get values from page
         /// </summary>
-        public virtual IGetAction Get => _fixture.Data.Locate<IGetAction>();
+        public virtual IGetAction Get => Fixture.Data.Locate<IGetAction>();
 
         /// <summary>
         /// Checks for element.
@@ -205,7 +205,7 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public virtual IActionProvider Clear(string selector)
         {
-            return _fixture.Data.Locate<IClearAction>().Clear(selector);
+            return Fixture.Data.Locate<IClearAction>().Clear(selector);
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public virtual IActionProvider Clear(By selector)
         {
-            return _fixture.Data.Locate<IClearAction>().Clear(selector);
+            return Fixture.Data.Locate<IClearAction>().Clear(selector);
         }
 
         /// <summary>
@@ -248,7 +248,7 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public virtual IActionProvider DismissAlert()
         {
-            return _fixture.Data.Locate<IAlertAction>().Dismiss();
+            return Fixture.Data.Locate<IAlertAction>().Dismiss();
         }
 
         /// <summary>
@@ -261,7 +261,7 @@ namespace SeleniumFixture.Impl
         /// </returns>
         public virtual IActionProvider Click(string selector, ClickMode clickMode = ClickMode.ClickAll)
         {
-            return _fixture.Data.Locate<IClickAction>().Click(selector, clickMode);
+            return Fixture.Data.Locate<IClickAction>().Click(selector, clickMode);
         }
 
         /// <summary>
@@ -274,7 +274,7 @@ namespace SeleniumFixture.Impl
         /// </returns>
         public virtual IActionProvider Click(By selector, ClickMode clickMode = ClickMode.ClickAll)
         {
-            return _fixture.Data.Locate<IClickAction>().Click(selector, clickMode);
+            return Fixture.Data.Locate<IClickAction>().Click(selector, clickMode);
         }
 
         /// <summary>
@@ -287,7 +287,7 @@ namespace SeleniumFixture.Impl
         /// </returns>
         public virtual IActionProvider DoubleClick(string selector, ClickMode clickMode = ClickMode.ClickAll)
         {
-            return _fixture.Data.Locate<IDoubleClickAction>().DoubleClick(selector, clickMode);
+            return Fixture.Data.Locate<IDoubleClickAction>().DoubleClick(selector, clickMode);
         }
 
         /// <summary>
@@ -300,7 +300,7 @@ namespace SeleniumFixture.Impl
         /// </returns>
         public virtual IActionProvider DoubleClick(By selector, ClickMode clickMode = ClickMode.ClickAll)
         {
-            return _fixture.Data.Locate<IDoubleClickAction>().DoubleClick(selector, clickMode);
+            return Fixture.Data.Locate<IDoubleClickAction>().DoubleClick(selector, clickMode);
         }
 
         /// <summary>
@@ -313,9 +313,9 @@ namespace SeleniumFixture.Impl
         /// <exception cref="System.Exception">Javascript not supported by driver  + _fixture.Driver</exception>
         public virtual T ExecuteJavaScript<T>(string javascript, params object[] args)
         {
-            if (!(_fixture.Driver is IJavaScriptExecutor executor))
+            if (!(Fixture.Driver is IJavaScriptExecutor executor))
             {
-                throw new Exception("Javascript not supported by driver " + _fixture.Driver);
+                throw new Exception("Javascript not supported by driver " + Fixture.Driver);
             }
 
             var returnValue = executor.ExecuteScript(javascript, args);
@@ -353,9 +353,9 @@ namespace SeleniumFixture.Impl
         /// <exception cref="System.Exception">Javascript not supported by driver  + _fixture.Driver</exception>
         public virtual void ExecuteJavaScript(string javascript, params object[] args)
         {
-            if (!(_fixture.Driver is IJavaScriptExecutor executor))
+            if (!(Fixture.Driver is IJavaScriptExecutor executor))
             {
-                throw new Exception("Javascript not supported by driver " + _fixture.Driver);
+                throw new Exception("Javascript not supported by driver " + Fixture.Driver);
             }
 
             executor.ExecuteScript(javascript, args);
@@ -367,7 +367,7 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public virtual IActionProvider AcceptAlert()
         {
-            return _fixture.Data.Locate<IAlertAction>().Accept();
+            return Fixture.Data.Locate<IAlertAction>().Accept();
         }
 
         /// <summary>
@@ -404,7 +404,7 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public virtual IThenSubmitAction AutoFill(IEnumerable<IWebElement> elements, object seedWith = null)
         {
-            return _fixture.Data.Locate<IAutoFillAction>(constraints: new { elements, seedWith }).PerformFill();
+            return Fixture.Data.Locate<IAutoFillAction>(constraints: new { elements, seedWith }).PerformFill();
         }
 
         /// <summary>
@@ -449,7 +449,7 @@ namespace SeleniumFixture.Impl
         /// </returns>
         public virtual IThenSubmitAction AutoFillAs<T>(IEnumerable<IWebElement> elements, string requestName = null, object constraints = null)
         {
-            var autoFillProvider = _fixture.Data.Locate<IAutoFillAsActionProvider>();
+            var autoFillProvider = Fixture.Data.Locate<IAutoFillAsActionProvider>();
 
             return autoFillProvider.CreateAction<T>(elements).PerformFill(requestName, constraints);
         }
@@ -490,13 +490,13 @@ namespace SeleniumFixture.Impl
             var readOnlyElements = elements as ReadOnlyCollection<IWebElement> ??
                                                                new ReadOnlyCollection<IWebElement>(new List<IWebElement>(elements));
 
-            return _fixture.Data.Locate<IFillAction>(constraints: new { elements = readOnlyElements });
+            return Fixture.Data.Locate<IFillAction>(constraints: new { elements = readOnlyElements });
         }
 
         /// <summary>
         /// Wait for something to happen
         /// </summary>
-        public virtual IWaitAction Wait => _fixture.Data.Locate<IWaitAction>();
+        public virtual IWaitAction Wait => Fixture.Data.Locate<IWaitAction>();
 
         /// <summary>
         /// Send the value to a particular element or set of elements
@@ -507,7 +507,7 @@ namespace SeleniumFixture.Impl
         {
             var sendValueString = sendValue.ToString();
 
-            return _fixture.Data.Locate<ISendToAction>(constraints: new { sendValue = sendValueString });
+            return Fixture.Data.Locate<ISendToAction>(constraints: new { sendValue = sendValueString });
         }
 
         /// <summary>
@@ -533,7 +533,7 @@ namespace SeleniumFixture.Impl
                 Wait.ForAjax();
             }
 
-            return _fixture.Data.Locate<IYieldsAction>();
+            return Fixture.Data.Locate<IYieldsAction>();
         }
 
         /// <summary>
@@ -559,7 +559,7 @@ namespace SeleniumFixture.Impl
                 Wait.ForAjax();
             }
 
-            return _fixture.Data.Locate<IYieldsAction>();
+            return Fixture.Data.Locate<IYieldsAction>();
         }
 
         /// <summary>
@@ -577,13 +577,13 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public virtual IActionProvider TakeScreenshot(string screenshotName = null, bool throwsIfNotSupported = false, ScreenshotImageFormat format = ScreenshotImageFormat.Png)
         {
-            return _fixture.Data.Locate<ITakeScreenshotAction>().TakeScreenshot(screenshotName, throwsIfNotSupported, format);
+            return Fixture.Data.Locate<ITakeScreenshotAction>().TakeScreenshot(screenshotName, throwsIfNotSupported, format);
         }
 
         /// <summary>
         /// Fixture for this action provider
         /// </summary>
-        public virtual Fixture UsingFixture => _fixture;
+        public virtual Fixture UsingFixture => Fixture;
 
         /// <summary>
         /// Yields a Page Object using SimpleFixture
@@ -596,7 +596,7 @@ namespace SeleniumFixture.Impl
         /// </returns>
         public virtual T Yields<T>(string requestName = null, object constraints = null)
         {
-            return _fixture.Data.Locate<IYieldsAction>().Yields<T>(requestName, constraints);
+            return Fixture.Data.Locate<IYieldsAction>().Yields<T>(requestName, constraints);
         }
 
         /// <summary>
@@ -610,7 +610,7 @@ namespace SeleniumFixture.Impl
         /// </returns>
         public virtual object Yields(Type type, string requestName = null, object constraints = null)
         {
-            return _fixture.Data.Locate<IYieldsAction>().Yields(type, requestName, constraints);
+            return Fixture.Data.Locate<IYieldsAction>().Yields(type, requestName, constraints);
         }
 
         /// <summary>
@@ -641,7 +641,7 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public IActionProvider Clear(IEnumerable<IWebElement> elements)
         {
-            return _fixture.Data.Locate<IClearAction>().Clear(elements);
+            return Fixture.Data.Locate<IClearAction>().Clear(elements);
         }
 
         /// <summary>
@@ -651,7 +651,7 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public IActionProvider Clear(params IWebElement[] elements)
         {
-            return _fixture.Data.Locate<IClearAction>().Clear(elements);
+            return Fixture.Data.Locate<IClearAction>().Clear(elements);
         }
 
         /// <summary>
@@ -662,7 +662,7 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public IActionProvider Click(IEnumerable<IWebDriver> elements, ClickMode clickMode = ClickMode.ClickOne)
         {
-            return _fixture.Data.Locate<IClickAction>().Click((IEnumerable<IWebElement>)elements, clickMode);
+            return Fixture.Data.Locate<IClickAction>().Click((IEnumerable<IWebElement>)elements, clickMode);
         }
 
         /// <summary>
@@ -683,7 +683,7 @@ namespace SeleniumFixture.Impl
         /// <returns></returns>
         public IActionProvider DoubleClick(IEnumerable<IWebElement> elements, ClickMode clickMode = ClickMode.ClickOne)
         {
-            return _fixture.Data.Locate<IDoubleClickAction>().DoubleClick(elements, clickMode);
+            return Fixture.Data.Locate<IDoubleClickAction>().DoubleClick(elements, clickMode);
         }
 
         /// <summary>

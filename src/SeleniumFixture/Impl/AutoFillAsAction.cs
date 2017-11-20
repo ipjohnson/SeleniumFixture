@@ -10,20 +10,20 @@ namespace SeleniumFixture.Impl
 
     public class AutoFillAsAction<T> : IAutoFillAsAction<T>
     {
-        protected readonly IActionProvider _actionProvider;
-        protected readonly IEnumerable<IWebElement> _elements;
+        protected readonly IActionProvider ActionProvider;
+        protected readonly IEnumerable<IWebElement> Elements;
 
         public AutoFillAsAction(IActionProvider actionProvider, IEnumerable<IWebElement> elements)
         {
-            _actionProvider = actionProvider;
-            _elements = elements;
+            ActionProvider = actionProvider;
+            Elements = elements;
         }
 
         public virtual IThenSubmitAction PerformFill(string requestName, object constraints)
         {
-            var seedValue = _actionProvider.UsingFixture.Data.Generate<T>(requestName, constraints);
+            var seedValue = ActionProvider.UsingFixture.Data.Generate<T>(requestName, constraints);
 
-            return new AutoFillAction(_actionProvider, _elements, seedValue).PerformFill();
+            return new AutoFillAction(ActionProvider, Elements, seedValue).PerformFill();
         }
     }
 }
