@@ -1,6 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <Description>Provides xUnit attributes for SeleniumFixture</Description>
+    <Authors>Ian Johnson</Authors>
     <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
     <IsPackable>true</IsPackable>
   </PropertyGroup>
