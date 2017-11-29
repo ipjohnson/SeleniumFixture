@@ -1,4 +1,6 @@
-﻿using SimpleFixture;
+﻿using System;
+using SeleniumFixture.Impl;
+using SimpleFixture;
 
 namespace SeleniumFixture
 {
@@ -27,7 +29,7 @@ namespace SeleniumFixture
         /// </summary>
         XPath
     }
-    
+
     /// <summary>
     /// Configuration object for SeleniumFoxture
     /// </summary>
@@ -44,7 +46,7 @@ namespace SeleniumFixture
         private void Initialize()
         {
             Selector = SelectorAlgorithm.Auto;
-            
+
             DefaultTimeout = 10;
             DefaultWaitInterval = 0.1;
             FixtureImplicitWait = 0.2;
@@ -56,6 +58,7 @@ namespace SeleniumFixture
             WrapValidationExceptions = true;
             ValidateMember = "Validate";
             DataConfiguration = new DefaultFixtureConfiguration();
+            ActionProvider = fixture => new FixtureActionProvider(fixture);
         }
 
         /// <summary>
@@ -82,7 +85,7 @@ namespace SeleniumFixture
         /// Time to wait in between testing for wait condition
         /// </summary>
         public double DefaultWaitInterval { get; set; }
-        
+
         /// <summary>
         /// Execute validate on page objects
         /// </summary>
@@ -112,5 +115,10 @@ namespace SeleniumFixture
         /// Data configuration for SimpleFixture
         /// </summary>
         public DefaultFixtureConfiguration DataConfiguration { get; set; }
+
+        /// <summary>
+        /// Action provider to be used by fixture
+        /// </summary>
+        public Func<Fixture, IActionProvider> ActionProvider { get; set; }
     }
 }

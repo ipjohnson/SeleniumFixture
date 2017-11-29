@@ -619,23 +619,24 @@ namespace SeleniumFixture
 
             Driver = webDriver;
 
+
+#if !NETSTANDARD2_0
             Data.Behavior.Add((r, o) =>
                               {
                                   if (o.GetType().IsValueType || o is string)
                                   {
                                       return o;
                                   }
-
-#if !NETSTANDARD2_0
                                   PageFactory.InitElements(webDriver, o);
-#endif
+
 
                                   return o;
                               });
+#endif
 
             Data.Behavior.Add(ImportPropertiesOnLocate);
 
-            _actionProvider = new FixtureActionProvider(this);
+            _actionProvider = Configuration.ActionProvider(this);
 
             Data.Return(_actionProvider);
 
